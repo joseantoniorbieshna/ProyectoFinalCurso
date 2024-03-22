@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 
-import com.faltasproject.domain.clases.models.Materia;
+import com.faltasproject.domain.models.clases.Materia;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

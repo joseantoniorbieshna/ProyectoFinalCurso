@@ -2,13 +2,12 @@ package com.faltasproject.adapters.jpa.clases.persistence;
 
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.faltasproject.adapters.jpa.clases.daos.MateriaRepository;
 import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
-import com.faltasproject.domain.clases.models.Materia;
-import com.faltasproject.domain.clases.persistance_ports.MateriaPersistance;
+import com.faltasproject.domain.models.clases.Materia;
+import com.faltasproject.domain.persistance_ports.clases.MateriaPersistance;
 
 @Repository("materiaPersistance")
 public class MateriaPersistenceJPA implements MateriaPersistance {
@@ -41,6 +40,11 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	public Materia readByName() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean existId(String id) {
+		return materiaRepository.findById(id).isPresent();
 	}
 
 }

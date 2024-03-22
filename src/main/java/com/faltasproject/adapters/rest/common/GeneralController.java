@@ -1,4 +1,4 @@
-package com.faltasproject.adapters.rest;
+package com.faltasproject.adapters.rest.common;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,18 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
-import com.faltasproject.domain.clases.models.Materia;
-import com.faltasproject.domain.clases.persistance_ports.MateriaPersistance;
+import com.faltasproject.domain.models.clases.Materia;
+import com.faltasproject.domain.persistance_ports.clases.MateriaPersistance;
+import com.faltasproject.domain.services.clases.MateriaService;
 import com.faltasproject.utils.XmlTreatment;
 
 @RestController
 @RequestMapping("general")
 public class GeneralController {
 	
-	private final MateriaPersistance materiaPersistance;
+	private final MateriaService materiaService;
 	
-	public GeneralController(MateriaPersistance materiaPersistance) {
-		this.materiaPersistance=materiaPersistance;
+	public GeneralController(MateriaService materiaService) {
+		this.materiaService=materiaService;
 	}
 
 
@@ -44,7 +45,7 @@ public class GeneralController {
 		materias = xmlTreatment.getAllMaterias();
 		
 		for(Materia materia:materias) {
-			materiaPersistance.create(materia);
+			materiaService.create(materia);
 		}
 
 		return "se han guardado " + materias.size() + " materias";

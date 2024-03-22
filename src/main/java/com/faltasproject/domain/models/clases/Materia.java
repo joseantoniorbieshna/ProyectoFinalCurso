@@ -1,11 +1,11 @@
-package com.faltasproject.domain.clases.models;
+package com.faltasproject.domain.models.clases;
 
 import java.util.Objects;
 
 public class Materia {
-	public String id;
-	public String nombreAbreviado;
-	public String nombreCompleto;
+	private String id;
+	private String nombreAbreviado;
+	private String nombreCompleto;
 	
 	public Materia(String id, String nombreAbreviado, String nombreCompleto) {
 		super();
