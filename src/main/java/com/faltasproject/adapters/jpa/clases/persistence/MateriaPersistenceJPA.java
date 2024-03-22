@@ -1,11 +1,14 @@
 package com.faltasproject.adapters.jpa.clases.persistence;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Repository;
 
 import com.faltasproject.adapters.jpa.clases.daos.MateriaRepository;
 import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
+import com.faltasproject.domain.exceptions.ConflictExceptions;
+import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.persistance_ports.clases.MateriaPersistance;
 
@@ -29,15 +32,24 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
-	public Stream<Materia> readAll() {
+	public Materia readByCompleteName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Materia readByName() {
+	public Materia readByDni(String id) {
+		Optional<MateriasEntity> materia=materiaRepository.findById(id);
+		if(!materia.isPresent()) {
+			throw new NotFoundException("error");
+		}
+		return materia.get().toMateria();
+	}
+
+	@Override
+	public Stream<Materia> readAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -15,7 +15,9 @@ public interface MateriaPersistance {
 	
 	Stream<Materia> readAll();
 	
-	Materia readByName();
+	Materia readByCompleteName();
+	
+	Materia readByDni(String id);
 
 	boolean existId(String id);
 
