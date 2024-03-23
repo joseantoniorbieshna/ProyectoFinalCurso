@@ -20,9 +20,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Materia;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class XmlTreatment {
 	
 	Document doc;
@@ -78,50 +81,54 @@ public class XmlTreatment {
 
 	}
 	
-	
-//	
-//	public List<Actividad> getAllActividades() {
-//
-//		List<Actividad> actividades = new ArrayList<>();
-//
-//		XPathFactory xPathFactory = XPathFactory.newInstance();
-//		XPath xpath = xPathFactory.newXPath();
-//
-//		// OBTENEMOS LA LISTA DE LOS CURSOS
-//		String expr = "//grupo_datos[@seq='ACTIVIDADES']";
-//
-//		try {
-//			
-//			XPathExpression expression = (XPathExpression) xpath.compile(expr);
-//
-//			NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
-//			// ITERO LA LISTA DEL NODO CURSO
-//			for (int i = 0; i < nodeList.getLength(); i++) {
-//				Node node = nodeList.item(i);
-//				NodeList nodelist = node.getChildNodes();
-//
-//				for (int j = 0; j < nodelist.getLength(); j++) {
-//					Node child = nodelist.item(j);
-//					if (child.getNodeType() == Node.ELEMENT_NODE) {
-//						// OBTENGO EL ID MATERIA
-//						Long idActividad = Long.valueOf(child.getChildNodes().item(3).getTextContent());
-//						// OBTENGO EL NOMBRE DE MATERIA
-//						String nombre = child.getChildNodes().item(5).getTextContent();
-//		
-//						
-//						;
-//						actividades.add(new Actividad(idActividad, nombre));
-//					}
-//				}
-//			}
-//			
-//			
-//		} catch (XPathExpressionException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return actividades;
-//
-//	}
+	public List<Curso> getAllCursos() {
+
+		List<Curso> cursos = new ArrayList<>();
+
+		XPathFactory xPathFactory = XPathFactory.newInstance();
+		XPath xpath = xPathFactory.newXPath();
+
+		// OBTENEMOS LA LISTA DE CURSOSS
+		String expr = "//cursos/curso";
+
+		try {
+			
+			XPathExpression expression = (XPathExpression) xpath.compile(expr);
+
+			NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
+			// ITERO LA LISTA DEL NODO CURSO
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node child = nodeList.item(i);
+				
+				if (child.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element)child;
+					Long id = Long.valueOf( element.getElementsByTagName("claveDeExportacion").item(0).getTextContent() );
+					String nombreCompleto = element.getElementsByTagName("nombreCompleto").item(0).getTextContent();
+					NodeList materiasNode = ((Element)element.getElementsByTagName("materiasDelCurso").item(0)).getElementsByTagName("materia");
+					
+					List<Materia> materias = new ArrayList<>();
+					//MATERIA ID
+					for (int j = 0; j < materiasNode.getLength(); j++) {
+						Node materiasChild = materiasNode.item(j);
+						if (materiasChild.getNodeType() == Node.ELEMENT_NODE) {
+							// OBTENGO EL ID 
+							String idMateria = materiasChild.getTextContent();
+							materias.add(new Materia(idMateria));
+						}
+					}
+					
+					cursos.add(new Curso(id,nombreCompleto,materias));
+				}
+			}
+				
+			
+			
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return cursos;
+
+	}
 
 }

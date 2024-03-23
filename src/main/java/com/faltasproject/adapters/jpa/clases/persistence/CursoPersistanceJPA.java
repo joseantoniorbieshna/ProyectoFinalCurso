@@ -31,7 +31,7 @@ public class CursoPersistanceJPA implements CursoPersistance {
 	@Override
 	public Curso create(Curso curso) {
 		if(existId(curso.getId())) {
-			throw new ConflictExceptions("El Curso con el id '"+curso.getId()+"' no existe");
+			throw new ConflictExceptions("El Curso con el id '"+curso.getId()+"' ya existe");
 		}
 		
 		CursoEntity cursoEntity = new CursoEntity(curso);

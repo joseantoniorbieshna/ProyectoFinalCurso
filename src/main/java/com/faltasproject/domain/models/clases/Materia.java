@@ -7,6 +7,13 @@ public class Materia {
 	private String nombreAbreviado;
 	private String nombreCompleto;
 	
+	
+	
+	public Materia(String id) {
+		super();
+		this.id = id;
+	}
+
 	public Materia(String id, String nombreAbreviado, String nombreCompleto) {
 		super();
 		this.id = id;
