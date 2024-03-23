@@ -1,6 +1,7 @@
 package com.faltasproject.utils;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import org.xml.sax.SAXException;
 
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Materia;
+import com.faltasproject.domain.models.horario.TramoHorario;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -128,6 +130,51 @@ public class XmlTreatment {
 			e.printStackTrace();
 		}
 		return cursos;
+
+	}
+	
+	
+	public List<TramoHorario> getAllTramosHorarios() {
+
+		List<TramoHorario> tramosHorarios = new ArrayList<>();
+
+		XPathFactory xPathFactory = XPathFactory.newInstance();
+		XPath xpath = xPathFactory.newXPath();
+
+		// OBTENEMOS LA LISTA DE CURSOSS
+		String expr = "//marcosDeHorario/marcoHorario/tramo";
+
+		try {
+			
+			XPathExpression expression = (XPathExpression) xpath.compile(expr);
+
+			NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
+			// ITERO LA LISTA DEL NODO CURSO
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node child = nodeList.item(i);
+				
+				if (child.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element)child;
+					Integer dia = Integer.valueOf( element.getElementsByTagName("dia").item(0).getTextContent() );
+					Integer indice = Integer.valueOf( element.getElementsByTagName("indice").item(0).getTextContent() );
+					
+					String[] horaEntradaTexto = element.getElementsByTagName("horaEntrada").item(0).getTextContent().split(":");
+					String[] horaSalidaTexto = element.getElementsByTagName("horaSalida").item(0).getTextContent().split(":");
+					
+					LocalTime horaEntrada = LocalTime.of(Integer.valueOf(horaEntradaTexto[0]), Integer.valueOf(horaEntradaTexto[1]), Integer.valueOf(horaEntradaTexto[2]));
+					LocalTime horaSalida=LocalTime.of(Integer.valueOf(horaSalidaTexto[0]), Integer.valueOf(horaSalidaTexto[1]), Integer.valueOf(horaSalidaTexto[2]));
+					
+					tramosHorarios.add(new TramoHorario(dia,indice,horaEntrada,horaSalida));
+				}
+			}
+				
+			
+			
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tramosHorarios;
 
 	}
 

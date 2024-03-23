@@ -7,7 +7,7 @@ public class IdTramoHorarioDTO {
 	public IdTramoHorarioDTO() {
 		super();
 	}
-
+	
 	public IdTramoHorarioDTO(Integer dia, Integer indice) {
 		super();
 		this.dia = dia;

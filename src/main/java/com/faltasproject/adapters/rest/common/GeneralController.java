@@ -13,9 +13,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Materia;
+import com.faltasproject.domain.models.horario.TramoHorario;
+import com.faltasproject.domain.persistance_ports.horario.TramoHorarioPersistance;
 import com.faltasproject.domain.services.clases.CursoService;
 import com.faltasproject.domain.services.clases.MateriaService;
+import com.faltasproject.domain.services.horario.TramoHorarioService;
 import com.faltasproject.utils.XmlTreatment;
+
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("general")
@@ -23,10 +28,12 @@ public class GeneralController {
 	
 	private final MateriaService materiaService;
 	private final CursoService cursoService;
+	private final TramoHorarioService tramoHorarioService;
 	
-	public GeneralController(MateriaService materiaService,CursoService cursoService) {
+	public GeneralController(MateriaService materiaService,CursoService cursoService,TramoHorarioService tramoHorarioService) {
 		this.materiaService=materiaService;
 		this.cursoService=cursoService;
+		this.tramoHorarioService=tramoHorarioService;
 	}
 
 
@@ -67,6 +74,22 @@ public class GeneralController {
 		}
 
 		return "se han guardado " + cursos.size() + " Cursos y en total tienen "+cursos.stream().flatMap(curso -> curso.getMaterias().stream()).count()+" materias relacionadas";
+	}
+	
+	@PostMapping("tramoshorarios")
+	public String introducirTramosHorarios(@RequestParam("xml") MultipartFile xml) {
+
+		List<TramoHorario> tramosHorarios=new ArrayList<>();
+		
+		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+
+		tramosHorarios = xmlTreatment.getAllTramosHorarios();
+		
+		for(TramoHorario tramoHorario:tramosHorarios) {
+			tramoHorarioService.Create(tramoHorario);
+		}
+
+		return "se han guardado " + tramosHorarios.size() + " TramosHorario";
 	}
 	
 	

@@ -33,6 +33,10 @@ public class TramoHorarioEntity {
 		@Temporal(TemporalType.TIME)
 		private Time horaSalida;
 	
+	public TramoHorarioEntity(TramoHorario tramoHorario) {
+		fromTramoHorario(tramoHorario);
+	}
+	
 	public TramoHorarioEntity(Integer dia,Integer indice,Time horaEntrada,Time horaSalida) {
 		this.key = new KeyTramoHorario(dia,indice);
 		setHoraEntrada(horaEntrada);

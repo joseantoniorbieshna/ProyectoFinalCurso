@@ -24,9 +24,10 @@ public class TramoHorarioPersistanceJPA implements TramoHorarioPersistance {
 
 	@Override
 	public TramoHorario create(TramoHorario tramoHorario) {
-		TramoHorarioEntity tramoHorarioEntity=tramoHorarioRepositoryJPA.findByKeyDiaAndKeyIndice(tramoHorario.getDia(),tramoHorario.getIndice()).
-		orElseThrow(()->new ConflictExceptions("No se ha encontrado el Tramo horario con dia "+tramoHorario.getDia()+" y indice "+tramoHorario.getIndice()));
-		return tramoHorarioEntity.toTramoHorario();
+		if(existId(tramoHorario)) {
+			throw new ConflictExceptions( "ya existe el Tramo horario con dia "+tramoHorario.getDia()+" y indice "+tramoHorario.getIndice());
+		}
+		return tramoHorarioRepositoryJPA.save(new TramoHorarioEntity(tramoHorario)).toTramoHorario();
 	}
 
 	@Override
@@ -64,6 +65,10 @@ public class TramoHorarioPersistanceJPA implements TramoHorarioPersistance {
 	@Override
 	public Boolean existId(IdTramoHorarioDTO idTramoHorarioDTO) {
 		return tramoHorarioRepositoryJPA.findByKeyDiaAndKeyIndice(idTramoHorarioDTO.getDia(), idTramoHorarioDTO.getIndice()).isPresent();
+	}
+	
+	public Boolean existId(TramoHorario tramoHorario) {
+		return existId(new IdTramoHorarioDTO(tramoHorario.getDia(),tramoHorario.getIndice()));
 	}
 	
 

@@ -27,7 +27,6 @@ public class Curso {
 	public Curso(String nombre) {
 		super();
 		this.nombre = nombre;
-		this.materias=new ArrayList<>();
 	}
 
 
