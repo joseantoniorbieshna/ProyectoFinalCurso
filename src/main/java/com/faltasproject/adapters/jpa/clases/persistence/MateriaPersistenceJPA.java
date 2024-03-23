@@ -14,9 +14,9 @@ import com.faltasproject.domain.persistance_ports.clases.MateriaPersistance;
 
 @Repository("materiaPersistance")
 public class MateriaPersistenceJPA implements MateriaPersistance {
-
+	
 	private final MateriaRepositoryJPA materiaRepository;
-
+	
 	public MateriaPersistenceJPA(MateriaRepositoryJPA materiaRepository) {
 		this.materiaRepository = materiaRepository;
 	}
@@ -70,7 +70,7 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	}
 
 	@Override
-	public boolean existId(String id) {
+	public Boolean existId(String id) {
 		return materiaRepository.findById(id).isPresent();
 	}
 

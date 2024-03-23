@@ -21,6 +21,6 @@ public interface MateriaPersistance {
 	
 	Materia readById(String id);
 
-	boolean existId(String id);
+	Boolean existId(String id);
 
 }

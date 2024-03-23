@@ -12,7 +12,7 @@ import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
 
 
 @SpringBootTest
-public class MateriaPersistenceJPATest {
+public class MateriaRepositoryJPATest {
 	@Autowired
 	private MateriaRepositoryJPA materiaRepositoryJPA;
 	
@@ -23,7 +23,7 @@ public class MateriaPersistenceJPATest {
 		assertEquals(expected, materias.size());
 		
 		
-		expected=4;
+		expected=5;
 		materias=materiaRepositoryJPA.findByNombreCompletoContainingIgnoreCase("A");
 		assertEquals(expected, materias.size());
 	}
