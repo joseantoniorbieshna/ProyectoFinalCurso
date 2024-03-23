@@ -1,6 +1,5 @@
 package com.faltasproject.adapters.jpa.clases.entities;
 
-import java.beans.Beans;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -29,9 +28,14 @@ public class MateriasEntity {
 	private String nombreCompleto;
 	
 	public MateriasEntity(Materia materia) {
+		fromMateria(materia);
+	}
+	
+	public void fromMateria(Materia materia) {
 		BeanUtils.copyProperties(materia, this);
 		
-		if(materia.getId()==null || materia.getId().isEmpty()) {
+		// Aseguro que exista un id
+		if(this.getId()==null || this.getId().isEmpty()) {
 			this.id = UUID.randomUUID().toString();
 		}
 	}

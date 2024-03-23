@@ -11,13 +11,15 @@ public interface MateriaPersistance {
 	
 	Materia create(Materia materia);
 	
-	Materia update(Materia materia);
+	Materia update(String id,Materia materia);
 	
 	Stream<Materia> readAll();
 	
-	Materia readByCompleteName();
+	Stream<Materia> readContainInCompleteName(String name);
 	
-	Materia readByDni(String id);
+	Boolean delete(String id);
+	
+	Materia readById(String id);
 
 	boolean existId(String id);
 
