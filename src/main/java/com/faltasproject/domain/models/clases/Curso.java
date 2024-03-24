@@ -8,6 +8,10 @@ public class Curso {
 	private Long id;
 	private String nombre;
 	private List<Materia> materias;
+	
+	public Curso() {
+		super();
+	}
 
 	public Curso(Long id, String nombre, List<Materia> materias) {
 		super();
@@ -27,6 +31,7 @@ public class Curso {
 	public Curso(String nombre) {
 		super();
 		this.nombre = nombre;
+		this.materias=new ArrayList<>();
 	}
 
 

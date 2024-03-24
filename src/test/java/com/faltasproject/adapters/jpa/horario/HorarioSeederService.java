@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.springframework.stereotype.Service;
 
 import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
+import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPATest;
 import com.faltasproject.adapters.jpa.horario.entities.TramoHorarioEntity;
 
 @Service

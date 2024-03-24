@@ -53,7 +53,9 @@ public class TramoHorarioEntity {
 	}
 	
 	public void fromTramoHorario(TramoHorario tramohorario) {
-		this.setKey( new KeyTramoHorario(tramohorario.getDia(), tramohorario.getIndice()) );
+		if(key==null) {
+			this.setKey( new KeyTramoHorario(tramohorario.getDia(), tramohorario.getIndice()) );			
+		}
 		this.setHoraEntrada( Time.valueOf(tramohorario.getHoraEntrada()) );
 		this.setHoraSalida( Time.valueOf(tramohorario.getHoraSalida()) );
 	}

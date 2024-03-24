@@ -47,7 +47,9 @@ public class CursoPersistanceJPA implements CursoPersistance {
 		CursoEntity cursoEntity = cursoRepositoryJPA.findById(id)
 		.orElseThrow(() -> new NotFoundException("El curso con el id '"+id+"' no existe"));
 		
+		List<MateriasEntity> materias = cursoEntity.getMaterias();
 		cursoEntity.fromCurso(curso);
+		cursoEntity.setMaterias(materias);
 		
 		return cursoRepositoryJPA.save(cursoEntity).toCurso();
 	}

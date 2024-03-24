@@ -2,6 +2,8 @@ package com.faltasproject.adapters.jpa.horario.entities.key_compound;
 
 import java.io.Serializable;
 
+import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
+
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,5 +21,17 @@ public class KeyTramoHorario implements Serializable {
 	@Column(name = "indice")
 	private Integer indice;
 	
+	public KeyTramoHorario(IdTramoHorarioDTO idTramoHorarioDTO) {
+		fromIdTramoHorarioDTO(idTramoHorarioDTO);
+	}
+	
+	public IdTramoHorarioDTO toIdTramoHorarioDTO() {
+		return new IdTramoHorarioDTO(this.getDia(),this.getIndice());
+	}
+	
+	public void fromIdTramoHorarioDTO(IdTramoHorarioDTO idTramoHorarioDTO) {
+		this.setDia(idTramoHorarioDTO.getDia());
+		this.setIndice(idTramoHorarioDTO.getIndice());
+	}
 	
 }

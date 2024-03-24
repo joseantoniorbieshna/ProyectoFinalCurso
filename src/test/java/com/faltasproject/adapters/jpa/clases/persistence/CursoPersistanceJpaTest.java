@@ -22,16 +22,20 @@ public class CursoPersistanceJpaTest {
 		 assertThrows(NotFoundException.class, () -> this.cursoPersistanceJPA.readById(0L));
 	}
 	
+	@Test
     void update() {
     	assertThrows( NotFoundException.class, () -> cursoPersistanceJPA.update(500L, new Curso("Curso 1")) );
 
-    	Curso curso = cursoPersistanceJPA.update(1L, new Curso("44º E.S.O"));
+    	Curso curso = cursoPersistanceJPA.readById(1L);
+    	assertNotEquals(0, curso.getMaterias().size());
+    	
+    	curso = cursoPersistanceJPA.update(1L, new Curso("44º E.S.O"));
     	assertEquals("44º E.S.O", curso.getNombre());
     	assertNotEquals(0, curso.getMaterias().size());
     	
     	
     	curso = cursoPersistanceJPA.update(2L, new Curso("4º E.S.O"));
-    	assertEquals("FyQ", curso.getNombre());
+    	assertEquals("4º E.S.O", curso.getNombre());
     	assertNotEquals(0, curso.getMaterias().size());
     }
 	

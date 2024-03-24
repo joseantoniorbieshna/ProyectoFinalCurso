@@ -36,6 +36,8 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 				.orElseThrow(() -> new NotFoundException("No se ha encontrado la Materia con el id: " + id));
 
 		materiaEntity.fromMateria(materia);
+		materiaEntity.setId(id);
+		
 		return materiaEntity.toMateria();
 	}
 

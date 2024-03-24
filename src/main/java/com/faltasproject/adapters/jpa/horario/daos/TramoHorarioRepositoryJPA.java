@@ -8,6 +8,4 @@ import java.util.Optional;
 
 
 public interface TramoHorarioRepositoryJPA extends JpaRepository<TramoHorarioEntity, KeyTramoHorario> {
-	Optional<TramoHorarioEntity> findByKeyDiaAndKeyIndice(Integer dia, Integer indice);
-	void deleteByKeyDiaAndKeyIndice(Integer dia, Integer indice);
 }

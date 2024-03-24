@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import com.faltasproject.domain.models.clases.Curso;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -26,7 +27,7 @@ public class CursoEntity {
 	private Long id;
 	private String nombre;
 	
-	@ManyToMany()
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 		name = "CURSO_MATERIA",
 		joinColumns = @JoinColumn(name="curso_id"),
@@ -44,21 +45,23 @@ public class CursoEntity {
 	}
 	
 	public void fromCurso(Curso curso) {
-		this.id=curso.getId();
+		if(id==null) {
+			this.id=curso.getId();			
+		}
 		this.nombre=curso.getNombre();
 		this.materias = curso.getMaterias().stream()
 				.map(materia -> new MateriasEntity(materia))
-				.collect(Collectors.toList());
+				.collect(Collectors.toList());			
 	}
 	
 	public Curso toCurso() {
-		return new Curso(
+		Curso curso=new Curso(
 				this.getId(),
 				this.getNombre(),
 				this.getMaterias().stream()
 					.map(materiaEntity->materiaEntity.toMateria())
-					.collect(Collectors.toList())
-				);
+					.collect(Collectors.toList()));
+		return curso;
 	}
 	
 	@Override

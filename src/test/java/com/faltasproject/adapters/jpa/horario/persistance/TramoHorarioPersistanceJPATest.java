@@ -27,6 +27,7 @@ public class TramoHorarioPersistanceJPATest {
 		 assertThrows(NotFoundException.class, () -> this.tramoHorarioPersistanceJPA.readById( new IdTramoHorarioDTO(0, 100) ));
 	}
 	
+	@Test
     void update() {
     	TramoHorarioEntity tramoHorarioEntity=new TramoHorarioEntity(0, 1, Time.valueOf( LocalTime.of(8, 0) ),Time.valueOf( LocalTime.of(9, 0)));
     	assertThrows( NotFoundException.class, () -> tramoHorarioPersistanceJPA.update(new IdTramoHorarioDTO(0, 10), tramoHorarioEntity.toTramoHorario()) );

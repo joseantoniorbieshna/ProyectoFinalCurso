@@ -41,7 +41,7 @@ public class MateriasEntity {
 	}
 	
 	public Materia toMateria() {
-		return new Materia(id, nombreAbreviado,nombreCompleto);
+		return new Materia(new String(id), new String(nombreAbreviado),new String(nombreCompleto));
 	}
 	
 	@Override
