@@ -16,7 +16,7 @@ public class TramoHorarioService {
 	}
 
 
-	public void Create(TramoHorario tramoHorario) {
+	public void create(TramoHorario tramoHorario) {
 		tramoHorarioPersistance.create(tramoHorario);
 	}
 }

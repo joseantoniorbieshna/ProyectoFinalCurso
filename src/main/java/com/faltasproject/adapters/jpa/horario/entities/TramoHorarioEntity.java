@@ -2,7 +2,6 @@ package com.faltasproject.adapters.jpa.horario.entities;
 
 import java.sql.Time;
 
-
 import com.faltasproject.adapters.jpa.horario.entities.key_compound.KeyTramoHorario;
 import com.faltasproject.domain.models.horario.TramoHorario;
 
@@ -13,18 +12,19 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "TRAMO_HORARIO")
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TramoHorarioEntity {
 	@EmbeddedId
+	@EqualsAndHashCode.Include
 	KeyTramoHorario key;
 	@Column(name = "hora_entrada")
 	@Temporal(TemporalType.TIME)

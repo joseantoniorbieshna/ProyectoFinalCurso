@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.persistance_ports.horario.TramoHorarioPersistance;
+import com.faltasproject.domain.services.clases.AulaService;
 import com.faltasproject.domain.services.clases.CursoService;
 import com.faltasproject.domain.services.clases.MateriaService;
 import com.faltasproject.domain.services.horario.TramoHorarioService;
@@ -29,11 +31,16 @@ public class GeneralController {
 	private final MateriaService materiaService;
 	private final CursoService cursoService;
 	private final TramoHorarioService tramoHorarioService;
+	private final AulaService aulaService;
 	
-	public GeneralController(MateriaService materiaService,CursoService cursoService,TramoHorarioService tramoHorarioService) {
+	public GeneralController(MateriaService materiaService,
+			CursoService cursoService,
+			TramoHorarioService tramoHorarioService,
+			AulaService aulaService) {
 		this.materiaService=materiaService;
 		this.cursoService=cursoService;
 		this.tramoHorarioService=tramoHorarioService;
+		this.aulaService=aulaService;
 	}
 
 
@@ -86,10 +93,26 @@ public class GeneralController {
 		tramosHorarios = xmlTreatment.getAllTramosHorarios();
 		
 		for(TramoHorario tramoHorario:tramosHorarios) {
-			tramoHorarioService.Create(tramoHorario);
+			tramoHorarioService.create(tramoHorario);
 		}
 
 		return "se han guardado " + tramosHorarios.size() + " TramosHorario";
+	}
+	
+	@PostMapping("aulas")
+	public String introducirAulas(@RequestParam("xml") MultipartFile xml) {
+
+		List<Aula> aulas = new ArrayList<>();
+		
+		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+
+		aulas = xmlTreatment.getAllAulas();
+		
+		for(Aula aula:aulas) {
+			aulaService.create(aula);
+		}
+
+		return "se han guardado " + aulas.size() + " Aulas";
 	}
 	
 	

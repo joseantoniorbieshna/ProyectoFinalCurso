@@ -6,14 +6,12 @@ import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class KeyTramoHorario implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Column(name = "dia")

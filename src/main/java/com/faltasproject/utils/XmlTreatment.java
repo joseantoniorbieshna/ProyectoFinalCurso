@@ -21,6 +21,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.models.horario.TramoHorario;
@@ -44,7 +45,6 @@ public class XmlTreatment {
 			e.printStackTrace();
 		}
 	}
-	
 	
 	public List<Materia> getAllMaterias() {
 
@@ -123,16 +123,12 @@ public class XmlTreatment {
 				}
 			}
 				
-			
-			
 		} catch (XPathExpressionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return cursos;
-
 	}
-	
 	
 	public List<TramoHorario> getAllTramosHorarios() {
 
@@ -167,8 +163,6 @@ public class XmlTreatment {
 					tramosHorarios.add(new TramoHorario(dia,indice,horaEntrada,horaSalida));
 				}
 			}
-				
-			
 			
 		} catch (XPathExpressionException e) {
 			// TODO Auto-generated catch block
@@ -176,6 +170,40 @@ public class XmlTreatment {
 		}
 		return tramosHorarios;
 
+	}
+	
+	public List<Aula> getAllAulas() {
+
+		List<Aula> aulas = new ArrayList<>();
+
+		XPathFactory xPathFactory = XPathFactory.newInstance();
+		XPath xpath = xPathFactory.newXPath();
+
+		// OBTENEMOS LA LISTA DE CURSOSS
+		String expr = "//aulas/aula";
+
+		try {
+			
+			XPathExpression expression = (XPathExpression) xpath.compile(expr);
+
+			NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
+			// ITERO LA LISTA DEL NODO CURSO
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node child = nodeList.item(i);
+				
+				if (child.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element)child;
+					Long id = Long.valueOf( element.getElementsByTagName("claveDeExportacion").item(0).getTextContent() );
+					String nombre = element.getElementsByTagName("descripcion").item(0).getTextContent();
+					
+					aulas.add(new Aula(id,nombre));
+				}
+			}
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return aulas;
 	}
 
 }

@@ -8,5 +8,5 @@ import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
 
 public interface CursoRepositoryJPA extends JpaRepository<CursoEntity, Long> {
 
-	List<CursoEntity> findByNombreContainingIgnoreCase(String palabra);
+	List<CursoEntity> findByNombreContainingIgnoreCase(String search);
 }

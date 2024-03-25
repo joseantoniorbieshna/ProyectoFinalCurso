@@ -12,18 +12,21 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name="CURSOS")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CursoEntity {
 	@Id
+	@EqualsAndHashCode.Include
 	private Long id;
 	private String nombre;
 	
@@ -62,28 +65,6 @@ public class CursoEntity {
 					.map(materiaEntity->materiaEntity.toMateria())
 					.collect(Collectors.toList()));
 		return curso;
-	}
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CursoEntity other = (CursoEntity) obj;
-		return Objects.equals(id, other.id);
-	}
-	
-	@Override
-	public String toString() {
-		return "CursoEntity [id=" + id + ", nombre=" + nombre + ", materias=" + materias + "]";
 	}
 	
 	

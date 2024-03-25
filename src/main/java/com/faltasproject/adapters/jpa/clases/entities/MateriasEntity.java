@@ -11,18 +11,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "MATERIAS")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class MateriasEntity {
 	@Id
+	@EqualsAndHashCode.Include
 	private String id;
 	private String nombreAbreviado;
 	private String nombreCompleto;
@@ -44,30 +47,4 @@ public class MateriasEntity {
 		return new Materia(new String(id), new String(nombreAbreviado),new String(nombreCompleto));
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MateriasEntity other = (MateriasEntity) obj;
-		return Objects.equals(id, other.id);
-	}
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-	
-	@Override
-	public String toString() {
-		return "MateriasEntity [id=" + id + ", nombreAbreviado=" + nombreAbreviado + ", nombreCompleto="
-				+ nombreCompleto + "]";
-	}
-	
-	
-	
-
 }

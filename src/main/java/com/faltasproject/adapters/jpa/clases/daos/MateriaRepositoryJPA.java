@@ -7,7 +7,7 @@ import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
 
 public interface MateriaRepositoryJPA extends JpaRepository<MateriasEntity, String> {
 	
-	List<MateriasEntity> findByNombreCompletoContainingIgnoreCase(String name);
+	List<MateriasEntity> findByNombreCompletoContainingIgnoreCase(String search);
 	
 
 }
