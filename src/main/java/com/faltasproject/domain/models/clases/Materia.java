@@ -3,20 +3,20 @@ package com.faltasproject.domain.models.clases;
 import java.util.Objects;
 
 public class Materia {
-	private String id;
+	private String referencia;
 	private String nombreAbreviado;
 	private String nombreCompleto;
 	
 	
 	
-	public Materia(String id) {
+	public Materia(String referencia) {
 		super();
-		this.id = id;
+		this.referencia = referencia;
 	}
 
-	public Materia(String id, String nombreAbreviado, String nombreCompleto) {
+	public Materia(String referencia, String nombreAbreviado, String nombreCompleto) {
 		super();
-		this.id = id;
+		this.referencia = referencia;
 		this.nombreAbreviado = nombreAbreviado;
 		this.nombreCompleto = nombreCompleto;
 	}
@@ -27,11 +27,11 @@ public class Materia {
 		this.nombreCompleto = nombreCompleto;
 	}
 	
-	public String getId() {
-		return id;
+	public String getReferencia() {
+		return referencia;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
 	}
 	public String getNombreAbreviado() {
 		return nombreAbreviado;
@@ -48,7 +48,7 @@ public class Materia {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(referencia);
 	}
 
 	@Override
@@ -60,12 +60,12 @@ public class Materia {
 		if (getClass() != obj.getClass())
 			return false;
 		Materia other = (Materia) obj;
-		return Objects.equals(id, other.id);
+		return Objects.equals(referencia, other.referencia);
 	}
 
 	@Override
 	public String toString() {
-		return "Materia [id=" + id + ", nombreAbreviado=" + nombreAbreviado + ", nombreCompleto=" + nombreCompleto
+		return "Materia [referencia=" + referencia + ", nombreAbreviado=" + nombreAbreviado + ", nombreCompleto=" + nombreCompleto
 				+ "]";
 	}
 	

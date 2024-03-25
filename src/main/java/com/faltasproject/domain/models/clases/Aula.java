@@ -3,7 +3,7 @@ package com.faltasproject.domain.models.clases;
 import java.util.Objects;
 
 public class Aula {
-	private Long id;
+	private Long referencia;
 	private String nombre;
 	
 	public Aula() {
@@ -15,18 +15,18 @@ public class Aula {
 		this.nombre = nombre;
 	}
 
-	public Aula(Long id, String nombre) {
+	public Aula(Long referencia, String nombre) {
 		super();
-		this.id = id;
+		this.referencia = referencia;
 		this.nombre = nombre;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getReferencia() {
+		return referencia;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setReferencia(Long referencia) {
+		this.referencia = referencia;
 	}
 
 	public String getNombre() {
@@ -39,7 +39,7 @@ public class Aula {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(referencia);
 	}
 
 	@Override
@@ -51,11 +51,11 @@ public class Aula {
 		if (getClass() != obj.getClass())
 			return false;
 		Aula other = (Aula) obj;
-		return Objects.equals(id, other.id);
+		return Objects.equals(referencia, other.referencia);
 	}
 
 	@Override
 	public String toString() {
-		return "Aula [id=" + id + ", nombre=" + nombre + "]";
+		return "Aula [referencia=" + referencia + ", nombre=" + nombre + "]";
 	}
 }

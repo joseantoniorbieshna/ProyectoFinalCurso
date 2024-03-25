@@ -19,7 +19,7 @@ public class MateriaPersistanceJPATest {
 	
     @Test
     void testReadNotFound() {
-        assertThrows(NotFoundException.class, () -> this.materiaPersistenceJPA.readById("0"));
+        assertThrows(NotFoundException.class, () -> this.materiaPersistenceJPA.readByReferencia("0"));
     }
     
     @Test
@@ -27,13 +27,13 @@ public class MateriaPersistanceJPATest {
     	assertThrows( NotFoundException.class, () -> materiaPersistenceJPA.update("-01", new Materia("Bd", "Base de datos")) );
 
     	Materia materia = materiaPersistenceJPA.update("01", new Materia("10000","PM", "Programacion"));
-    	assertEquals("01", materia.getId());
+    	assertEquals("01", materia.getReferencia());
     	assertEquals("PM", materia.getNombreAbreviado());
     	assertEquals("Programacion", materia.getNombreCompleto());
     	
     	
     	materia = materiaPersistenceJPA.update("01", new Materia("10000","FyQ", "Fisica y quimica"));
-    	assertEquals("01", materia.getId());
+    	assertEquals("01", materia.getReferencia());
     	assertEquals("FyQ", materia.getNombreAbreviado());
     	assertEquals("Fisica y quimica", materia.getNombreCompleto());
     }
@@ -43,12 +43,12 @@ public class MateriaPersistanceJPATest {
     	assertThrows(ConflictExceptions.class, () -> materiaPersistenceJPA.create(new Materia("01", "PM","Programación")));
     	
     	Materia materia = materiaPersistenceJPA.create(new Materia("FF", "PM2","Programación 2"));
-    	assertEquals("FF", materia.getId());
+    	assertEquals("FF", materia.getReferencia());
     	assertEquals("PM2", materia.getNombreAbreviado());
     	assertEquals("Programación 2", materia.getNombreCompleto());
     	
     	materiaPersistenceJPA.delete("FF");
-    	assertThrows(NotFoundException.class, () -> materiaPersistenceJPA.readById("FF"));
+    	assertThrows(NotFoundException.class, () -> materiaPersistenceJPA.readByReferencia("FF"));
     }
     
     

@@ -12,6 +12,8 @@ import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.persistance_ports.clases.MateriaPersistance;
 
+import jakarta.transaction.Transactional;
+
 @Repository("materiaPersistance")
 public class MateriaPersistenceJPA implements MateriaPersistance {
 	
@@ -23,7 +25,9 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 
 	@Override
 	public Materia create(Materia materia) {
-		this.assertIdMateriaNotExist(materia.getId());
+		if(this.existReferencia(materia.getReferencia())) {
+			throw new ConflictExceptions("La materia con la referencia '"+materia.getReferencia()+"' ya existe"); 
+		}
 		MateriasEntity MateriaEntity = new MateriasEntity(materia);
 		return materiaRepository.save(MateriaEntity)
 				.toMateria();
@@ -31,12 +35,13 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 
 
 	@Override
-	public Materia update(String id, Materia materia) {
-		MateriasEntity materiaEntity = materiaRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("No se ha encontrado la Materia con el id: " + id));
+	public Materia update(String referencia, Materia materia) {
+		MateriasEntity materiaEntity = materiaRepository.findByReferencia(referencia)
+				.orElseThrow(() -> new NotFoundException("No se ha encontrado la Materia con la referencia: " + referencia));
 
 		materiaEntity.fromMateria(materia);
-		materiaEntity.setId(id);
+		//NO SE PUEDE CAMBIAR NI LA REFERENCIA
+		materiaEntity.setReferencia(referencia);
 		
 		return materiaEntity.toMateria();
 	}
@@ -48,22 +53,23 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	}
 
 	@Override
-	public Materia readById(String id) {
-		Optional<MateriasEntity> materia = materiaRepository.findById(id);
+	public Materia readByReferencia(String referencia) {
+		Optional<MateriasEntity> materia = materiaRepository.findByReferencia(referencia);
 		if (!materia.isPresent()) {
-			throw new NotFoundException("No se ha encontra la Materia con el id: " + id);
+			throw new NotFoundException("No se ha encontra la Materia con la referencia: " + referencia);
 		}
 		return materia.get().toMateria();
 	}
 
 	@Override
-	public Boolean delete(String id) {
-		if (!existId(id)) {
-			throw new NotFoundException("No se ha encontrado la Materia con el id: " + id);
+	@Transactional
+	public Boolean delete(String referencia) {
+		if (!existReferencia(referencia)) {
+			throw new NotFoundException("No se ha encontrado la Materia con la referencia: " + referencia);
 		}
 		
-		materiaRepository.deleteById(id);
-		return !existId(id);
+		materiaRepository.deleteByReferencia(referencia);
+		return !existReferencia(referencia);
 	}
 
 	@Override
@@ -72,14 +78,7 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	}
 
 	@Override
-	public Boolean existId(String id) {
-		return materiaRepository.findById(id).isPresent();
-	}
-
-
-	public void assertIdMateriaNotExist(String id) {
-		if(this.existId(id)) {
-			throw new ConflictExceptions("La materia don el id '"+id+"' ya existe"); 
-		}
+	public Boolean existReferencia(String referencia) {
+		return materiaRepository.findByReferencia(referencia).isPresent();
 	}
 }

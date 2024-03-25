@@ -4,8 +4,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import com.faltasproject.domain.models.clases.Curso;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -27,7 +31,11 @@ import lombok.Setter;
 public class CursoEntity {
 	@Id
 	@EqualsAndHashCode.Include
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@EqualsAndHashCode.Include
+	@Column(unique = true)
+	private Long referencia;
 	private String nombre;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -38,19 +46,19 @@ public class CursoEntity {
 	)
 	private List<MateriasEntity> materias;
 	
-	public CursoEntity(String nombre, List<MateriasEntity> materias) {
+	public CursoEntity(Long referencia,String nombre, List<MateriasEntity> materias) {
 		super();
+		this.referencia=referencia;
 		this.nombre = nombre;
 		this.materias = materias;
 	}
+	
 	public CursoEntity(Curso curso){
 		this.fromCurso(curso);
 	}
 	
 	public void fromCurso(Curso curso) {
-		if(id==null) {
-			this.id=curso.getId();			
-		}
+		this.referencia=curso.getReferencia();			
 		this.nombre=curso.getNombre();
 		this.materias = curso.getMaterias().stream()
 				.map(materia -> new MateriasEntity(materia))
@@ -59,7 +67,7 @@ public class CursoEntity {
 	
 	public Curso toCurso() {
 		Curso curso=new Curso(
-				this.getId(),
+				this.getReferencia(),
 				this.getNombre(),
 				this.getMaterias().stream()
 					.map(materiaEntity->materiaEntity.toMateria())

@@ -23,19 +23,22 @@ public class AulaPersistanceJPA implements AulaPersistance {
 
 	@Override
 	public Aula create(Aula aula) {
-		if(existId(aula.getId())) {
-			throw new ConflictExceptions("El Aula con el id '"+aula.getId()+"' ya existe");
+		if(existReferencia(aula.getReferencia())) {
+			throw new ConflictExceptions("El Aula con la referencia '"+aula.getReferencia()+"' ya existe");
 		}
 		return aulaRepositoryJPA.save(new AulaEntity(aula)).toAula();
 	}
 
 	@Override
-	public Aula update(Long id, Aula aula) {
-		AulaEntity aulaEntity=aulaRepositoryJPA.findById(id)
-		.orElseThrow(() -> new NotFoundException("El Aula con el id '"+aula.getId()+"' no existe"));
+	public Aula update(Long referencia, Aula aula) {
+		AulaEntity aulaEntity=aulaRepositoryJPA.findByReferencia(referencia)
+		.orElseThrow(() -> new NotFoundException("El Aula con la referencia '"+aula.getReferencia()+"' no existe"));
 		
+		Long id = aulaEntity.getId();
 		aulaEntity.fromAula(aula);
-		aulaEntity.setId(id);
+		//LA REFERENCIA NO PUEDEN CAMBIAR
+		aulaEntity.setReferencia(referencia);
+		
 		return aulaEntity.toAula();
 	}
 
@@ -51,24 +54,24 @@ public class AulaPersistanceJPA implements AulaPersistance {
 	}
 
 	@Override
-	public Boolean delete(Long id) {
-		if(!existId(id)) {
-			throw new NotFoundException("El Aula con el id '"+id+"' no existe");
+	public Boolean delete(Long referencia) {
+		if(!existReferencia(referencia)) {
+			throw new NotFoundException("El Aula con la referencia '"+referencia+"' no existe");
 		}
-		aulaRepositoryJPA.deleteById(id);
-		return !existId(id);
+		aulaRepositoryJPA.deleteByReferencia(referencia);
+		return !existReferencia(referencia);
 	}
 
 	@Override
-	public Aula readById(Long id) {
-		return aulaRepositoryJPA.findById(id)
-				.orElseThrow(() -> new NotFoundException("El Aula con el id '"+id+"' no existe"))
+	public Aula readByReferencia(Long referencia) {
+		return aulaRepositoryJPA.findByReferencia(referencia)
+				.orElseThrow(() -> new NotFoundException("El Aula con la referencia '"+referencia+"' no existe"))
 				.toAula();
 	}
 
 	@Override
-	public Boolean existId(Long id) {
-		return aulaRepositoryJPA.findById(id).isPresent();
+	public Boolean existReferencia(Long referencia) {
+		return aulaRepositoryJPA.findByReferencia(referencia).isPresent();
 	}
 
 }

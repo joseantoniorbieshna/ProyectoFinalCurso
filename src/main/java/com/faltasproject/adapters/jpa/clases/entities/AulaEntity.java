@@ -1,7 +1,11 @@
 package com.faltasproject.adapters.jpa.clases.entities;
 
 import com.faltasproject.domain.models.clases.Aula;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -17,9 +21,13 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
 public class AulaEntity {
-	@EqualsAndHashCode.Include
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private Long id;
+	@EqualsAndHashCode.Include
+	@Column(unique = true)
+	private Long referencia;
 	private String nombre;
 	
 	public AulaEntity(Aula aula) {
@@ -27,9 +35,7 @@ public class AulaEntity {
 	}
 	
 	public void fromAula(Aula aula) {
-		if(this.id==null) {
-			this.id=aula.getId();			
-		}
+		this.referencia=aula.getReferencia();			
 		this.nombre=aula.getNombre();
 	}
 	

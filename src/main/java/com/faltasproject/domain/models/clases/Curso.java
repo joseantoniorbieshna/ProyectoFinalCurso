@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Curso {
-	private Long id;
+	private Long referencia;
 	private String nombre;
 	private List<Materia> materias;
 	
@@ -13,17 +13,17 @@ public class Curso {
 		super();
 	}
 
-	public Curso(Long id, String nombre, List<Materia> materias) {
+	public Curso(Long referencia, String nombre, List<Materia> materias) {
 		super();
-		this.id = id;
+		this.referencia = referencia;
 		this.nombre = nombre;
 		this.materias = materias;
 	}
 	
 
-	public Curso(Long id, String nombre) {
+	public Curso(Long referencia, String nombre) {
 		super();
-		this.id = id;
+		this.referencia = referencia;
 		this.nombre = nombre;
 		this.materias=new ArrayList<>();
 	}
@@ -35,12 +35,12 @@ public class Curso {
 	}
 
 
-	public Long getId() {
-		return id;
+	public Long getReferencia() {
+		return referencia;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setReferencia(Long referencia) {
+		this.referencia = referencia;
 	}
 
 	public String getNombre() {
@@ -61,7 +61,7 @@ public class Curso {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(referencia);
 	}
 
 	@Override
@@ -73,12 +73,12 @@ public class Curso {
 		if (getClass() != obj.getClass())
 			return false;
 		Curso other = (Curso) obj;
-		return Objects.equals(id, other.id);
+		return Objects.equals(referencia, other.referencia);
 	}
 
 	@Override
 	public String toString() {
-		return "Curso [id=" + id + ", nombre=" + nombre + "]";
+		return "Curso [referencia=" + referencia + ", nombre=" + nombre + "]";
 	}
 
 }

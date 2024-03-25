@@ -19,14 +19,14 @@ public class CursoPersistanceJpaTest {
 
 	@Test
 	void testReadNotFound() {
-		 assertThrows(NotFoundException.class, () -> this.cursoPersistanceJPA.readById(0L));
+		 assertThrows(NotFoundException.class, () -> this.cursoPersistanceJPA.readByReferencia(0L));
 	}
 	
 	@Test
     void update() {
     	assertThrows( NotFoundException.class, () -> cursoPersistanceJPA.update(500L, new Curso("Curso 1")) );
 
-    	Curso curso = cursoPersistanceJPA.readById(1L);
+    	Curso curso = cursoPersistanceJPA.readByReferencia(1L);
     	assertNotEquals(0, curso.getMaterias().size());
     	
     	curso = cursoPersistanceJPA.update(1L, new Curso("44º E.S.O"));

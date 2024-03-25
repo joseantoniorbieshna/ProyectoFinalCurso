@@ -12,15 +12,15 @@ public interface AulaPersistance {
 	
 	Aula create(Aula aula);
 	
-	Aula update(Long id,Aula aula);
+	Aula update(Long referencia,Aula aula);
 	
 	Stream<Aula> readAll();
 	
 	Stream<Aula> readContainInName(String name);
 	
-	Boolean delete(Long id);
+	Boolean delete(Long referencia);
 	
-	Aula readById(Long id);
+	Aula readByReferencia(Long referencia);
 
-	Boolean existId(Long id); 
+	Boolean existReferencia(Long referencia); 
 }

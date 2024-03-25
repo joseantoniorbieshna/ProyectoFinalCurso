@@ -7,7 +7,10 @@ import org.springframework.beans.BeanUtils;
 
 import com.faltasproject.domain.models.clases.Materia;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -26,9 +29,20 @@ import lombok.Setter;
 public class MateriasEntity {
 	@Id
 	@EqualsAndHashCode.Include
-	private String id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Column(unique = true)
+	@EqualsAndHashCode.Include
+	private String referencia;
 	private String nombreAbreviado;
 	private String nombreCompleto;
+	
+	public MateriasEntity(String referencia, String nombreAbreviado, String nombreCompleto) {
+		super();
+		this.referencia = referencia;
+		this.nombreAbreviado = nombreAbreviado;
+		this.nombreCompleto = nombreCompleto;
+	}
 	
 	public MateriasEntity(Materia materia) {
 		fromMateria(materia);
@@ -36,15 +50,11 @@ public class MateriasEntity {
 	
 	public void fromMateria(Materia materia) {
 		BeanUtils.copyProperties(materia, this);
-		
-		// Aseguro que exista un id
-		if(this.getId()==null || this.getId().isEmpty()) {
-			this.id = UUID.randomUUID().toString();
-		}
 	}
 	
 	public Materia toMateria() {
-		return new Materia(new String(id), new String(nombreAbreviado),new String(nombreCompleto));
+		return new Materia(new String(referencia), new String(nombreAbreviado),new String(nombreCompleto));
 	}
+
 	
 }

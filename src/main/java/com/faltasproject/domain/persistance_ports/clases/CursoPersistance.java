@@ -10,16 +10,16 @@ public interface CursoPersistance {
 	
 	Curso create(Curso curso);
 	
-	Curso update(Long id,Curso curso);
+	Curso update(Long referencia,Curso curso);
 	
 	Stream<Curso> readAll();
 	
 	Stream<Curso> readContainInCompleteName(String name);
 	
-	Boolean delete(Long id);
+	Boolean delete(Long referencia);
 	
-	Curso readById(Long id);
+	Curso readByReferencia(Long referencia);
 
-	Boolean existId(Long id);
+	Boolean existReferencia(Long referencia);
 
 }

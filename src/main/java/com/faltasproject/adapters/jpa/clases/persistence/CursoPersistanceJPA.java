@@ -30,25 +30,27 @@ public class CursoPersistanceJPA implements CursoPersistance {
 
 	@Override
 	public Curso create(Curso curso) {
-		if(existId(curso.getId())) {
-			throw new ConflictExceptions("El Curso con el id '"+curso.getId()+"' ya existe");
+		if(existReferencia(curso.getReferencia())) {
+			throw new ConflictExceptions("El Curso con la referencia '"+curso.getReferencia()+"' ya existe");
 		}
 		
 		CursoEntity cursoEntity = new CursoEntity(curso);
 		List<MateriasEntity> materias = cursoEntity.getMaterias().stream()
-				.map(materiaEntity->materiaRepositoryJPA.findById(materiaEntity.getId()).get())
+				.map(materia->materiaRepositoryJPA.findByReferencia(materia.getReferencia()).get())
 				.collect(Collectors.toList());
 		cursoEntity.setMaterias(materias);
 		return cursoRepositoryJPA.save(cursoEntity).toCurso();
 	}
 
 	@Override
-	public Curso update(Long id, Curso curso) {
-		CursoEntity cursoEntity = cursoRepositoryJPA.findById(id)
-		.orElseThrow(() -> new NotFoundException("El curso con el id '"+id+"' no existe"));
+	public Curso update(Long referencia, Curso curso) {
+		CursoEntity cursoEntity = cursoRepositoryJPA.findByReferencia(referencia)
+		.orElseThrow(() -> new NotFoundException("El curso con la referencia '"+referencia+"' no existe"));
 		
 		List<MateriasEntity> materias = cursoEntity.getMaterias();
 		cursoEntity.fromCurso(curso);
+		//REFERENCIA Y MATERIAS, NO PUECEN SER CAMBIADAS
+		cursoEntity.setReferencia(referencia);
 		cursoEntity.setMaterias(materias);
 		
 		return cursoRepositoryJPA.save(cursoEntity).toCurso();
@@ -67,25 +69,25 @@ public class CursoPersistanceJPA implements CursoPersistance {
 	}
 
 	@Override
-	public Boolean delete(Long id) {
-		if(!existId(id)) {
-			throw new NotFoundException("El Curso con el id '"+id+"' no existe");
+	public Boolean delete(Long referencia) {
+		if(!existReferencia(referencia)) {
+			throw new NotFoundException("El Curso con la referencia '"+referencia+"' no existe");
 		}
 		
-		cursoRepositoryJPA.deleteById(id);
-		return !existId(id);
+		cursoRepositoryJPA.deleteById(referencia);
+		return !existReferencia(referencia);
 	}
 
 	@Override
-	public Curso readById(Long id) {
-		return cursoRepositoryJPA.findById(id)
-				.orElseThrow(()-> new NotFoundException("El Curso con el id '"+id+"' no existe"))
+	public Curso readByReferencia(Long referencia) {
+		return cursoRepositoryJPA.findByReferencia(referencia)
+				.orElseThrow(()-> new NotFoundException("El Curso con la referencia '"+referencia+"' no existe"))
 				.toCurso();
 	}
 
 	@Override
-	public Boolean existId(Long id) {
-		Optional<CursoEntity> cursoEntity = cursoRepositoryJPA.findById(id);
+	public Boolean existReferencia(Long referencia) {
+		Optional<CursoEntity> cursoEntity = cursoRepositoryJPA.findByReferencia(referencia);
 		return cursoEntity.isPresent();
 	}
 	

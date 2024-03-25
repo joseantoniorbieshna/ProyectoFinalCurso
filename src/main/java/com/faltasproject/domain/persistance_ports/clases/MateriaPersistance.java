@@ -11,16 +11,16 @@ public interface MateriaPersistance {
 	
 	Materia create(Materia materia);
 	
-	Materia update(String id,Materia materia);
+	Materia update(String referencia,Materia materia);
 	
 	Stream<Materia> readAll();
 	
 	Stream<Materia> readContainInCompleteName(String name);
 	
-	Boolean delete(String id);
+	Boolean delete(String referencia);
 	
-	Materia readById(String id);
+	Materia readByReferencia(String referencia);
 
-	Boolean existId(String id);
+	Boolean existReferencia(String referencia);
 
 }
