@@ -4,6 +4,8 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,5 +40,35 @@ public class CursoPersistanceJpaTest {
     	assertEquals("4º E.S.O", curso.getNombre());
     	assertNotEquals(0, curso.getMaterias().size());
     }
+	
+	@Test
+	void create() {
+		//TODO
+	}
+	
+	@Test
+	void readAll() {
+		//TODO
+	}
+	
+	@Test
+	void readContainInCompleteName() {
+		//TODO
+	}
+	
+	@Test
+	void delete() {
+		//TODO
+	}
+	
+	@Test
+	void readByReferencia() {
+		//TODO
+	}
+
+	@Test
+	void existReferencia() {
+		//TODO
+	}
 	
 }

@@ -1,10 +1,12 @@
 package com.faltasproject.adapters.jpa.clases.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import com.faltasproject.domain.models.clases.Curso;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -53,6 +55,13 @@ public class CursoEntity {
 		this.materias = materias;
 	}
 	
+	public CursoEntity(Long referencia, String nombre) {
+		super();
+		this.referencia = referencia;
+		this.nombre = nombre;
+		this.materias=new ArrayList<>();
+	}
+	
 	public CursoEntity(Curso curso){
 		this.fromCurso(curso);
 	}
@@ -74,6 +83,5 @@ public class CursoEntity {
 					.collect(Collectors.toList()));
 		return curso;
 	}
-	
-	
+
 }

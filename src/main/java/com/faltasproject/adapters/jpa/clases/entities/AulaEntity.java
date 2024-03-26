@@ -30,6 +30,12 @@ public class AulaEntity {
 	private Long referencia;
 	private String nombre;
 	
+	public AulaEntity(Long referencia, String nombre) {
+		super();
+		this.referencia = referencia;
+		this.nombre = nombre;
+	}
+	
 	public AulaEntity(Aula aula) {
 		fromAula(aula);
 	}
@@ -45,5 +51,5 @@ public class AulaEntity {
 				this.getNombre());
 		return aula;
 	}
-	
+
 }

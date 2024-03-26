@@ -4,6 +4,8 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.Arrays;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
@@ -20,6 +22,10 @@ public class HorarioSeederService {
 	}
 
 	public void seedDatabase() {
+		Logger logger = LogManager.getLogger(this.getClass());
+		
+		logger.warn("----- POBLANDO BASE DE DATOS - HORARIOS -----");
+		
 		TramoHorarioEntity[] tramosHorarios= {
 			new TramoHorarioEntity(0, 1, Time.valueOf( LocalTime.of(8, 0) ),Time.valueOf( LocalTime.of(9, 0))),
 			new TramoHorarioEntity(0, 2, Time.valueOf( LocalTime.of(9, 0) ),Time.valueOf( LocalTime.of(10, 0))),

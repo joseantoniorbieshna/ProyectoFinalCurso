@@ -3,6 +3,8 @@ package com.faltasproject.adapters.jpa.clases.persistence;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,6 +52,31 @@ public class MateriaPersistanceJPATest {
     	materiaPersistenceJPA.delete("FF");
     	assertThrows(NotFoundException.class, () -> materiaPersistenceJPA.readByReferencia("FF"));
     }
+    
+    @Test
+	void readAll() {
+		//TODO
+	}
+	
+    @Test
+	void readContainInCompleteName() {
+    	//TODO
+	}
+	
+    @Test
+	void delete() {
+    	//TODO
+	}
+    
+    @Test
+	void readByReferencia() {
+		
+	}
+    
+    @Test
+	void existReferencia() {
+    	//TODO
+	}
     
     
 
