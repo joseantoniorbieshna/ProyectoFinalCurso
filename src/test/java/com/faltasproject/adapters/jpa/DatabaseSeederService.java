@@ -18,17 +18,17 @@ public class DatabaseSeederService {
 		this.setDatabases();
 	}
 	
-	private void setDatabases(){
+	public void setDatabases(){
 		this.clasesSeederService.seedDatabase();
 		this.horarioSeederService.seedDatabase();
 	}
 	
-	private void deleteAll() {
+	public void deleteAll() {
 		this.clasesSeederService.deleteAll();
 		this.horarioSeederService.deleteAll();
 	}
 	
-	private void reSeedDatabase() {
+	public void reSeedDatabase() {
 		this.deleteAll();
 		this.setDatabases();
 	}

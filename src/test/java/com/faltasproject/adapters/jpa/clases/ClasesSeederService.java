@@ -70,6 +70,7 @@ public class ClasesSeederService {
 	}
 	
 	public void deleteAll() {
+		materiaRepository.deleteAllRelationFromCursoMateria();
 		materiaRepository.deleteAll();
 		cursoRepositoryJPA.deleteAll();
 		aulaRepositoryJPA.deleteAll();

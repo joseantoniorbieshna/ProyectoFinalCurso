@@ -68,6 +68,7 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 			throw new NotFoundException("No se ha encontrado la Materia con la referencia: " + referencia);
 		}
 		
+		materiaRepository.deleteAllRelationFromMateriaByReferencia(referencia);
 		materiaRepository.deleteByReferencia(referencia);
 		return !existReferencia(referencia);
 	}

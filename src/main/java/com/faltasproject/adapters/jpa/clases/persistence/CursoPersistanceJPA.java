@@ -48,6 +48,7 @@ public class CursoPersistanceJPA implements CursoPersistance {
 		.orElseThrow(() -> new NotFoundException("El curso con la referencia '"+referencia+"' no existe"));
 		
 		List<MateriasEntity> materias = cursoEntity.getMaterias();
+		
 		cursoEntity.fromCurso(curso);
 		//REFERENCIA Y MATERIAS, NO PUECEN SER CAMBIADAS
 		cursoEntity.setReferencia(referencia);

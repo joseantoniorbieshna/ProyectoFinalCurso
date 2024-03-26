@@ -1,15 +1,18 @@
 package com.faltasproject.adapters.jpa.clases.persistence;
 
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.faltasproject.adapters.jpa.DatabaseSeederService;
+import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
+import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Curso;
 
@@ -18,6 +21,10 @@ public class CursoPersistanceJpaTest {
 	
 	@Autowired
 	CursoPersistanceJPA cursoPersistanceJPA;
+	@Autowired
+	MateriaPersistenceJPA materiaPersistenceJPA;
+	@Autowired
+	DatabaseSeederService databaseSeederService;
 
 	@Test
 	void testReadNotFound() {
@@ -58,7 +65,25 @@ public class CursoPersistanceJpaTest {
 	
 	@Test
 	void delete() {
-		//TODO
+		new CursoEntity(2L,"1º Bachillerato(Arte)");
+		new MateriasEntity("05","Fi","Filosofia");
+		
+		Curso curso=cursoPersistanceJPA.readByReferencia(2L);
+		assertEquals(2, curso.getMaterias().size());
+		//BORRAMOS UNA MATERIA
+		Boolean response=materiaPersistenceJPA.delete("05");
+		assertTrue(response);
+		
+		curso=cursoPersistanceJPA.readByReferencia(2L);
+		assertEquals(1, curso.getMaterias().size());
+		
+		
+		//VOLVEMOS AL ESTADO ANTERIOR
+		//TODO hay que hacerlo bien en vez de resetear la base de datos
+		//Así estaría tardando más
+		databaseSeederService.reSeedDatabase();
+		
+		
 	}
 	
 	@Test
