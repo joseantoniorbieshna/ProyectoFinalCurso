@@ -11,6 +11,8 @@ import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.persistance_ports.clases.AulaPersistance;
 
+import jakarta.transaction.Transactional;
+
 @Repository("aulaPersistance")
 public class AulaPersistanceJPA implements AulaPersistance {
 
@@ -32,14 +34,18 @@ public class AulaPersistanceJPA implements AulaPersistance {
 	@Override
 	public Aula update(Long referencia, Aula aula) {
 		AulaEntity aulaEntity=aulaRepositoryJPA.findByReferencia(referencia)
-		.orElseThrow(() -> new NotFoundException("El Aula con la referencia '"+aula.getReferencia()+"' no existe"));
+		.orElseThrow(() -> new NotFoundException("El Aula con la referencia '"+referencia+"' no existe"));
 		
-		Long id = aulaEntity.getId();
+		//TRATAMOS LA REFERENCIA
+		if(aula.getReferencia()==null) {
+			aula.setReferencia(referencia);
+		}else if(existReferencia(aula.getReferencia())){
+			throw new ConflictExceptions("La referencia a la que quieres cambiar el Aula ya existe");
+		}
+		//CAMBIAMOS DATOS
 		aulaEntity.fromAula(aula);
-		//LA REFERENCIA NO PUEDEN CAMBIAR
-		aulaEntity.setReferencia(referencia);
 		
-		return aulaEntity.toAula();
+		return aulaRepositoryJPA.save(aulaEntity).toAula();
 	}
 
 	@Override

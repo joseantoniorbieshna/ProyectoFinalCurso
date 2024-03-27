@@ -17,6 +17,8 @@ import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.persistance_ports.clases.CursoPersistance;
 
+import jakarta.transaction.Transactional;
+
 @Repository("cursoPersistance")
 public class CursoPersistanceJPA implements CursoPersistance {
 	

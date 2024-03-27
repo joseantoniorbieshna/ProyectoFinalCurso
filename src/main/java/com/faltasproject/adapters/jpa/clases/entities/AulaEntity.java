@@ -25,7 +25,6 @@ public class AulaEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private Long id;
-	@EqualsAndHashCode.Include
 	@Column(unique = true)
 	private Long referencia;
 	private String nombre;
@@ -41,13 +40,13 @@ public class AulaEntity {
 	}
 	
 	public void fromAula(Aula aula) {
-		this.referencia=aula.getReferencia();			
 		this.nombre=aula.getNombre();
+		this.referencia=aula.getReferencia();			
 	}
 	
 	public Aula toAula() {
 		Aula aula=new Aula(
-				this.getId(),
+				this.getReferencia(),
 				this.getNombre());
 		return aula;
 	}

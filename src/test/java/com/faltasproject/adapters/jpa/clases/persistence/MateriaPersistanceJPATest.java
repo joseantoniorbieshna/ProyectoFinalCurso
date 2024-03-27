@@ -1,9 +1,11 @@
 package com.faltasproject.adapters.jpa.clases.persistence;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +57,24 @@ public class MateriaPersistanceJPATest {
     
     @Test
 	void readAll() {
-		//TODO
+    	assertEquals(5, materiaPersistenceJPA.readAll().count());
 	}
 	
     @Test
 	void readContainInCompleteName() {
-    	//TODO
-	}
+    	// 1º
+    	assertEquals(3, materiaPersistenceJPA.readContainInCompleteName("e").count());
+    	
+    	// 2º
+    	assertEquals(0, materiaPersistenceJPA.readContainInCompleteName("hola").count());
+    	
+    	// 3º
+    	assertEquals(1, materiaPersistenceJPA.readContainInCompleteName("Filo").count());
+    	Materia materia = materiaPersistenceJPA.readContainInCompleteName("Filo")
+    			.map(t -> t).collect(Collectors.toList()).get(0);
+    	assertEquals("Filosofia", materia.getNombreCompleto());
+    	assertEquals("05", materia.getReferencia());
+    }
 	
     @Test
 	void delete() {
@@ -75,7 +88,11 @@ public class MateriaPersistanceJPATest {
     
     @Test
 	void existReferencia() {
-    	//TODO
+    	assertTrue(materiaPersistenceJPA.existReferencia("01"));
+    	assertTrue(materiaPersistenceJPA.existReferencia("05"));
+
+    	assertFalse(materiaPersistenceJPA.existReferencia("00"));
+    	assertFalse(materiaPersistenceJPA.existReferencia("06"));
 	}
     
     

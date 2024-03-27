@@ -90,10 +90,7 @@ public class CursoEntity {
 	
 	@PreRemove
 	public void beforeRemove () {
-		for(MateriasEntity materia:materias) {
-			materias.remove(materia);
-		}
+		this.materias.clear();
 	}
-	
 
 }
