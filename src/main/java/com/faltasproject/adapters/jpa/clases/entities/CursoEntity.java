@@ -1,28 +1,32 @@
 package com.faltasproject.adapters.jpa.clases.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.faltasproject.domain.models.clases.Curso;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name="CURSOS")
@@ -46,9 +50,9 @@ public class CursoEntity {
 		joinColumns = @JoinColumn(name="curso_id"),
 		inverseJoinColumns = @JoinColumn(name="materia_id")
 	)
-	private List<MateriasEntity> materias;
+	private Set<MateriasEntity> materias;
 	
-	public CursoEntity(Long referencia,String nombre, List<MateriasEntity> materias) {
+	public CursoEntity(Long referencia,String nombre, Set<MateriasEntity> materias) {
 		super();
 		this.referencia=referencia;
 		this.nombre = nombre;
@@ -59,7 +63,7 @@ public class CursoEntity {
 		super();
 		this.referencia = referencia;
 		this.nombre = nombre;
-		this.materias=new ArrayList<>();
+		this.materias=new HashSet<>();
 	}
 	
 	public CursoEntity(Curso curso){
@@ -71,7 +75,7 @@ public class CursoEntity {
 		this.nombre=curso.getNombre();
 		this.materias = curso.getMaterias().stream()
 				.map(materia -> new MateriasEntity(materia))
-				.collect(Collectors.toList());			
+				.collect(Collectors.toSet());			
 	}
 	
 	public Curso toCurso() {
@@ -83,5 +87,13 @@ public class CursoEntity {
 					.collect(Collectors.toList()));
 		return curso;
 	}
+	
+	@PreRemove
+	public void beforeRemove () {
+		for(MateriasEntity materia:materias) {
+			materias.remove(materia);
+		}
+	}
+	
 
 }

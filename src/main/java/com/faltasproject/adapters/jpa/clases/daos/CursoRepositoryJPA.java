@@ -15,14 +15,6 @@ import jakarta.transaction.Transactional;
 public interface CursoRepositoryJPA extends JpaRepository<CursoEntity, Long> {
 	List<CursoEntity> findByNombreContainingIgnoreCase(String search);
 	Optional<CursoEntity> findByReferencia(Long referencia);
+	@Transactional
 	void deleteByReferencia(Long referencia);
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE FROM CURSO_MATERIA", nativeQuery = true)
-    void deleteAllRelationFromCursoMateria();
-    
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE FROM CURSO_MATERIA WHERE CURSO_ID IN (SELECT ID FROM CURSOS WHERE REFERENCIA = :referenciaCurso)", nativeQuery = true)
-    void deleteAllRelationFromCursoByReferencia(Long referenciaCurso);
 }

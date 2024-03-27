@@ -29,12 +29,12 @@ public class MateriaPersistanceJPATest {
     	assertThrows( NotFoundException.class, () -> materiaPersistenceJPA.update("-01", new Materia("Bd", "Base de datos")) );
 
     	Materia materia = materiaPersistenceJPA.update("01", new Materia("10000","PM", "Programacion"));
-    	assertEquals("01", materia.getReferencia());
+    	assertEquals("10000", materia.getReferencia());
     	assertEquals("PM", materia.getNombreAbreviado());
     	assertEquals("Programacion", materia.getNombreCompleto());
     	
     	
-    	materia = materiaPersistenceJPA.update("01", new Materia("10000","FyQ", "Fisica y quimica"));
+    	materia = materiaPersistenceJPA.update("10000", new Materia("01","FyQ", "Fisica y quimica"));
     	assertEquals("01", materia.getReferencia());
     	assertEquals("FyQ", materia.getNombreAbreviado());
     	assertEquals("Fisica y quimica", materia.getNombreCompleto());

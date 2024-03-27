@@ -40,10 +40,8 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 				.orElseThrow(() -> new NotFoundException("No se ha encontrado la Materia con la referencia: " + referencia));
 
 		materiaEntity.fromMateria(materia);
-		//NO SE PUEDE CAMBIAR NI LA REFERENCIA
-		materiaEntity.setReferencia(referencia);
 		
-		return materiaEntity.toMateria();
+		return materiaRepository.save(materiaEntity).toMateria();
 	}
 
 	@Override
@@ -62,13 +60,11 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	}
 
 	@Override
-	@Transactional
 	public Boolean delete(String referencia) {
 		if (!existReferencia(referencia)) {
 			throw new NotFoundException("No se ha encontrado la Materia con la referencia: " + referencia);
 		}
 		
-		materiaRepository.deleteAllRelationFromMateriaByReferencia(referencia);
 		materiaRepository.deleteByReferencia(referencia);
 		return !existReferencia(referencia);
 	}

@@ -2,6 +2,7 @@ package com.faltasproject.adapters.jpa.clases.persistence;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,9 +36,9 @@ public class CursoPersistanceJPA implements CursoPersistance {
 		}
 		
 		CursoEntity cursoEntity = new CursoEntity(curso);
-		List<MateriasEntity> materias = cursoEntity.getMaterias().stream()
+		Set<MateriasEntity> materias = cursoEntity.getMaterias().stream()
 				.map(materia->materiaRepositoryJPA.findByReferencia(materia.getReferencia()).get())
-				.collect(Collectors.toList());
+				.collect(Collectors.toSet());
 		cursoEntity.setMaterias(materias);
 		return cursoRepositoryJPA.save(cursoEntity).toCurso();
 	}
@@ -47,11 +48,17 @@ public class CursoPersistanceJPA implements CursoPersistance {
 		CursoEntity cursoEntity = cursoRepositoryJPA.findByReferencia(referencia)
 		.orElseThrow(() -> new NotFoundException("El curso con la referencia '"+referencia+"' no existe"));
 		
-		List<MateriasEntity> materias = cursoEntity.getMaterias();
+		Set<MateriasEntity> materias = cursoEntity.getMaterias();
 		
+		//OBLIGAMOS A TENER REFERENCIA
+		if(curso.getReferencia()==null) {
+			curso.setReferencia(referencia);
+		}
+		//CAMBIAMOS LOS DATOS Y PERSISTIMOS MATERIAS
 		cursoEntity.fromCurso(curso);
-		//REFERENCIA Y MATERIAS, NO PUECEN SER CAMBIADAS
-		cursoEntity.setReferencia(referencia);
+		materias=cursoEntity.getMaterias().stream().map(materia -> materiaRepositoryJPA.findByReferencia(materia.getReferencia())
+				.orElseThrow(()->new NotFoundException("La materia con la referencia '"+materia.getReferencia()+"' no existe ")))
+				.collect(Collectors.toSet());
 		cursoEntity.setMaterias(materias);
 		
 		return cursoRepositoryJPA.save(cursoEntity).toCurso();
@@ -75,7 +82,7 @@ public class CursoPersistanceJPA implements CursoPersistance {
 			throw new NotFoundException("El Curso con la referencia '"+referencia+"' no existe");
 		}
 		
-		cursoRepositoryJPA.deleteById(referencia);
+		cursoRepositoryJPA.deleteByReferencia(referencia);
 		return !existReferencia(referencia);
 	}
 

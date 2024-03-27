@@ -29,7 +29,7 @@ public class AulaEntity {
 	@Column(unique = true)
 	private Long referencia;
 	private String nombre;
-	
+		
 	public AulaEntity(Long referencia, String nombre) {
 		super();
 		this.referencia = referencia;

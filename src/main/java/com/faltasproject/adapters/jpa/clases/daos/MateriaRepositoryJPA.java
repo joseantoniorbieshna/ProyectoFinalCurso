@@ -15,16 +15,7 @@ public interface MateriaRepositoryJPA extends JpaRepository<MateriasEntity, Long
 	
 	List<MateriasEntity> findByNombreCompletoContainingIgnoreCase(String search);
 	Optional<MateriasEntity> findByReferencia(String referencia);
+	@Transactional
 	void deleteByReferencia(String referencia);
-    
-	@Modifying
-    @Transactional
-    @Query(value = "DELETE FROM CURSO_MATERIA WHERE MATERIA_ID IN (SELECT ID FROM MATERIAS WHERE REFERENCIA = :materiaReferencia)", nativeQuery = true)
-    void deleteAllRelationFromMateriaByReferencia(String materiaReferencia);
-    
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE FROM CURSO_MATERIA", nativeQuery = true)
-    void deleteAllRelationFromCursoMateria();
 
 }

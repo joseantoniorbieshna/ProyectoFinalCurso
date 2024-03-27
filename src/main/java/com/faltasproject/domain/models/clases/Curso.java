@@ -33,6 +33,11 @@ public class Curso {
 		this.nombre = nombre;
 		this.materias=new ArrayList<>();
 	}
+	public Curso(String nombre, List<Materia> materias) {
+		super();
+		this.nombre = nombre;
+		this.materias=materias;
+	}
 
 
 	public Long getReferencia() {

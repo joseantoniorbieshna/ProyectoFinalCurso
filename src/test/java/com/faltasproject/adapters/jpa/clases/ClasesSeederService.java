@@ -2,6 +2,7 @@ package com.faltasproject.adapters.jpa.clases;
 
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -48,11 +49,11 @@ public class ClasesSeederService {
 		
 		// CURSO
 		CursoEntity[] cursos= {
-				new CursoEntity(1L,"4º E.S.O",List.of(materias[0],materias[1],materias[2])),
-				new CursoEntity(2L,"1º Bachillerato(Arte)",List.of(materias[4],materias[1])),
-				new CursoEntity(3L,"3º E.S.O",List.of(materias[1])),
-				new CursoEntity(4L,"1º E.S.O",List.of(materias[0],materias[1],materias[2],materias[3])),
-				new CursoEntity(5L,"2º Bachillerato",List.of(materias[0],materias[1],materias[2],materias[3])),
+				new CursoEntity(1L,"4º E.S.O", new HashSet<MateriasEntity>(  List.of( materias[0],materias[1],materias[2]))  ),
+				new CursoEntity(2L,"1º Bachillerato(Arte)",new HashSet<MateriasEntity>(  List.of(materias[4],materias[1]))  ),
+				new CursoEntity(3L,"3º E.S.O",new HashSet<MateriasEntity>(  List.of(materias[1]))  ),
+				new CursoEntity(4L,"1º E.S.O",new HashSet<MateriasEntity>(  List.of(materias[0],materias[1],materias[2],materias[3])) ),
+				new CursoEntity(5L,"2º Bachillerato",new HashSet<MateriasEntity>(  List.of(materias[0],materias[1],materias[2],materias[3]))  ),
 		};
 		
 		cursoRepositoryJPA.saveAll(Arrays.asList(cursos));
@@ -70,7 +71,6 @@ public class ClasesSeederService {
 	}
 	
 	public void deleteAll() {
-		materiaRepository.deleteAllRelationFromCursoMateria();
 		materiaRepository.deleteAll();
 		cursoRepositoryJPA.deleteAll();
 		aulaRepositoryJPA.deleteAll();
