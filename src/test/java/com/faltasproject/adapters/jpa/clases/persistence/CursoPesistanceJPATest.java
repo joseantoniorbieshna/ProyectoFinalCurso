@@ -3,8 +3,7 @@ package com.faltasproject.adapters.jpa.clases.persistence;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,8 +19,8 @@ import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Materia;
 
 @SpringBootTest
-public class CursoPersistanceJpaTest {
-	
+class CursoPesistanceJPATest {
+
 	@Autowired
 	CursoPersistanceJPA cursoPersistanceJPA;
 	@Autowired
@@ -34,7 +33,9 @@ public class CursoPersistanceJpaTest {
 	
 	@Test
     void update() {
-    	assertThrows( NotFoundException.class, () -> cursoPersistanceJPA.update(500L, new Curso("Curso 1")) );
+		final Long referenciaUpdate = 500L;
+		final Curso updateCurso = new Curso("Curso 1");
+    	assertThrows( NotFoundException.class, () -> cursoPersistanceJPA.update(referenciaUpdate,updateCurso ) );
 
     	Long referencia=1L;
     	Curso curso = cursoPersistanceJPA.readByReferencia(referencia);
@@ -142,5 +143,5 @@ public class CursoPersistanceJpaTest {
 		assertFalse(cursoPersistanceJPA.existReferencia(0L));
 		assertFalse(cursoPersistanceJPA.existReferencia(6L));
 	}
-	
+
 }

@@ -16,10 +16,10 @@ public interface CursoPersistance {
 	
 	Stream<Curso> readContainInCompleteName(String name);
 	
-	Boolean delete(Long referencia);
+	boolean delete(Long referencia);
 	
 	Curso readByReferencia(Long referencia);
 
-	Boolean existReferencia(Long referencia);
+	boolean existReferencia(Long referencia);
 
 }

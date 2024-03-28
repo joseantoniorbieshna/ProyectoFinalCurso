@@ -4,17 +4,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import com.faltasproject.domain.models.clases.Curso;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -74,18 +69,17 @@ public class CursoEntity {
 		this.referencia=curso.getReferencia();			
 		this.nombre=curso.getNombre();
 		this.materias = curso.getMaterias().stream()
-				.map(materia -> new MateriasEntity(materia))
+				.map(MateriasEntity::new)
 				.collect(Collectors.toSet());			
 	}
 	
 	public Curso toCurso() {
-		Curso curso=new Curso(
+		return new Curso(
 				this.getReferencia(),
 				this.getNombre(),
 				this.getMaterias().stream()
 					.map(materiaEntity->materiaEntity.toMateria())
 					.collect(Collectors.toList()));
-		return curso;
 	}
 	
 	@PreRemove

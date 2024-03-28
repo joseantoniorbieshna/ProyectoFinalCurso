@@ -7,24 +7,21 @@ public class Materia {
 	private String nombreAbreviado;
 	private String nombreCompleto;
 	
-	
-	
 	public Materia(String referencia) {
 		super();
-		this.referencia = referencia;
+		setReferencia(referencia);
 	}
 
 	public Materia(String referencia, String nombreAbreviado, String nombreCompleto) {
-		super();
-		this.referencia = referencia;
-		this.nombreAbreviado = nombreAbreviado;
-		this.nombreCompleto = nombreCompleto;
+		this(referencia);
+		setNombreAbreviado(nombreAbreviado);
+		setNombreCompleto(nombreCompleto);
 	}
 	
 	public Materia( String nombreAbreviado, String nombreCompleto) {
 		super();
-		this.nombreAbreviado = nombreAbreviado;
-		this.nombreCompleto = nombreCompleto;
+		setNombreAbreviado(nombreAbreviado);
+		setNombreCompleto(nombreCompleto);
 	}
 	
 	public String getReferencia() {
@@ -68,6 +65,5 @@ public class Materia {
 		return "Materia [referencia=" + referencia + ", nombreAbreviado=" + nombreAbreviado + ", nombreCompleto=" + nombreCompleto
 				+ "]";
 	}
-	
 	
 }

@@ -3,14 +3,10 @@ package com.faltasproject.adapters.jpa.clases.entities;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.beans.BeanUtils;
 
 import com.faltasproject.domain.models.clases.Materia;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -62,7 +58,7 @@ public class MateriasEntity {
 	}
 	
 	public Materia toMateria() {
-		return new Materia(new String(referencia), new String(nombreAbreviado),new String(nombreCompleto));
+		return new Materia(String.valueOf(referencia), String.valueOf(nombreAbreviado),String.valueOf(nombreCompleto));
 	}
 	
 	@PreRemove

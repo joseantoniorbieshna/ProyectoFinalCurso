@@ -1,6 +1,5 @@
 package com.faltasproject.adapters.jpa.clases.persistence;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,7 +16,6 @@ import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.persistance_ports.clases.CursoPersistance;
 
-import jakarta.transaction.Transactional;
 
 @Repository("cursoPersistance")
 public class CursoPersistanceJPA implements CursoPersistance {
@@ -34,12 +32,13 @@ public class CursoPersistanceJPA implements CursoPersistance {
 	@Override
 	public Curso create(Curso curso) {
 		if(existReferencia(curso.getReferencia())) {
-			throw new ConflictExceptions("El Curso con la referencia '"+curso.getReferencia()+"' ya existe");
+			throw new ConflictExceptions(getMessageErrorExist(curso.getReferencia()));
 		}
 		
 		CursoEntity cursoEntity = new CursoEntity(curso);
 		Set<MateriasEntity> materias = cursoEntity.getMaterias().stream()
-				.map(materia->materiaRepositoryJPA.findByReferencia(materia.getReferencia()).get())
+				.map(materia->materiaRepositoryJPA.findByReferencia(materia.getReferencia())
+						.orElseThrow(()-> new NotFoundException( getMateriaErrorNotFound(materia.getReferencia()) )))
 				.collect(Collectors.toSet());
 		cursoEntity.setMaterias(materias);
 		return cursoRepositoryJPA.save(cursoEntity).toCurso();
@@ -48,9 +47,8 @@ public class CursoPersistanceJPA implements CursoPersistance {
 	@Override
 	public Curso update(Long referencia, Curso curso) {
 		CursoEntity cursoEntity = cursoRepositoryJPA.findByReferencia(referencia)
-		.orElseThrow(() -> new NotFoundException("El curso con la referencia '"+referencia+"' no existe"));
+		.orElseThrow(() -> new NotFoundException(getMessageErrorNotExist(referencia)));
 		
-		Set<MateriasEntity> materias = cursoEntity.getMaterias();
 		
 		//OBLIGAMOS A TENER REFERENCIA
 		if(curso.getReferencia()==null) {
@@ -58,8 +56,8 @@ public class CursoPersistanceJPA implements CursoPersistance {
 		}
 		//CAMBIAMOS LOS DATOS Y PERSISTIMOS MATERIAS
 		cursoEntity.fromCurso(curso);
-		materias=cursoEntity.getMaterias().stream().map(materia -> materiaRepositoryJPA.findByReferencia(materia.getReferencia())
-				.orElseThrow(()->new NotFoundException("La materia con la referencia '"+materia.getReferencia()+"' no existe ")))
+		Set<MateriasEntity> materias=cursoEntity.getMaterias().stream().map(materia -> materiaRepositoryJPA.findByReferencia(materia.getReferencia())
+				.orElseThrow(()->new NotFoundException( getMateriaErrorNotFound(materia.getReferencia()) )))
 				.collect(Collectors.toSet());
 		cursoEntity.setMaterias(materias);
 		
@@ -69,19 +67,19 @@ public class CursoPersistanceJPA implements CursoPersistance {
 	@Override
 	public Stream<Curso> readAll() {
 		return cursoRepositoryJPA.findAll().stream()
-				.map(cursoEntity->cursoEntity.toCurso());
+				.map(CursoEntity::toCurso);
 	}
 
 	@Override
 	public Stream<Curso> readContainInCompleteName(String name) {
 		return cursoRepositoryJPA.findByNombreContainingIgnoreCase(name).stream()
-				.map(cursoEntity -> cursoEntity.toCurso());
+				.map(CursoEntity::toCurso);
 	}
 
 	@Override
-	public Boolean delete(Long referencia) {
+	public boolean delete(Long referencia) {
 		if(!existReferencia(referencia)) {
-			throw new NotFoundException("El Curso con la referencia '"+referencia+"' no existe");
+			throw new NotFoundException(getMessageErrorNotExist(referencia));
 		}
 		
 		cursoRepositoryJPA.deleteByReferencia(referencia);
@@ -91,16 +89,27 @@ public class CursoPersistanceJPA implements CursoPersistance {
 	@Override
 	public Curso readByReferencia(Long referencia) {
 		return cursoRepositoryJPA.findByReferencia(referencia)
-				.orElseThrow(()-> new NotFoundException("El Curso con la referencia '"+referencia+"' no existe"))
+				.orElseThrow(()-> new NotFoundException(getMessageErrorNotExist(referencia)))
 				.toCurso();
 	}
 
 	@Override
-	public Boolean existReferencia(Long referencia) {
+	public boolean existReferencia(Long referencia) {
 		Optional<CursoEntity> cursoEntity = cursoRepositoryJPA.findByReferencia(referencia);
 		return cursoEntity.isPresent();
 	}
 	
+	private String getMessageErrorExist(Long referencia) {
+		return "El curso con la referencia '"+referencia+"' ya existe";
+	}
+	
+	private String getMessageErrorNotExist(Long referencia) {
+		return "El curso con la referencia '"+referencia+"' no existe";
+	}
+	
+	private String getMateriaErrorNotFound(String referencia) {
+		return "La meteria con la referencia '"+referencia+"' no existe";
+	}
 
 	
 }

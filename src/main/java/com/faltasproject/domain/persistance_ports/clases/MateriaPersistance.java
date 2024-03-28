@@ -17,10 +17,10 @@ public interface MateriaPersistance {
 	
 	Stream<Materia> readContainInCompleteName(String name);
 	
-	Boolean delete(String referencia);
+	boolean delete(String referencia);
 	
 	Materia readByReferencia(String referencia);
 
-	Boolean existReferencia(String referencia);
+	boolean existReferencia(String referencia);
 
 }

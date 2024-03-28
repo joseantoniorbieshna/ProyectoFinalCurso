@@ -2,7 +2,7 @@ package com.faltasproject.adapters.jpa;
 
 import org.springframework.stereotype.Service;
 
-import com.faltasproject.adapters.jpa.clases.ClasesSeederService;
+import com.faltasproject.adapters.jpa.clases.*;
 import com.faltasproject.adapters.jpa.horario.HorarioSeederService;
 
 @Service

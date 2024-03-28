@@ -1,6 +1,5 @@
 package com.faltasproject.adapters.rest.common;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,14 +14,12 @@ import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.models.horario.TramoHorario;
-import com.faltasproject.domain.persistance_ports.horario.TramoHorarioPersistance;
 import com.faltasproject.domain.services.clases.AulaService;
 import com.faltasproject.domain.services.clases.CursoService;
 import com.faltasproject.domain.services.clases.MateriaService;
 import com.faltasproject.domain.services.horario.TramoHorarioService;
 import com.faltasproject.utils.XmlTreatment;
 
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("general")
@@ -52,11 +49,9 @@ public class GeneralController {
 	@PostMapping("materias")
 	public String introducirMaterias(@RequestParam("xml") MultipartFile xml) {
 
-		List<Materia> materias=new ArrayList<>();
-		
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
 
-		materias = xmlTreatment.getAllMaterias();
+		List<Materia> materias = xmlTreatment.getAllMaterias();
 		
 		for(Materia materia:materias) {
 			materiaService.create(materia);
@@ -70,11 +65,9 @@ public class GeneralController {
 	@PostMapping("cursos")
 	public String introducirCursos(@RequestParam("xml") MultipartFile xml) {
 
-		List<Curso> cursos=new ArrayList<>();
-		
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
 
-		cursos = xmlTreatment.getAllCursos();
+		List<Curso> cursos = xmlTreatment.getAllCursos();
 		
 		for(Curso curso:cursos) {
 			cursoService.create(curso);
@@ -86,11 +79,9 @@ public class GeneralController {
 	@PostMapping("tramoshorarios")
 	public String introducirTramosHorarios(@RequestParam("xml") MultipartFile xml) {
 
-		List<TramoHorario> tramosHorarios=new ArrayList<>();
-		
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
 
-		tramosHorarios = xmlTreatment.getAllTramosHorarios();
+		List<TramoHorario> tramosHorarios = xmlTreatment.getAllTramosHorarios();
 		
 		for(TramoHorario tramoHorario:tramosHorarios) {
 			tramoHorarioService.create(tramoHorario);
@@ -102,11 +93,9 @@ public class GeneralController {
 	@PostMapping("aulas")
 	public String introducirAulas(@RequestParam("xml") MultipartFile xml) {
 
-		List<Aula> aulas = new ArrayList<>();
-		
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
 
-		aulas = xmlTreatment.getAllAulas();
+		List<Aula> aulas = xmlTreatment.getAllAulas();
 		
 		for(Aula aula:aulas) {
 			aulaService.create(aula);

@@ -1,9 +1,7 @@
 package com.faltasproject.adapters.jpa.clases.persistence;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.stream.Collectors;
 
@@ -16,7 +14,8 @@ import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Materia;
 
 @SpringBootTest
-public class MateriaPersistanceJPATest { 
+class MateriaPersistanceJPATest {
+
 	
 	@Autowired
 	MateriaPersistenceJPA materiaPersistenceJPA;
@@ -28,7 +27,9 @@ public class MateriaPersistanceJPATest {
     
     @Test
     void update() {
-    	assertThrows( NotFoundException.class, () -> materiaPersistenceJPA.update("-01", new Materia("Bd", "Base de datos")) );
+    	final String referenciaUpdate="-01";
+    	final Materia materiaUpdate =  new Materia("Bd", "Base de datos");
+    	assertThrows( NotFoundException.class, () -> materiaPersistenceJPA.update(referenciaUpdate, materiaUpdate));
 
     	Materia materia = materiaPersistenceJPA.update("01", new Materia("10000","PM", "Programacion"));
     	assertEquals("10000", materia.getReferencia());
@@ -44,7 +45,8 @@ public class MateriaPersistanceJPATest {
     
     @Test
     void create() {
-    	assertThrows(ConflictExceptions.class, () -> materiaPersistenceJPA.create(new Materia("01", "PM","Programación")));
+    	Materia materiaUpdate = new Materia("01", "PM","Programación");
+    	assertThrows(ConflictExceptions.class, () -> materiaPersistenceJPA.create(materiaUpdate));
     	
     	Materia materia = materiaPersistenceJPA.create(new Materia("FF", "PM2","Programación 2"));
     	assertEquals("FF", materia.getReferencia());
@@ -78,12 +80,34 @@ public class MateriaPersistanceJPATest {
 	
     @Test
 	void delete() {
-    	//TODO
+    	// 1º
+    	String referencia="100F";
+    	Materia materia =new Materia(referencia);
+    	materiaPersistenceJPA.create(materia);
+    	
+    	assertTrue(materiaPersistenceJPA.existReferencia(referencia));
+    	materiaPersistenceJPA.delete(referencia);
+    	assertFalse(materiaPersistenceJPA.existReferencia(referencia));
+    	
+    	//2º
+    	final String referenciaExceptionExist="01";
+    	final Materia materiaExceptionExist = new Materia(referenciaExceptionExist);
+    	assertThrows(ConflictExceptions.class, ()->materiaPersistenceJPA.create(materiaExceptionExist));
 	}
     
     @Test
 	void readByReferencia() {
-		// TODO
+    	Materia materia = materiaPersistenceJPA.readByReferencia("01");
+    	assertEquals("Fisica y quimica", materia.getNombreCompleto());
+    	assertEquals("FyQ", materia.getNombreAbreviado());
+    	assertEquals("01", materia.getReferencia());
+    	
+    	materia = materiaPersistenceJPA.readByReferencia("05");
+    	assertEquals("Filosofia", materia.getNombreCompleto());
+    	assertEquals("Fi", materia.getNombreAbreviado());
+    	assertEquals("05", materia.getReferencia());
+    	
+    	assertThrows(NotFoundException.class,()->materiaPersistenceJPA.readByReferencia("JDF"));
 	}
     
     @Test
@@ -95,6 +119,6 @@ public class MateriaPersistanceJPATest {
     	assertFalse(materiaPersistenceJPA.existReferencia("06"));
 	}
     
-    
+   
 
 }

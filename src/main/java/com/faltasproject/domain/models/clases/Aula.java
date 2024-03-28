@@ -5,20 +5,15 @@ import java.util.Objects;
 public class Aula {
 	private Long referencia;
 	private String nombre;
-	
-	public Aula() {
-		super();
-	}
 
 	public Aula(String nombre) {
 		super();
-		this.nombre = nombre;
+		setNombre(nombre);
 	}
 
 	public Aula(Long referencia, String nombre) {
-		super();
-		this.referencia = referencia;
-		this.nombre = nombre;
+		this(nombre);
+		setReferencia(referencia);
 	}
 
 	public Long getReferencia() {

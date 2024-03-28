@@ -18,7 +18,7 @@ public interface TramoHorarioPersistance {
 	
 	TramoHorario readById(IdTramoHorarioDTO idTramoHorarioDTO);
 	
-	Boolean delete(IdTramoHorarioDTO idTramoHorarioDTO);
+	boolean delete(IdTramoHorarioDTO idTramoHorarioDTO);
 	
-	Boolean existId(IdTramoHorarioDTO idTramoHorarioDTO);
+	boolean existId(IdTramoHorarioDTO idTramoHorarioDTO);
 }

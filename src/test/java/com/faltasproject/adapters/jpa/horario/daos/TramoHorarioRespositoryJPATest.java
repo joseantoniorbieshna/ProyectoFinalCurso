@@ -1,7 +1,6 @@
 package com.faltasproject.adapters.jpa.horario.daos;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Optional;
 
@@ -13,7 +12,7 @@ import com.faltasproject.adapters.jpa.horario.entities.TramoHorarioEntity;
 import com.faltasproject.adapters.jpa.horario.entities.key_compound.KeyTramoHorario;
 
 @SpringBootTest
-public class TramoHorarioRepositoryJPATest {
+class TramoHorarioRespositoryJPATest {
 	
 	@Autowired
 	TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA;

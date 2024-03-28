@@ -1,6 +1,5 @@
 package com.faltasproject.adapters.jpa.clases.daos;
 
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
@@ -11,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
-import com.faltasproject.domain.exceptions.NotFoundException;
 
 import jakarta.transaction.Transactional;
+
 @SpringBootTest
 class CursoRepositoryJPATest {
 
@@ -21,7 +20,7 @@ class CursoRepositoryJPATest {
 	private CursoRepositoryJPA cursoRepositoryJPA;
 		
 	@Test
-	public void findByNombreContainingIgnoreCase() {
+	void findByNombreContainingIgnoreCase() {
 		int expected=3;
 		List<CursoEntity> cursos=cursoRepositoryJPA.findByNombreContainingIgnoreCase("E.S.O");
 		assertEquals(expected, cursos.size());

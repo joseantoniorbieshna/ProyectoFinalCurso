@@ -18,9 +18,9 @@ public interface AulaPersistance {
 	
 	Stream<Aula> readContainInName(String name);
 	
-	Boolean delete(Long referencia);
+	boolean delete(Long referencia);
 	
 	Aula readByReferencia(Long referencia);
 
-	Boolean existReferencia(Long referencia); 
+	boolean existReferencia(Long referencia); 
 }

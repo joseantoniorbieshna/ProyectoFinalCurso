@@ -45,10 +45,9 @@ public class AulaEntity {
 	}
 	
 	public Aula toAula() {
-		Aula aula=new Aula(
+		return new Aula(
 				this.getReferencia(),
 				this.getNombre());
-		return aula;
 	}
 
 }

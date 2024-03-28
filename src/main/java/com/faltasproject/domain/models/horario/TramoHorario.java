@@ -7,7 +7,7 @@ public class TramoHorario {
 	private Integer dia;
 	private Integer indice;
 	private LocalTime horaEntrada;
-	private LocalTime HoraSalida;
+	private LocalTime horaSalida;
 	
 	
 
@@ -20,7 +20,7 @@ public class TramoHorario {
 		this.dia = dia;
 		this.indice = indice;
 		this.horaEntrada = horaEntrada;
-		HoraSalida = horaSalida;
+		this.horaSalida = horaSalida;
 	}
 
 	public Integer getDia() {
@@ -48,16 +48,16 @@ public class TramoHorario {
 	}
 
 	public LocalTime getHoraSalida() {
-		return HoraSalida;
+		return horaSalida;
 	}
 
 	public void setHoraSalida(LocalTime horaSalida) {
-		HoraSalida = horaSalida;
+		this.horaSalida = horaSalida;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(HoraSalida, dia);
+		return Objects.hash(horaSalida, dia);
 	}
 
 	@Override
@@ -69,13 +69,13 @@ public class TramoHorario {
 		if (getClass() != obj.getClass())
 			return false;
 		TramoHorario other = (TramoHorario) obj;
-		return Objects.equals(HoraSalida, other.HoraSalida) && Objects.equals(dia, other.dia);
+		return Objects.equals(horaSalida, other.horaSalida) && Objects.equals(dia, other.dia);
 	}
 
 	@Override
 	public String toString() {
 		return "TramoHorario [dia=" + dia + ", indice=" + indice + ", horaEntrada=" + horaEntrada + ", HoraSalida="
-				+ HoraSalida + "]";
+				+ horaSalida + "]";
 	}
 	
 }

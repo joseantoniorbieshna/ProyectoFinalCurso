@@ -1,7 +1,7 @@
 package com.faltasproject.adapters.jpa.horario.persistance;
 
 import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Time;
 import java.time.LocalTime;
@@ -17,20 +17,23 @@ import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 
 @SpringBootTest
-public class TramoHorarioPersistanceJPATest {
+class TramoHorarioPersistanceJPATest {
 	
 	@Autowired
 	TramoHorarioPersistanceJPA tramoHorarioPersistanceJPA;
 	
 	@Test
 	void testReadNotFound() {
-		 assertThrows(NotFoundException.class, () -> this.tramoHorarioPersistanceJPA.readById( new IdTramoHorarioDTO(0, 100) ));
+		final IdTramoHorarioDTO idTramoHorarioSearch = new IdTramoHorarioDTO(0, 100);
+		assertThrows(NotFoundException.class, () -> this.tramoHorarioPersistanceJPA.readById( idTramoHorarioSearch ));
 	}
 	
 	@Test
     void update() {
     	TramoHorarioEntity tramoHorarioEntity=new TramoHorarioEntity(0, 1, Time.valueOf( LocalTime.of(8, 0) ),Time.valueOf( LocalTime.of(9, 0)));
-    	assertThrows( NotFoundException.class, () -> tramoHorarioPersistanceJPA.update(new IdTramoHorarioDTO(0, 10), tramoHorarioEntity.toTramoHorario()) );
+    	final TramoHorario tramoMateriaUpdate = tramoHorarioEntity.toTramoHorario();
+    	final IdTramoHorarioDTO idTramoHorarioUpdate = new IdTramoHorarioDTO(0, 10);
+    	assertThrows( NotFoundException.class, () -> tramoHorarioPersistanceJPA.update(idTramoHorarioUpdate, tramoMateriaUpdate ));
 
     	
     	IdTramoHorarioDTO idTramoHorarioDTO = new IdTramoHorarioDTO(0, 2);
@@ -51,5 +54,5 @@ public class TramoHorarioPersistanceJPATest {
     	assertEquals(tramoHorarioSave.getHoraSalida(), tramoHorarioResult.getHoraSalida());
     	
     }
-	
+
 }

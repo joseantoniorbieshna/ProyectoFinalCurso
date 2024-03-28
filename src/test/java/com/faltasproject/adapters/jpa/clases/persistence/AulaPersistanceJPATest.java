@@ -41,7 +41,8 @@ class AulaPersistanceJPATest {
 
 	@Test
 	void create() {
-		assertThrows(ConflictExceptions.class, ()->aulaPersistanceJPA.create(new Aula(1L,"AULA A")));
+		final Aula aulaUpdate = new Aula(1L,"AULA A");
+		assertThrows(ConflictExceptions.class, ()->aulaPersistanceJPA.create(aulaUpdate));
 		
 		Long referencia=10L;
 		String nombreAula="AULA TEMPORAL";

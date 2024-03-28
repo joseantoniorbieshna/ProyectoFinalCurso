@@ -28,6 +28,7 @@ import com.faltasproject.domain.models.horario.TramoHorario;
 
 import lombok.extern.slf4j.Slf4j;
 
+
 @Slf4j
 public class XmlTreatment {
 	
@@ -35,14 +36,13 @@ public class XmlTreatment {
 
 	public XmlTreatment(MultipartFile xml) {
 		// Configurar el analizador DOM
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newDefaultInstance();
 		DocumentBuilder builder;
 		try {
 			builder = factory.newDocumentBuilder();
 			doc = builder.parse(xml.getInputStream());
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		}
 	}
 	
@@ -58,7 +58,7 @@ public class XmlTreatment {
 
 		try {
 			
-			XPathExpression expression = (XPathExpression) xpath.compile(expr);
+			XPathExpression expression = xpath.compile(expr);
 
 			NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
 			// ITERO LA LISTA DEL NODO CURSO
@@ -76,8 +76,7 @@ public class XmlTreatment {
 			
 			
 		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		}
 		return materias;
 
@@ -95,7 +94,7 @@ public class XmlTreatment {
 
 		try {
 			
-			XPathExpression expression = (XPathExpression) xpath.compile(expr);
+			XPathExpression expression = xpath.compile(expr);
 
 			NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
 			// ITERO LA LISTA DEL NODO CURSO
@@ -124,8 +123,7 @@ public class XmlTreatment {
 			}
 				
 		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		}
 		return cursos;
 	}
@@ -142,7 +140,7 @@ public class XmlTreatment {
 
 		try {
 			
-			XPathExpression expression = (XPathExpression) xpath.compile(expr);
+			XPathExpression expression =	 xpath.compile(expr);
 
 			NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
 			// ITERO LA LISTA DEL NODO CURSO
@@ -165,8 +163,7 @@ public class XmlTreatment {
 			}
 			
 		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		}
 		return tramosHorarios;
 
@@ -184,7 +181,7 @@ public class XmlTreatment {
 
 		try {
 			
-			XPathExpression expression = (XPathExpression) xpath.compile(expr);
+			XPathExpression expression = xpath.compile(expr);
 
 			NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
 			// ITERO LA LISTA DEL NODO CURSO
@@ -200,8 +197,7 @@ public class XmlTreatment {
 				}
 			}
 		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		}
 		return aulas;
 	}

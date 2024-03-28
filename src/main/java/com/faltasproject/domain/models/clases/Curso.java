@@ -9,36 +9,26 @@ public class Curso {
 	private String nombre;
 	private List<Materia> materias;
 	
-	public Curso() {
-		super();
-	}
-
-	public Curso(Long referencia, String nombre, List<Materia> materias) {
-		super();
-		this.referencia = referencia;
-		this.nombre = nombre;
-		this.materias = materias;
-	}
-	
-
-	public Curso(Long referencia, String nombre) {
-		super();
-		this.referencia = referencia;
-		this.nombre = nombre;
-		this.materias=new ArrayList<>();
-	}
-	
 	public Curso(String nombre) {
 		super();
-		this.nombre = nombre;
-		this.materias=new ArrayList<>();
+		setNombre(nombre);
+		setMaterias(new ArrayList<>());
 	}
+	
+	public Curso(Long referencia, String nombre) {
+		this(nombre);
+		setReferencia(referencia);
+	}
+	
 	public Curso(String nombre, List<Materia> materias) {
-		super();
-		this.nombre = nombre;
-		this.materias=materias;
+		this(nombre);
+		setMaterias(materias);
 	}
-
+	
+	public Curso(Long referencia, String nombre, List<Materia> materias) {
+		this(referencia,nombre);
+		setMaterias(materias);
+	}
 
 	public Long getReferencia() {
 		return referencia;
