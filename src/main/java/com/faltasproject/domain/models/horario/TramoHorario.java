@@ -16,11 +16,11 @@ public class TramoHorario {
 	}
 
 	public TramoHorario(Integer dia, Integer indice, LocalTime horaEntrada, LocalTime horaSalida) {
-		super();
-		this.dia = dia;
-		this.indice = indice;
-		this.horaEntrada = horaEntrada;
-		this.horaSalida = horaSalida;
+		this();
+		setDia(dia);
+		setIndice(indice);
+		setHoraEntrada(horaEntrada);
+		setHoraSalida(horaSalida);
 	}
 
 	public Integer getDia() {

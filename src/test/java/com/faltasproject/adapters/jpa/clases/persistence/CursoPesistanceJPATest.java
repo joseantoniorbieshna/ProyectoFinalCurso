@@ -55,7 +55,8 @@ class CursoPesistanceJPATest {
 	void create() {
 		//TODO
 		Long referencia=1000L;
-		Curso curso = new Curso(referencia,"CURSO TEMPORAL");
+		String nombreCurso = "CURSO TEMPORAL";
+		Curso curso = new Curso(referencia,nombreCurso);
 		List<Materia> materias = new ArrayList<>();
 		materias.add( materiaPersistenceJPA.readByReferencia("01") );
 		materias.add( materiaPersistenceJPA.readByReferencia("02") );
@@ -63,12 +64,15 @@ class CursoPesistanceJPATest {
 		curso.setMaterias(materias);
 		
 		cursoPersistanceJPA.create(curso);
-		cursoPersistanceJPA.existReferencia(referencia);
-		curso = cursoPersistanceJPA.readByReferencia(referencia);
-		assertEquals(referencia, curso.getReferencia());
-		assertEquals("CURSO TEMPORAL", curso.getNombre());
+		assertTrue(cursoPersistanceJPA.existReferencia(referencia));
+		Curso cursoResult = cursoPersistanceJPA.readByReferencia(referencia);
+		assertEquals(referencia, cursoResult.getReferencia());
+		assertEquals(nombreCurso, cursoResult.getNombre());
+		assertEquals(curso, cursoResult);
 		
+		//VOLVER AL ESTADO DE ANTES
 		cursoPersistanceJPA.delete(referencia);
+		assertFalse(cursoPersistanceJPA.existReferencia(referencia));
 	}
 	
 	@Test

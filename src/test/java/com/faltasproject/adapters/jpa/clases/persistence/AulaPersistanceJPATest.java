@@ -46,13 +46,15 @@ class AulaPersistanceJPATest {
 		
 		Long referencia=10L;
 		String nombreAula="AULA TEMPORAL";
-		aulaPersistanceJPA.create(new Aula(referencia,nombreAula));
+		Aula aula = new Aula(referencia,nombreAula);
+		aulaPersistanceJPA.create(aula);
 		
 		assertTrue(aulaPersistanceJPA.existReferencia(referencia));
 		
-		Aula aula = aulaPersistanceJPA.readByReferencia(referencia);
-		assertEquals(referencia, aula.getReferencia());
-		assertEquals(nombreAula, aula.getNombre());
+		Aula aulaResult = aulaPersistanceJPA.readByReferencia(referencia);
+		assertEquals(referencia, aulaResult.getReferencia());
+		assertEquals(nombreAula, aulaResult.getNombre());
+		assertEquals(aula, aulaResult);
 		
 		// REVERTIR CAMBIOS
 		aulaPersistanceJPA.delete(referencia);

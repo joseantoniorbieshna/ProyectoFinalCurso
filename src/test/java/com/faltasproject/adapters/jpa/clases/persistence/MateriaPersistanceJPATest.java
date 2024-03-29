@@ -45,16 +45,25 @@ class MateriaPersistanceJPATest {
     
     @Test
     void create() {
-    	Materia materiaUpdate = new Materia("01", "PM","Programación");
+    	final Materia materiaUpdate = new Materia("01", "PM","Programación");
     	assertThrows(ConflictExceptions.class, () -> materiaPersistenceJPA.create(materiaUpdate));
     	
-    	Materia materia = materiaPersistenceJPA.create(new Materia("FF", "PM2","Programación 2"));
-    	assertEquals("FF", materia.getReferencia());
-    	assertEquals("PM2", materia.getNombreAbreviado());
-    	assertEquals("Programación 2", materia.getNombreCompleto());
+    	String referencia="FF";
+    	Materia materiaCreate = new Materia(referencia, "PM2","Programación 2");
+    	materiaPersistenceJPA.create(materiaCreate);
     	
-    	materiaPersistenceJPA.delete("FF");
-    	assertThrows(NotFoundException.class, () -> materiaPersistenceJPA.readByReferencia("FF"));
+    	
+    	Materia materiaResult = materiaPersistenceJPA.readByReferencia(referencia);
+    	assertEquals("FF", materiaResult.getReferencia());
+    	assertEquals("PM2", materiaResult.getNombreAbreviado());
+    	assertEquals("Programación 2", materiaResult.getNombreCompleto());
+    	assertEquals(materiaCreate, materiaResult);
+    	
+    	//VOLVER AL ESTADO DE ANTES
+    	materiaPersistenceJPA.delete(referencia);
+    	assertFalse(materiaPersistenceJPA.existReferencia(referencia));
+    	// ERROR
+    	assertThrows(NotFoundException.class, () -> materiaPersistenceJPA.readByReferencia(referencia));
     }
     
     @Test

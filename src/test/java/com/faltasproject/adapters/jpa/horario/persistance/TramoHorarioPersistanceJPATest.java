@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,9 @@ class TramoHorarioPersistanceJPATest {
 	@Test
     void update() {
     	TramoHorarioEntity tramoHorarioEntity=new TramoHorarioEntity(0, 1, Time.valueOf( LocalTime.of(8, 0) ),Time.valueOf( LocalTime.of(9, 0)));
-    	final TramoHorario tramoMateriaUpdate = tramoHorarioEntity.toTramoHorario();
-    	final IdTramoHorarioDTO idTramoHorarioUpdate = new IdTramoHorarioDTO(0, 10);
-    	assertThrows( NotFoundException.class, () -> tramoHorarioPersistanceJPA.update(idTramoHorarioUpdate, tramoMateriaUpdate ));
+    	final TramoHorario tramoMateriaUpdateError = tramoHorarioEntity.toTramoHorario();
+    	final IdTramoHorarioDTO idTramoHorarioUpdateError = new IdTramoHorarioDTO(0, 10);
+    	assertThrows( NotFoundException.class, () -> tramoHorarioPersistanceJPA.update(idTramoHorarioUpdateError, tramoMateriaUpdateError ));
 
     	
     	IdTramoHorarioDTO idTramoHorarioDTO = new IdTramoHorarioDTO(0, 2);
@@ -54,5 +55,90 @@ class TramoHorarioPersistanceJPATest {
     	assertEquals(tramoHorarioSave.getHoraSalida(), tramoHorarioResult.getHoraSalida());
     	
     }
+	
+	@Test
+	void existId() {
+		//Exist
+		IdTramoHorarioDTO idTramoHorarioDTO = new IdTramoHorarioDTO(0, 1);
+		assertTrue(tramoHorarioPersistanceJPA.existId(idTramoHorarioDTO));
+
+		idTramoHorarioDTO = new IdTramoHorarioDTO(0, 4);
+		assertTrue(tramoHorarioPersistanceJPA.existId(idTramoHorarioDTO));
+
+		idTramoHorarioDTO = new IdTramoHorarioDTO(1, 1);
+		assertTrue(tramoHorarioPersistanceJPA.existId(idTramoHorarioDTO));
+	
+		idTramoHorarioDTO = new IdTramoHorarioDTO(1, 4);
+		assertTrue(tramoHorarioPersistanceJPA.existId(idTramoHorarioDTO));
+		
+		//Not exist
+		idTramoHorarioDTO = new IdTramoHorarioDTO(0, 0);
+		assertFalse(tramoHorarioPersistanceJPA.existId(idTramoHorarioDTO));
+
+		idTramoHorarioDTO = new IdTramoHorarioDTO(0, 5);
+		assertFalse(tramoHorarioPersistanceJPA.existId(idTramoHorarioDTO));
+
+	}
+	
+	@Test
+	void create() {
+		LocalTime horaEntrada = LocalTime.of(8, 0);
+		LocalTime horasSalida = LocalTime.of(11, 0);
+		IdTramoHorarioDTO idTramoHorarioDTO = new IdTramoHorarioDTO(4,0);
+		TramoHorario tramoHorario=new TramoHorario(idTramoHorarioDTO.getDia(),idTramoHorarioDTO.getIndice(),horaEntrada,horasSalida);
+		tramoHorarioPersistanceJPA.create(tramoHorario);
+		assertTrue(tramoHorarioPersistanceJPA.existId(idTramoHorarioDTO));
+		
+		TramoHorario tramoHorarioResult = tramoHorarioPersistanceJPA.readById(idTramoHorarioDTO);
+		
+		assertEquals(idTramoHorarioDTO.getDia(), tramoHorarioResult.getDia());
+		assertEquals(idTramoHorarioDTO.getIndice(), tramoHorarioResult.getIndice());
+		assertEquals(horaEntrada, tramoHorarioResult.getHoraEntrada());
+		assertEquals(horasSalida,tramoHorarioResult.getHoraSalida());
+		assertEquals(tramoHorario, tramoHorarioResult);
+		
+		//VOLVEMOS AL ESTADO DE ANTES
+		boolean result = tramoHorarioPersistanceJPA.delete(idTramoHorarioDTO);
+		assertTrue(result);
+		result = tramoHorarioPersistanceJPA.existId(idTramoHorarioDTO);
+		assertFalse(result);
+	}
+	
+	@Test
+	void delete() {
+		LocalTime horaEntrada = LocalTime.of(8, 0);
+		LocalTime horasSalida = LocalTime.of(11, 0);
+		IdTramoHorarioDTO idTramoHorarioDTO = new IdTramoHorarioDTO(4,0);
+		TramoHorario tramoHorario=new TramoHorario(idTramoHorarioDTO.getDia(),idTramoHorarioDTO.getIndice(),horaEntrada,horasSalida);
+		tramoHorarioPersistanceJPA.create(tramoHorario);
+		assertTrue(tramoHorarioPersistanceJPA.existId(idTramoHorarioDTO));
+		
+		boolean result=tramoHorarioPersistanceJPA.delete(idTramoHorarioDTO);
+		assertTrue(result);
+		result = tramoHorarioPersistanceJPA.existId(idTramoHorarioDTO);
+		assertFalse(result);
+	}
+	
+	@Test
+	void readAll() {
+		int expected=8;
+		assertEquals(expected, tramoHorarioPersistanceJPA.readAll().count());
+	}
+	
+	@Test
+	void readById() {
+		TramoHorario tramoHorario = tramoHorarioPersistanceJPA.readById(new IdTramoHorarioDTO(0,1));
+		LocalTime horaEntradaExpected=LocalTime.of(8, 0);
+		LocalTime horaSalidaExpected=LocalTime.of(9, 0);
+		assertEquals(horaEntradaExpected, tramoHorario.getHoraEntrada());
+		assertEquals(horaSalidaExpected, tramoHorario.getHoraSalida());
+		
+		tramoHorario = tramoHorarioPersistanceJPA.readById(new IdTramoHorarioDTO(1,4));
+		horaEntradaExpected=LocalTime.of(11, 30);
+		horaSalidaExpected=LocalTime.of(12, 30);
+		assertEquals(horaEntradaExpected, tramoHorario.getHoraEntrada());
+		assertEquals(horaSalidaExpected, tramoHorario.getHoraSalida());
+	}
+
 
 }
