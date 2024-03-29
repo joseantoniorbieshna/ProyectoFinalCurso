@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.faltasproject.domain.models.clases.Curso;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -46,6 +48,9 @@ public class CursoEntity {
 		inverseJoinColumns = @JoinColumn(name="materia_id")
 	)
 	private Set<MateriasEntity> materias;
+	
+	@OneToMany(mappedBy = "curso",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+	private Set<GrupoEntity> grupos;
 	
 	public CursoEntity(Long referencia,String nombre, Set<MateriasEntity> materias) {
 		super();
@@ -79,7 +84,7 @@ public class CursoEntity {
 				this.getNombre(),
 				this.getMaterias().stream()
 					.map(materiaEntity->materiaEntity.toMateria())
-					.collect(Collectors.toList()));
+					.collect(Collectors.toSet()));
 	}
 	
 	@PreRemove

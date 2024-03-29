@@ -1,18 +1,18 @@
 package com.faltasproject.domain.models.clases;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class Curso {
 	private Long referencia;
 	private String nombre;
-	private List<Materia> materias;
+	private Set<Materia> materias;
 	
 	public Curso(String nombre) {
 		super();
 		setNombre(nombre);
-		setMaterias(new ArrayList<>());
+		setMaterias(new HashSet<>());
 	}
 	
 	public Curso(Long referencia, String nombre) {
@@ -20,12 +20,12 @@ public class Curso {
 		setReferencia(referencia);
 	}
 	
-	public Curso(String nombre, List<Materia> materias) {
+	public Curso(String nombre, Set<Materia> materias) {
 		this(nombre);
 		setMaterias(materias);
 	}
 	
-	public Curso(Long referencia, String nombre, List<Materia> materias) {
+	public Curso(Long referencia, String nombre, Set<Materia> materias) {
 		this(referencia,nombre);
 		setMaterias(materias);
 	}
@@ -46,11 +46,11 @@ public class Curso {
 		this.nombre = nombre;
 	}
 
-	public List<Materia> getMaterias() {
+	public Set<Materia> getMaterias() {
 		return materias;
 	}
 
-	public void setMaterias(List<Materia> materias) {
+	public void setMaterias(Set<Materia> materias) {
 		this.materias = materias;
 	}
 

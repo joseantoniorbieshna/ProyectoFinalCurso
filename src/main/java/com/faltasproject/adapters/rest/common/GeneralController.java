@@ -1,7 +1,6 @@
 package com.faltasproject.adapters.rest.common;
 
-import java.util.List;
-
+import java.util.Set;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +50,7 @@ public class GeneralController {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
 
-		List<Materia> materias = xmlTreatment.getAllMaterias();
+		Set<Materia> materias = xmlTreatment.getAllMaterias();
 		
 		for(Materia materia:materias) {
 			materiaService.create(materia);
@@ -67,7 +66,7 @@ public class GeneralController {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
 
-		List<Curso> cursos = xmlTreatment.getAllCursos();
+		Set<Curso> cursos = xmlTreatment.getAllCursos();
 		
 		for(Curso curso:cursos) {
 			cursoService.create(curso);
@@ -81,7 +80,7 @@ public class GeneralController {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
 
-		List<TramoHorario> tramosHorarios = xmlTreatment.getAllTramosHorarios();
+		Set<TramoHorario> tramosHorarios = xmlTreatment.getAllTramosHorarios();
 		
 		for(TramoHorario tramoHorario:tramosHorarios) {
 			tramoHorarioService.create(tramoHorario);
@@ -95,7 +94,7 @@ public class GeneralController {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
 
-		List<Aula> aulas = xmlTreatment.getAllAulas();
+		Set<Aula> aulas = xmlTreatment.getAllAulas();
 		
 		for(Aula aula:aulas) {
 			aulaService.create(aula);

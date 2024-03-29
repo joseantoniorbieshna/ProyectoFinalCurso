@@ -5,17 +5,23 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.assertj.core.util.Sets;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
+import com.faltasproject.adapters.jpa.clases.entities.GrupoEntity;
+import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Curso;
+import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
 
 @SpringBootTest
@@ -25,6 +31,8 @@ class CursoPesistanceJPATest {
 	CursoPersistanceJPA cursoPersistanceJPA;
 	@Autowired
 	MateriaPersistenceJPA materiaPersistenceJPA;
+	@Autowired
+	GrupoPersistanceJPA grupoPersistanceJPA;
 
 	@Test
 	void testReadNotFound() {
@@ -46,7 +54,7 @@ class CursoPesistanceJPATest {
     	assertEquals(0, curso.getMaterias().size());
     	
     	
-    	curso = cursoPersistanceJPA.update(referencia, new Curso("4º E.S.O", Arrays.asList( new Materia("01"),new Materia("02"),new Materia("03") )));
+    	curso = cursoPersistanceJPA.update(referencia, new Curso("4º E.S.O", Sets.set( new Materia("01"),new Materia("02"),new Materia("03") )));
     	assertEquals("4º E.S.O", curso.getNombre());
     	assertEquals(3, curso.getMaterias().size());
     }
@@ -57,7 +65,7 @@ class CursoPesistanceJPATest {
 		Long referencia=1000L;
 		String nombreCurso = "CURSO TEMPORAL";
 		Curso curso = new Curso(referencia,nombreCurso);
-		List<Materia> materias = new ArrayList<>();
+		Set<Materia> materias = new HashSet<>();
 		materias.add( materiaPersistenceJPA.readByReferencia("01") );
 		materias.add( materiaPersistenceJPA.readByReferencia("02") );
 		materias.add( materiaPersistenceJPA.readByReferencia("05") );
@@ -96,26 +104,50 @@ class CursoPesistanceJPATest {
 	@Test
 	void delete() {
 		// EXCEPCION
-		assertThrows(NotFoundException.class, ()->materiaPersistenceJPA.delete("FFF"));
+		assertThrows(NotFoundException.class, ()->cursoPersistanceJPA.delete(1000L));
 		// PROBAMOS A BORRAR MATERIA Y QUE NO SE BORRE CURSO
 		Long referenciaCurso=2L;
 		Curso curso=cursoPersistanceJPA.readByReferencia(referenciaCurso);
-		assertEquals(2, curso.getMaterias().size());
+		int materiaExpected=2;
+		assertEquals(materiaExpected, curso.getMaterias().size());
 		//BORRAMOS UNA MATERIA
 		Boolean response=materiaPersistenceJPA.delete("05");
+		materiaExpected=1;
 		assertTrue(response);
 		
 		curso=cursoPersistanceJPA.readByReferencia(referenciaCurso);
-		assertEquals(1, curso.getMaterias().size());
+		assertEquals(materiaExpected, curso.getMaterias().size());
 		
 		// VOLVEMOS AL ESTADO ANTERIOR
 		Materia materia = materiaPersistenceJPA.create(new Materia("05","Fi","Filosofia"));
-		List<Materia> materiasSave = curso.getMaterias();
+		materiaExpected=2;
+		Set<Materia> materiasSave = curso.getMaterias();
 		materiasSave.add(materia);
 		cursoPersistanceJPA.update(referenciaCurso,curso);
 		curso=cursoPersistanceJPA.readByReferencia(referenciaCurso);
-		assertEquals(2, curso.getMaterias().size());
+		assertEquals(materiaExpected, curso.getMaterias().size());
 		
+		
+		
+		//PROBAMOS A BORRAR CURSO
+		Long referencia=5L;
+		assertTrue(cursoPersistanceJPA.existReferencia(referencia));
+		Set<Materia> materias = cursoPersistanceJPA.readByReferencia(referencia).getMaterias();
+		
+		boolean result = cursoPersistanceJPA.delete(referencia);
+		assertTrue(result);
+		assertFalse(cursoPersistanceJPA.existReferencia(referencia));
+		
+		//VOLVEMOS AL ESTADO ANTERIOR
+		curso=cursoPersistanceJPA.create( new Curso(referencia,"2º Bachillerato",
+				materias.stream()
+				.map(materiaIterator -> materiaPersistenceJPA.readByReferencia(materiaIterator.getReferencia()))
+				.collect(Collectors.toSet()))
+				);
+		
+		grupoPersistanceJPA.create(new Grupo("E4D",curso));
+		assertTrue(cursoPersistanceJPA.existReferencia(referencia));
+		assertEquals(curso,grupoPersistanceJPA.readByNombre("E4D").getCurso());
 		
 	}
 	

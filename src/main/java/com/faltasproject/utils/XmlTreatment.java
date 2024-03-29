@@ -3,7 +3,9 @@ package com.faltasproject.utils;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,9 +48,9 @@ public class XmlTreatment {
 		}
 	}
 	
-	public List<Materia> getAllMaterias() {
+	public Set<Materia> getAllMaterias() {
 
-		List<Materia> materias = new ArrayList<>();
+		Set<Materia> materias = new HashSet<>();
 
 		XPathFactory xPathFactory = XPathFactory.newInstance();
 		XPath xpath = xPathFactory.newXPath();
@@ -82,9 +84,9 @@ public class XmlTreatment {
 
 	}
 	
-	public List<Curso> getAllCursos() {
+	public Set<Curso> getAllCursos() {
 
-		List<Curso> cursos = new ArrayList<>();
+		Set<Curso> cursos = new HashSet<>();
 
 		XPathFactory xPathFactory = XPathFactory.newInstance();
 		XPath xpath = xPathFactory.newXPath();
@@ -107,7 +109,7 @@ public class XmlTreatment {
 					String nombreCompleto = element.getElementsByTagName("nombreCompleto").item(0).getTextContent();
 					NodeList materiasNode = ((Element)element.getElementsByTagName("materiasDelCurso").item(0)).getElementsByTagName("materia");
 					
-					List<Materia> materias = new ArrayList<>();
+					Set<Materia> materias = new HashSet<>();
 					//MATERIA ID
 					for (int j = 0; j < materiasNode.getLength(); j++) {
 						Node materiasChild = materiasNode.item(j);
@@ -128,9 +130,9 @@ public class XmlTreatment {
 		return cursos;
 	}
 	
-	public List<TramoHorario> getAllTramosHorarios() {
+	public Set<TramoHorario> getAllTramosHorarios() {
 
-		List<TramoHorario> tramosHorarios = new ArrayList<>();
+		Set<TramoHorario> tramosHorarios = new HashSet<>();
 
 		XPathFactory xPathFactory = XPathFactory.newInstance();
 		XPath xpath = xPathFactory.newXPath();
@@ -169,9 +171,9 @@ public class XmlTreatment {
 
 	}
 	
-	public List<Aula> getAllAulas() {
+	public Set<Aula> getAllAulas() {
 
-		List<Aula> aulas = new ArrayList<>();
+		Set<Aula> aulas = new HashSet<>();
 
 		XPathFactory xPathFactory = XPathFactory.newInstance();
 		XPath xpath = xPathFactory.newXPath();
