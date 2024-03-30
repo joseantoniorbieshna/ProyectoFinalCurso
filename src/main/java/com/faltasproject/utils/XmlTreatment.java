@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 
 import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Curso;
+import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.models.horario.TramoHorario;
 
@@ -202,6 +203,40 @@ public class XmlTreatment {
 			log.warn(e.getMessage());
 		}
 		return aulas;
+	}
+	
+	
+	public Set<Grupo> getAllGrupos() {
+
+		Set<Grupo> grupos = new HashSet<>();
+
+		XPathFactory xPathFactory = XPathFactory.newInstance();
+		XPath xpath = xPathFactory.newXPath();
+
+		// OBTENEMOS LA LISTA DE CURSOSS
+		String expr = "//grupos/grupo";
+
+		try {
+			
+			XPathExpression expression = xpath.compile(expr);
+
+			NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
+			// ITERO LA LISTA DEL NODO CURSO
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node child = nodeList.item(i);
+				
+				if (child.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element)child;
+					String nombre = element.getElementsByTagName("nombre").item(0).getTextContent();
+					Long claveCurso = Long.valueOf( element.getElementsByTagName("claveDeExportacion").item(0).getTextContent().split("-")[0]);
+					
+					grupos.add(new Grupo(nombre,new Curso(claveCurso)));
+				}
+			}
+		} catch (XPathExpressionException e) {
+			log.warn(e.getMessage());
+		}
+		return grupos;
 	}
 
 }

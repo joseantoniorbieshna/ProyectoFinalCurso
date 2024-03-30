@@ -47,12 +47,12 @@ public class GrupoEntity {
 	
 	public void fromGrupo(Grupo grupo) {
 		BeanUtils.copyProperties(grupo, this);
-		this.curso = new CursoEntity(grupo.getCurso());
+		//No persistido
+		this.curso = new CursoEntity(grupo.getReferenciaCurso());
 	}
 	
 	public Grupo toGrupo() {
 		return new Grupo(getNombre(),getCurso().toCurso());
 	}
-
 
 }

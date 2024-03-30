@@ -53,6 +53,9 @@ public class CursoPersistanceJPA implements CursoPersistance {
 		//OBLIGAMOS A TENER REFERENCIA
 		if(curso.getReferencia()==null) {
 			curso.setReferencia(referencia);
+		}else if( !referencia.equals(curso.getReferencia()) &&
+				existReferencia(curso.getReferencia())) {
+			throw new ConflictExceptions(getMessageErrorExist(curso.getReferencia()));
 		}
 		//CAMBIAMOS LOS DATOS Y PERSISTIMOS MATERIAS
 		cursoEntity.fromCurso(curso);

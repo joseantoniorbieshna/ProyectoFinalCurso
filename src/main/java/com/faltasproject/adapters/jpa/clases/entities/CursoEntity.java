@@ -59,11 +59,15 @@ public class CursoEntity {
 		this.materias = materias;
 	}
 	
-	public CursoEntity(Long referencia, String nombre) {
+	public CursoEntity(Long referencia) {
 		super();
 		this.referencia = referencia;
-		this.nombre = nombre;
 		this.materias=new HashSet<>();
+	}
+	
+	public CursoEntity(Long referencia, String nombre) {
+		this(referencia);
+		this.nombre = nombre;
 	}
 	
 	public CursoEntity(Curso curso){

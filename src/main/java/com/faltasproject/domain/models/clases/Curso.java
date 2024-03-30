@@ -15,6 +15,11 @@ public class Curso {
 		setMaterias(new HashSet<>());
 	}
 	
+	public Curso(Long referencia) {
+		super();
+		setReferencia(referencia);
+	}
+	
 	public Curso(Long referencia, String nombre) {
 		this(nombre);
 		setReferencia(referencia);

@@ -11,10 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Curso;
+import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.services.clases.AulaService;
 import com.faltasproject.domain.services.clases.CursoService;
+import com.faltasproject.domain.services.clases.GrupoService;
 import com.faltasproject.domain.services.clases.MateriaService;
 import com.faltasproject.domain.services.horario.TramoHorarioService;
 import com.faltasproject.utils.XmlTreatment;
@@ -28,15 +30,18 @@ public class GeneralController {
 	private final CursoService cursoService;
 	private final TramoHorarioService tramoHorarioService;
 	private final AulaService aulaService;
+	private final GrupoService grupoService;
 	
 	public GeneralController(MateriaService materiaService,
 			CursoService cursoService,
 			TramoHorarioService tramoHorarioService,
-			AulaService aulaService) {
+			AulaService aulaService,
+			GrupoService grupoService) {
 		this.materiaService=materiaService;
 		this.cursoService=cursoService;
 		this.tramoHorarioService=tramoHorarioService;
 		this.aulaService=aulaService;
+		this.grupoService=grupoService;
 	}
 
 
@@ -101,6 +106,20 @@ public class GeneralController {
 		}
 
 		return "se han guardado " + aulas.size() + " Aulas";
+	}
+	
+	@PostMapping("grupos")
+	public String introducirGrupos(@RequestParam("xml") MultipartFile xml) {
+
+		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+
+		Set<Grupo> grupos = xmlTreatment.getAllGrupos();
+		
+		for(Grupo grupo:grupos) {
+			grupoService.create(grupo);
+		}
+
+		return "se han guardado " + grupos.size() + " grupos";
 	}
 	
 	

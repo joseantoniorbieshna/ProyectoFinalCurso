@@ -38,7 +38,8 @@ public class AulaPersistanceJPA implements AulaPersistance {
 		//TRATAMOS LA REFERENCIA
 		if(aula.getReferencia()==null) {
 			aula.setReferencia(referencia);
-		}else if(existReferencia(aula.getReferencia())){
+		}else if( !referencia.equals(aula.getReferencia()) &&
+				existReferencia(aula.getReferencia())){
 			throw new ConflictExceptions("La referencia a la que quieres cambiar el Aula ya existe");
 		}
 		//CAMBIAMOS DATOS

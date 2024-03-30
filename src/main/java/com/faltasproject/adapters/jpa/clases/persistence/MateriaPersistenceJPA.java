@@ -16,10 +16,6 @@ import com.faltasproject.domain.persistance_ports.clases.MateriaPersistance;
 @Repository("materiaPersistance")
 public class MateriaPersistenceJPA implements MateriaPersistance {
 	
-	private static final String FIRST_PART_MESSAGE_EXIST_OR_NOT_REFERENCIA="La materia con la referencia '";
-	private static final String SECOND_PART_MESSAGE_EXIST_REFERENCIA="' ya existe";
-	private static final String SECOND_PART_MESSAGE_NOT_EXIST_REFERENCIA="' no existe";
-	
 	private final MateriaRepositoryJPA materiaRepository;
 	
 	public MateriaPersistenceJPA(MateriaRepositoryJPA materiaRepository) {
@@ -29,7 +25,7 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	@Override
 	public Materia create(Materia materia) {
 		if(this.existReferencia(materia.getReferencia())) {
-			throw new ConflictExceptions(FIRST_PART_MESSAGE_EXIST_OR_NOT_REFERENCIA+materia.getReferencia()+SECOND_PART_MESSAGE_EXIST_REFERENCIA); 
+			throw new ConflictExceptions(getMessageErrorExist(materia.getReferencia())); 
 		}
 		MateriasEntity materiaEntity = new MateriasEntity(materia);
 		return materiaRepository.save(materiaEntity)
@@ -40,8 +36,15 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	@Override
 	public Materia update(String referencia, Materia materia) {
 		MateriasEntity materiaEntity = materiaRepository.findByReferencia(referencia)
-				.orElseThrow(() -> new NotFoundException(FIRST_PART_MESSAGE_EXIST_OR_NOT_REFERENCIA+ referencia + SECOND_PART_MESSAGE_NOT_EXIST_REFERENCIA));
-
+				.orElseThrow(() -> new NotFoundException(getMessageErrorNotExist(referencia)));
+		//OBLIGAMOS A QUE TENGA REFERENCIA
+		if(materia.getReferencia()==null) {
+			materia.setReferencia(referencia);
+		}else if( !referencia.equals(materia.getReferencia()) &&
+				existReferencia(materia.getReferencia())) {
+			throw new ConflictExceptions(getMessageErrorExist(materia.getReferencia()));
+		}
+		// CAMBIAMOS LOS DATOS
 		materiaEntity.fromMateria(materia);
 		
 		return materiaRepository.save(materiaEntity).toMateria();
@@ -57,7 +60,7 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	public Materia readByReferencia(String referencia) {
 		Optional<MateriasEntity> materia = materiaRepository.findByReferencia(referencia);
 		if (!materia.isPresent()) {
-			throw new NotFoundException(FIRST_PART_MESSAGE_EXIST_OR_NOT_REFERENCIA + referencia + SECOND_PART_MESSAGE_NOT_EXIST_REFERENCIA);
+			throw new NotFoundException(getMessageErrorNotExist(referencia));
 		}
 		return materia.get().toMateria();
 	}
@@ -65,7 +68,7 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	@Override
 	public boolean delete(String referencia) {
 		if (!existReferencia(referencia)) {
-			throw new NotFoundException(FIRST_PART_MESSAGE_EXIST_OR_NOT_REFERENCIA + referencia + SECOND_PART_MESSAGE_NOT_EXIST_REFERENCIA);
+			throw new NotFoundException(getMessageErrorNotExist(referencia));
 		}
 		
 		materiaRepository.deleteByReferencia(referencia);
@@ -80,5 +83,12 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	@Override
 	public boolean existReferencia(String referencia) {
 		return materiaRepository.findByReferencia(referencia).isPresent();
+	}
+	
+	private String getMessageErrorExist(String referencia) {
+		return "La materia con la referencia '"+referencia+"' ya existe";
+	}
+	private String getMessageErrorNotExist(String referencia) {
+		return "La materia con la referencia '"+referencia+"' no existe";
 	}
 }
