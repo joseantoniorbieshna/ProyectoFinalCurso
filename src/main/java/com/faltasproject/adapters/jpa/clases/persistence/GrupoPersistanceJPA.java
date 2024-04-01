@@ -100,7 +100,7 @@ public class GrupoPersistanceJPA implements GrupoPersistance {
 		return "El Grupo con el nombre '"+nombre+"' no existe";
 	}
 	
-	private CursoEntity getCursoPersistByReferenciaCurso(Long referenciaCurso) {
+	private CursoEntity getCursoPersistByReferenciaCurso(String referenciaCurso) {
 		return cursoRepositoryJPA.findByReferencia(referenciaCurso)
 				.orElseThrow( ()-> new NotFoundException(ERROR_CURSO_NOT_EXIST));
 	}

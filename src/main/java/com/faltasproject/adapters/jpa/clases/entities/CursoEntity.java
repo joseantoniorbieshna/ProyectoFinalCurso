@@ -38,7 +38,7 @@ public class CursoEntity {
 	private Long id;
 	@EqualsAndHashCode.Include
 	@Column(unique = true)
-	private Long referencia;
+	private String referencia;
 	private String nombre;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -52,20 +52,20 @@ public class CursoEntity {
 	@OneToMany(mappedBy = "curso",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
 	private Set<GrupoEntity> grupos;
 	
-	public CursoEntity(Long referencia,String nombre, Set<MateriasEntity> materias) {
+	public CursoEntity(String referencia,String nombre, Set<MateriasEntity> materias) {
 		super();
 		this.referencia=referencia;
 		this.nombre = nombre;
 		this.materias = materias;
 	}
 	
-	public CursoEntity(Long referencia) {
+	public CursoEntity(String referencia) {
 		super();
 		this.referencia = referencia;
 		this.materias=new HashSet<>();
 	}
 	
-	public CursoEntity(Long referencia, String nombre) {
+	public CursoEntity(String referencia, String nombre) {
 		this(referencia);
 		this.nombre = nombre;
 	}

@@ -27,7 +27,7 @@ public class Grupo {
 		return curso;
 	}
 	
-	public Long getReferenciaCurso() {
+	public String getReferenciaCurso() {
 		return getCurso().getReferencia();
 	}
 

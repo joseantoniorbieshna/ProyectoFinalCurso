@@ -26,10 +26,10 @@ public class AulaEntity {
 	@EqualsAndHashCode.Include
 	private Long id;
 	@Column(unique = true)
-	private Long referencia;
+	private String referencia;
 	private String nombre;
 		
-	public AulaEntity(Long referencia, String nombre) {
+	public AulaEntity(String referencia, String nombre) {
 		super();
 		this.referencia = referencia;
 		this.nombre = nombre;

@@ -5,41 +5,36 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Curso {
-	private Long referencia;
+	private String referencia;
 	private String nombre;
 	private Set<Materia> materias;
 	
-	public Curso(String nombre) {
+	public Curso(String referencia) {
 		super();
-		setNombre(nombre);
+		setReferencia(referencia);
 		setMaterias(new HashSet<>());
 	}
 	
-	public Curso(Long referencia) {
-		super();
-		setReferencia(referencia);
-	}
-	
-	public Curso(Long referencia, String nombre) {
-		this(nombre);
-		setReferencia(referencia);
+	public Curso(String referencia, String nombre) {
+		this(referencia);
+		setNombre(nombre);
 	}
 	
 	public Curso(String nombre, Set<Materia> materias) {
-		this(nombre);
+		setNombre(nombre);
 		setMaterias(materias);
 	}
 	
-	public Curso(Long referencia, String nombre, Set<Materia> materias) {
+	public Curso(String referencia, String nombre, Set<Materia> materias) {
 		this(referencia,nombre);
 		setMaterias(materias);
 	}
 
-	public Long getReferencia() {
+	public String getReferencia() {
 		return referencia;
 	}
 
-	public void setReferencia(Long referencia) {
+	public void setReferencia(String referencia) {
 		this.referencia = referencia;
 	}
 

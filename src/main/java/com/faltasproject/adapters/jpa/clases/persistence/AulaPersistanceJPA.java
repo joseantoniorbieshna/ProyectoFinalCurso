@@ -31,7 +31,7 @@ public class AulaPersistanceJPA implements AulaPersistance {
 	}
 
 	@Override
-	public Aula update(Long referencia, Aula aula) {
+	public Aula update(String referencia, Aula aula) {
 		AulaEntity aulaEntity=aulaRepositoryJPA.findByReferencia(referencia)
 		.orElseThrow(() -> new NotFoundException( getMessageErrorNotExist(referencia) ));
 		
@@ -60,7 +60,7 @@ public class AulaPersistanceJPA implements AulaPersistance {
 	}
 
 	@Override
-	public boolean delete(Long referencia) {
+	public boolean delete(String referencia) {
 		if(!existReferencia(referencia)) {
 			throw new NotFoundException( getMessageErrorNotExist(referencia) );
 		}
@@ -69,22 +69,22 @@ public class AulaPersistanceJPA implements AulaPersistance {
 	}
 
 	@Override
-	public Aula readByReferencia(Long referencia) {
+	public Aula readByReferencia(String referencia) {
 		return aulaRepositoryJPA.findByReferencia(referencia)
 				.orElseThrow(() -> new NotFoundException( getMessageErrorNotExist(referencia) ))
 				.toAula();
 	}
 
 	@Override
-	public boolean existReferencia(Long referencia) {
+	public boolean existReferencia(String referencia) {
 		return aulaRepositoryJPA.findByReferencia(referencia).isPresent();
 	}
 	
-	private String getMessageErrorExist(Long referencia) {
+	private String getMessageErrorExist(String referencia) {
 		return "El Aula con la referencia '"+referencia+"' ya existe";
 	}
 	
-	private String getMessageErrorNotExist(Long referencia) {
+	private String getMessageErrorNotExist(String referencia) {
 		return "El Aula con la referencia '"+referencia+"' no existe";
 	}
 

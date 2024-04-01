@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.assertj.core.util.Sets;
 import org.springframework.stereotype.Service;
 
 import com.faltasproject.adapters.jpa.clases.daos.AulaRepositoryJPA;
@@ -54,22 +55,22 @@ public class ClasesSeederService {
 		
 		// CURSO
 		CursoEntity[] cursos= {
-				new CursoEntity(1L,"4º E.S.O", new HashSet<MateriasEntity>(  List.of( materias[0],materias[1],materias[2]))  ),
-				new CursoEntity(2L,"1º Bachillerato(Arte)",new HashSet<MateriasEntity>(  List.of(materias[4],materias[1]))  ),
-				new CursoEntity(3L,"3º E.S.O",new HashSet<MateriasEntity>(  List.of(materias[1]))  ),
-				new CursoEntity(4L,"1º E.S.O",new HashSet<MateriasEntity>(  List.of(materias[0],materias[1],materias[2],materias[3])) ),
-				new CursoEntity(5L,"2º Bachillerato",new HashSet<MateriasEntity>(  List.of(materias[0],materias[1],materias[2],materias[3]))  ),
+				new CursoEntity("1","4º E.S.O", Sets.set( materias[0],materias[1],materias[2])),
+				new CursoEntity("2","1º Bachillerato(Arte)", Sets.set(materias[4],materias[1])),
+				new CursoEntity("3","3º E.S.O", Sets.set(materias[1])),
+				new CursoEntity("4","1º E.S.O", Sets.set(materias[0],materias[1],materias[2],materias[3])),
+				new CursoEntity("5","2º Bachillerato", Sets.set(materias[0],materias[1],materias[2],materias[3])),
 		};
 		
 		cursoRepositoryJPA.saveAll(Arrays.asList(cursos));
 		
 		// AULA
 		AulaEntity[] aula={
-			new AulaEntity(1L,"AULA A"),
-			new AulaEntity(2L,"AULA B"),
-			new AulaEntity(3L,"AULA C"),
-			new AulaEntity(4L,"AULA D"),
-			new AulaEntity(5L,"AULA E"),
+			new AulaEntity("1","AULA A"),
+			new AulaEntity("2","AULA B"),
+			new AulaEntity("3","AULA C"),
+			new AulaEntity("4","AULA D"),
+			new AulaEntity("5","AULA E"),
 		};
 		
 		aulaRepositoryJPA.saveAll(Arrays.asList(aula));

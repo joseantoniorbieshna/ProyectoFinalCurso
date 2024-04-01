@@ -43,7 +43,7 @@ class GrupoRepositoryJPATest {
 		String nombre="1A";
 		Optional<GrupoEntity> grupo = grupoRepositoryJPA.findByNombreEquals(nombre);
 		assertTrue(grupo.isPresent());
-		Long referenciaCurso = grupo.get().getCurso().getReferencia();
+		String referenciaCurso = grupo.get().getCurso().getReferencia();
 		
 		
 		grupoRepositoryJPA.deleteByNombreEquals(nombre);

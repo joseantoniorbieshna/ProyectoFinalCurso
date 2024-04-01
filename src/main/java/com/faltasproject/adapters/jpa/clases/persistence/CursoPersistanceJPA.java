@@ -45,7 +45,7 @@ public class CursoPersistanceJPA implements CursoPersistance {
 	}
 
 	@Override
-	public Curso update(Long referencia, Curso curso) {
+	public Curso update(String referencia, Curso curso) {
 		CursoEntity cursoEntity = cursoRepositoryJPA.findByReferencia(referencia)
 		.orElseThrow(() -> new NotFoundException(getMessageErrorNotExist(referencia)));
 		
@@ -80,7 +80,7 @@ public class CursoPersistanceJPA implements CursoPersistance {
 	}
 
 	@Override
-	public boolean delete(Long referencia) {
+	public boolean delete(String referencia) {
 		if(!existReferencia(referencia)) {
 			throw new NotFoundException(getMessageErrorNotExist(referencia));
 		}
@@ -90,23 +90,23 @@ public class CursoPersistanceJPA implements CursoPersistance {
 	}
 
 	@Override
-	public Curso readByReferencia(Long referencia) {
+	public Curso readByReferencia(String referencia) {
 		return cursoRepositoryJPA.findByReferencia(referencia)
 				.orElseThrow(()-> new NotFoundException(getMessageErrorNotExist(referencia)))
 				.toCurso();
 	}
 
 	@Override
-	public boolean existReferencia(Long referencia) {
+	public boolean existReferencia(String referencia) {
 		Optional<CursoEntity> cursoEntity = cursoRepositoryJPA.findByReferencia(referencia);
 		return cursoEntity.isPresent();
 	}
 	
-	private String getMessageErrorExist(Long referencia) {
+	private String getMessageErrorExist(String referencia) {
 		return "El curso con la referencia '"+referencia+"' ya existe";
 	}
 	
-	private String getMessageErrorNotExist(Long referencia) {
+	private String getMessageErrorNotExist(String referencia) {
 		return "El curso con la referencia '"+referencia+"' no existe";
 	}
 	

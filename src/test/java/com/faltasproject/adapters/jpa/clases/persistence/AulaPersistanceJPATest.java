@@ -23,16 +23,16 @@ class AulaPersistanceJPATest {
 
 	@Test
 	void update() {
-		Long referencia=3L;
-		Long referenciaExpected=100L;
+		String referencia="3";
+		String referenciaExpected="100";
 		String nombreExpected="AULA TRASERA";
 		Aula aula = aulaPersistanceJPA.update(referencia, new Aula(referenciaExpected,"AULA TRASERA"));
 		assertEquals(referenciaExpected, aula.getReferencia());
 		assertEquals(nombreExpected, aula.getNombre());
 		
 		//VOLVER AL VALOR ANTERIOR
-		referencia=100L;
-		referenciaExpected=3L;
+		referencia="100";
+		referenciaExpected="3";
 		nombreExpected="AULA C";
 		aula = aulaPersistanceJPA.update(referencia, new Aula(referenciaExpected,"AULA C"));
 		assertEquals(referenciaExpected, aula.getReferencia());
@@ -41,10 +41,10 @@ class AulaPersistanceJPATest {
 
 	@Test
 	void create() {
-		final Aula aulaUpdate = new Aula(1L,"AULA A");
+		final Aula aulaUpdate = new Aula("1","AULA A");
 		assertThrows(ConflictExceptions.class, ()->aulaPersistanceJPA.create(aulaUpdate));
 		
-		Long referencia=10L;
+		String referencia="10";
 		String nombreAula="AULA TEMPORAL";
 		Aula aula = new Aula(referencia,nombreAula);
 		aulaPersistanceJPA.create(aula);
@@ -85,7 +85,7 @@ class AulaPersistanceJPATest {
 	void delete() {
 
 		// 1º
-		Long referencia=10L;
+		String referencia="10";
 		String nombreAula="AULA TEMPORAL";
 		aulaPersistanceJPA.create(new Aula(referencia,nombreAula));
 		
@@ -95,7 +95,7 @@ class AulaPersistanceJPATest {
 		assertFalse(aulaPersistanceJPA.existReferencia(referencia));
 		
 		// 2º
-		referencia=11L;
+		referencia="11";
 		nombreAula="AULA TEMPORAL2";
 		aulaPersistanceJPA.create(new Aula(referencia,nombreAula));
 		
@@ -104,19 +104,19 @@ class AulaPersistanceJPATest {
 		aulaPersistanceJPA.delete(referencia);
 		assertFalse(aulaPersistanceJPA.existReferencia(referencia));
 		
-		assertThrows(NotFoundException.class, ()->aulaPersistanceJPA.delete(11L));
+		assertThrows(NotFoundException.class, ()->aulaPersistanceJPA.delete("11"));
 		
 	}
 	
 	@Test
 	void readByReferencia() {
-		Long referencia=1L;
+		String referencia="1";
 		Aula aula = aulaPersistanceJPA.readByReferencia(referencia);
 		String expectedName="AULA A";
 		assertEquals(expectedName, aula.getNombre());
 		assertEquals(referencia, aula.getReferencia());
 
-		referencia=5L;
+		referencia="5";
 		aula = aulaPersistanceJPA.readByReferencia(referencia);
 		expectedName="AULA E";
 		assertEquals(expectedName, aula.getNombre());
@@ -125,11 +125,15 @@ class AulaPersistanceJPATest {
 	
 	@Test
 	void existReferencia() {
-		assertTrue(aulaPersistanceJPA.existReferencia(1L));
-		assertTrue(aulaPersistanceJPA.existReferencia(5L));
+		String referencia="1";
+		assertTrue(aulaPersistanceJPA.existReferencia(referencia));
+		referencia="5";
+		assertTrue(aulaPersistanceJPA.existReferencia(referencia));
 		
-		assertFalse(aulaPersistanceJPA.existReferencia(0L));
-		assertFalse(aulaPersistanceJPA.existReferencia(6L));
+		referencia="0";
+		assertFalse(aulaPersistanceJPA.existReferencia(referencia));
+		referencia="6";
+		assertFalse(aulaPersistanceJPA.existReferencia(referencia));
 	}
 
 }

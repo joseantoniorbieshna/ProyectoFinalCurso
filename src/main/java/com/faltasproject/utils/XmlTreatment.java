@@ -106,7 +106,7 @@ public class XmlTreatment {
 				
 				if (child.getNodeType() == Node.ELEMENT_NODE) {
 					Element element = (Element)child;
-					Long id = Long.valueOf( element.getElementsByTagName("claveDeExportacion").item(0).getTextContent() );
+					String id = element.getElementsByTagName("claveDeExportacion").item(0).getTextContent();
 					String nombreCompleto = element.getElementsByTagName("nombreCompleto").item(0).getTextContent();
 					NodeList materiasNode = ((Element)element.getElementsByTagName("materiasDelCurso").item(0)).getElementsByTagName("materia");
 					
@@ -193,7 +193,7 @@ public class XmlTreatment {
 				
 				if (child.getNodeType() == Node.ELEMENT_NODE) {
 					Element element = (Element)child;
-					Long id = Long.valueOf( element.getElementsByTagName("claveDeExportacion").item(0).getTextContent() );
+					String id = element.getElementsByTagName("claveDeExportacion").item(0).getTextContent();
 					String nombre = element.getElementsByTagName("descripcion").item(0).getTextContent();
 					
 					aulas.add(new Aula(id,nombre));
@@ -228,7 +228,7 @@ public class XmlTreatment {
 				if (child.getNodeType() == Node.ELEMENT_NODE) {
 					Element element = (Element)child;
 					String nombre = element.getElementsByTagName("nombre").item(0).getTextContent();
-					Long claveCurso = Long.valueOf( element.getElementsByTagName("claveDeExportacion").item(0).getTextContent().split("-")[0]);
+					String claveCurso = element.getElementsByTagName("claveDeExportacion").item(0).getTextContent().split("-")[0];
 					
 					grupos.add(new Grupo(nombre,new Curso(claveCurso)));
 				}

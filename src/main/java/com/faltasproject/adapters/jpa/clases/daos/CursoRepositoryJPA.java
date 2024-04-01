@@ -11,7 +11,7 @@ import jakarta.transaction.Transactional;
 
 public interface CursoRepositoryJPA extends JpaRepository<CursoEntity, Long> {
 	List<CursoEntity> findByNombreContainingIgnoreCase(String search);
-	Optional<CursoEntity> findByReferencia(Long referencia);
+	Optional<CursoEntity> findByReferencia(String referencia);
 	@Transactional
-	void deleteByReferencia(Long referencia);
+	void deleteByReferencia(String referencia);
 }

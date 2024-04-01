@@ -31,10 +31,12 @@ class CursoRepositoryJPATest {
 	}
 	@Test
 	void findByReferencia(){
-		Optional<CursoEntity> curso = cursoRepositoryJPA.findByReferencia(-1L);
+		String referencia="-1";
+		Optional<CursoEntity> curso = cursoRepositoryJPA.findByReferencia(referencia);
 		assertFalse(curso.isPresent());
 		
-		curso = cursoRepositoryJPA.findByReferencia(1L);
+		referencia="1";
+		curso = cursoRepositoryJPA.findByReferencia(referencia);
 		assertTrue(curso.isPresent());
 		assertEquals("4º E.S.O", curso.get().getNombre());
 		assertEquals(3, curso.get().getMaterias().size());
@@ -42,15 +44,16 @@ class CursoRepositoryJPATest {
 	@Test
 	@Transactional
 	void deleteByReferencia() {
-		CursoEntity cursoEntity = new CursoEntity(10000L,"4º CARRERA");
+		String referencia="10000";
+		CursoEntity cursoEntity = new CursoEntity(referencia,"4º CARRERA");
 		cursoRepositoryJPA.save(cursoEntity);
 		
-		Optional<CursoEntity> cursoResult=cursoRepositoryJPA.findByReferencia(10000L);
+		Optional<CursoEntity> cursoResult=cursoRepositoryJPA.findByReferencia(referencia);
 		assertTrue(cursoResult.isPresent());
 		
-		cursoRepositoryJPA.deleteByReferencia(10000L);
+		cursoRepositoryJPA.deleteByReferencia(referencia);
 		
-		cursoResult=cursoRepositoryJPA.findByReferencia(10000L);
+		cursoResult=cursoRepositoryJPA.findByReferencia(referencia);
 		assertFalse(cursoResult.isPresent());
 	}
 

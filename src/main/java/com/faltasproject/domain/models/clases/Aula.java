@@ -3,7 +3,7 @@ package com.faltasproject.domain.models.clases;
 import java.util.Objects;
 
 public class Aula {
-	private Long referencia;
+	private String referencia;
 	private String nombre;
 
 	public Aula(String nombre) {
@@ -11,16 +11,16 @@ public class Aula {
 		setNombre(nombre);
 	}
 
-	public Aula(Long referencia, String nombre) {
+	public Aula(String referencia, String nombre) {
 		this(nombre);
 		setReferencia(referencia);
 	}
 
-	public Long getReferencia() {
+	public String getReferencia() {
 		return referencia;
 	}
 
-	public void setReferencia(Long referencia) {
+	public void setReferencia(String referencia) {
 		this.referencia = referencia;
 	}
 

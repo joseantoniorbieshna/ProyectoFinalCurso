@@ -11,7 +11,7 @@ import jakarta.transaction.Transactional;
 
 public interface AulaRepositoryJPA extends JpaRepository<AulaEntity, Long> {
 	List<AulaEntity> findByNombreContainingIgnoreCase(String search);
-	Optional<AulaEntity> findByReferencia(Long referencia);
+	Optional<AulaEntity> findByReferencia(String referencia);
 	@Transactional
-	void deleteByReferencia(Long referencia);
+	void deleteByReferencia(String referencia);
 }

@@ -36,25 +36,25 @@ class CursoPesistanceJPATest {
 
 	@Test
 	void testReadNotFound() {
-		 assertThrows(NotFoundException.class, () -> this.cursoPersistanceJPA.readByReferencia(0L));
+		 assertThrows(NotFoundException.class, () -> this.cursoPersistanceJPA.readByReferencia("0"));
 	}
 	
 	@Test
     void update() {
-		final Long referenciaUpdate = 500L;
+		final String referenciaUpdate = "500";
 		final Curso updateCurso = new Curso("Curso 1");
     	assertThrows( NotFoundException.class, () -> cursoPersistanceJPA.update(referenciaUpdate,updateCurso ) );
 
-    	Long referencia=1L;
+    	String referencia="1";
     	Curso curso = cursoPersistanceJPA.readByReferencia(referencia);
     	assertNotEquals(0, curso.getMaterias().size());
     	
-    	curso = cursoPersistanceJPA.update(referencia, new Curso("44º E.S.O"));
+    	curso = cursoPersistanceJPA.update(referencia, new Curso(null,"44º E.S.O"));
     	assertEquals("44º E.S.O", curso.getNombre());
     	assertEquals(0, curso.getMaterias().size());
     	
     	
-    	curso = cursoPersistanceJPA.update(referencia, new Curso("4º E.S.O", Sets.set( new Materia("01"),new Materia("02"),new Materia("03") )));
+    	curso = cursoPersistanceJPA.update(referencia, new Curso(null,"4º E.S.O", Sets.set( new Materia("01"),new Materia("02"),new Materia("03") )));
     	assertEquals("4º E.S.O", curso.getNombre());
     	assertEquals(3, curso.getMaterias().size());
     }
@@ -62,7 +62,7 @@ class CursoPesistanceJPATest {
 	@Test
 	void create() {
 		//TODO
-		Long referencia=1000L;
+		String referencia="1000";
 		String nombreCurso = "CURSO TEMPORAL";
 		Curso curso = new Curso(referencia,nombreCurso);
 		Set<Materia> materias = new HashSet<>();
@@ -104,9 +104,9 @@ class CursoPesistanceJPATest {
 	@Test
 	void delete() {
 		// EXCEPCION
-		assertThrows(NotFoundException.class, ()->cursoPersistanceJPA.delete(1000L));
+		assertThrows(NotFoundException.class, ()->cursoPersistanceJPA.delete("1000"));
 		// PROBAMOS A BORRAR MATERIA Y QUE NO SE BORRE CURSO
-		Long referenciaCurso=2L;
+		String referenciaCurso="2";
 		Curso curso=cursoPersistanceJPA.readByReferencia(referenciaCurso);
 		int materiaExpected=2;
 		assertEquals(materiaExpected, curso.getMaterias().size());
@@ -130,7 +130,7 @@ class CursoPesistanceJPATest {
 		
 		
 		//PROBAMOS A BORRAR CURSO
-		Long referencia=5L;
+		String referencia="5";
 		assertTrue(cursoPersistanceJPA.existReferencia(referencia));
 		Set<Materia> materias = cursoPersistanceJPA.readByReferencia(referencia).getMaterias();
 		
@@ -153,17 +153,17 @@ class CursoPesistanceJPATest {
 	
 	@Test
 	void readByReferencia() {
-		assertThrows(NotFoundException.class, ()->cursoPersistanceJPA.readByReferencia(199L));
+		assertThrows(NotFoundException.class, ()->cursoPersistanceJPA.readByReferencia("199"));
 		
 		//1º
-		Curso curso=cursoPersistanceJPA.readByReferencia(1L);
+		Curso curso=cursoPersistanceJPA.readByReferencia("1");
 		String expected = "4º E.S.O";
 		Integer sizeMateriaExpected =3;
 		assertEquals(expected, curso.getNombre());
 		assertEquals(sizeMateriaExpected, curso.getMaterias().size());
 		
 		//2º
-		curso=cursoPersistanceJPA.readByReferencia(3L);
+		curso=cursoPersistanceJPA.readByReferencia("3");
 		expected = "3º E.S.O";
 		sizeMateriaExpected =1;
 		assertEquals(expected, curso.getNombre());
@@ -173,11 +173,11 @@ class CursoPesistanceJPATest {
 
 	@Test
 	void existReferencia() {
-		assertTrue(cursoPersistanceJPA.existReferencia(1L));
-		assertTrue(cursoPersistanceJPA.existReferencia(5L));
+		assertTrue(cursoPersistanceJPA.existReferencia("1"));
+		assertTrue(cursoPersistanceJPA.existReferencia("5"));
 		
-		assertFalse(cursoPersistanceJPA.existReferencia(0L));
-		assertFalse(cursoPersistanceJPA.existReferencia(6L));
+		assertFalse(cursoPersistanceJPA.existReferencia("0"));
+		assertFalse(cursoPersistanceJPA.existReferencia("6"));
 	}
 
 }
