@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.faltasproject.adapters.jpa.horario.entities.TramoHorarioEntity;
-import com.faltasproject.adapters.jpa.horario.entities.key_compound.KeyTramoHorario;
+import com.faltasproject.adapters.jpa.horario.entities.key_compound.TramoHorarioKey;
 
 @SpringBootTest
 class TramoHorarioRespositoryJPATest {
@@ -19,7 +19,7 @@ class TramoHorarioRespositoryJPATest {
 	
 	@Test
 	void test() {
-		Optional<TramoHorarioEntity> tramoHorarioEntity=tramoHorarioRepositoryJPA.findById(new KeyTramoHorario(0, 1));
+		Optional<TramoHorarioEntity> tramoHorarioEntity=tramoHorarioRepositoryJPA.findById(new TramoHorarioKey(0, 1));
 		assertTrue(tramoHorarioEntity.isPresent());
 	}
 

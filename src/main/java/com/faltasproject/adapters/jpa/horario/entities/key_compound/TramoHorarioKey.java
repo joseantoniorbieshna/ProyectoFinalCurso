@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class KeyTramoHorario implements Serializable {
+public class TramoHorarioKey implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Column(name = "dia")
 	private Integer dia;
 	@Column(name = "indice")
 	private Integer indice;
 	
-	public KeyTramoHorario(IdTramoHorarioDTO idTramoHorarioDTO) {
+	public TramoHorarioKey(IdTramoHorarioDTO idTramoHorarioDTO) {
 		fromIdTramoHorarioDTO(idTramoHorarioDTO);
 	}
 	

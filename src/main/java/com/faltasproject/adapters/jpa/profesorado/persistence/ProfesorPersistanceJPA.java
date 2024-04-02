@@ -51,7 +51,7 @@ public class ProfesorPersistanceJPA implements ProfesorPersistance {
 	@Override
 	public Stream<Profesor> readAll() {
 		return profesorRepositoryJPA.findAll().stream()
-				.map(profesorEntity->profesorEntity.toProfesor());
+				.map(ProfesorEntity::toProfesor);
 	}
 
 	@Override

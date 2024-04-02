@@ -263,7 +263,7 @@ public class XmlTreatment {
 				if (child.getNodeType() == Node.ELEMENT_NODE) {
 					Element element = (Element)child;
 					Node claveExportacionNode = element.getElementsByTagName("claveDeExportacion").item(0);
-					String claveExportacion= new String();
+					String claveExportacion= null;
 					// A VECES NO FUNCIONA BIEN POR TANTO HAY QUE HACER ESTO
 					if(claveExportacionNode==null) {
 						claveExportacion=element.getElementsByTagName("nombre").item(0).getTextContent();

@@ -1,3 +1,6 @@
+
+
+
 package com.faltasproject.adapters.jpa.horario.persistence;
 
 import java.util.Optional;
@@ -7,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.entities.TramoHorarioEntity;
-import com.faltasproject.adapters.jpa.horario.entities.key_compound.KeyTramoHorario;
+import com.faltasproject.adapters.jpa.horario.entities.key_compound.TramoHorarioKey;
 import com.faltasproject.domain.exceptions.ConflictExceptions;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.horario.TramoHorario;
@@ -34,7 +37,7 @@ public class TramoHorarioPersistanceJPA implements TramoHorarioPersistance {
 
 	@Override
 	public TramoHorario update(IdTramoHorarioDTO idTramoHorarioDTO, TramoHorario tramoHorario) {
-		Optional<TramoHorarioEntity> tramoHorarioEntity=tramoHorarioRepositoryJPA.findById(new KeyTramoHorario(idTramoHorarioDTO.getDia(), idTramoHorarioDTO.getIndice()));
+		Optional<TramoHorarioEntity> tramoHorarioEntity=tramoHorarioRepositoryJPA.findById(new TramoHorarioKey(idTramoHorarioDTO.getDia(), idTramoHorarioDTO.getIndice()));
 		if(!tramoHorarioEntity.isPresent()) {
 			throw new NotFoundException(getMessageErrorNotFound(idTramoHorarioDTO.getDia(),idTramoHorarioDTO.getIndice()));
 		}
@@ -51,7 +54,7 @@ public class TramoHorarioPersistanceJPA implements TramoHorarioPersistance {
 
 	@Override
 	public TramoHorario readById(IdTramoHorarioDTO idTramoHorarioDTO) {
-		return tramoHorarioRepositoryJPA.findById(new KeyTramoHorario(idTramoHorarioDTO))
+		return tramoHorarioRepositoryJPA.findById(new TramoHorarioKey(idTramoHorarioDTO))
 				.orElseThrow(()-> new NotFoundException(getMessageErrorNotFound(idTramoHorarioDTO.getDia(),idTramoHorarioDTO.getIndice())))
 				.toTramoHorario();
 	}
@@ -61,13 +64,13 @@ public class TramoHorarioPersistanceJPA implements TramoHorarioPersistance {
 		if(!existId(idTramoHorarioDTO)) {
 			throw new NotFoundException(getMessageErrorNotFound(idTramoHorarioDTO.getDia(),idTramoHorarioDTO.getIndice()));
 		}
-		tramoHorarioRepositoryJPA.deleteById(new KeyTramoHorario(idTramoHorarioDTO));
+		tramoHorarioRepositoryJPA.deleteById(new TramoHorarioKey(idTramoHorarioDTO));
 		return !existId(idTramoHorarioDTO);
 	}
 
 	@Override
 	public boolean existId(IdTramoHorarioDTO idTramoHorarioDTO) {
-		return tramoHorarioRepositoryJPA.findById(new KeyTramoHorario(idTramoHorarioDTO)).isPresent();
+		return tramoHorarioRepositoryJPA.findById(new TramoHorarioKey(idTramoHorarioDTO)).isPresent();
 	}
 	
 	public boolean existId(TramoHorario tramoHorario) {

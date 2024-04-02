@@ -2,7 +2,6 @@ package com.faltasproject.adapters.jpa.profesorado.entities;
 
 import org.springframework.beans.BeanUtils;
 
-import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
 import com.faltasproject.domain.models.profesorado.Profesor;
 
 import jakarta.persistence.Column;

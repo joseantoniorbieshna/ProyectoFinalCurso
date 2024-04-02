@@ -2,8 +2,6 @@ package com.faltasproject.adapters.jpa.clases;
 
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,6 +28,7 @@ public class ClasesSeederService {
 			CursoRepositoryJPA cursoRepositoryJPA,
 			AulaRepositoryJPA aulaRepositoryJPA,
 			 GrupoRepositoryJPA grupoRepositoryJPA) {
+		
 		this.materiaRepository=materiaRepository;
 		this.cursoRepositoryJPA=cursoRepositoryJPA;
 		this.aulaRepositoryJPA=aulaRepositoryJPA;
@@ -89,6 +88,7 @@ public class ClasesSeederService {
 				
 		};
 		grupoRepositoryJPA.saveAll(Arrays.asList(grupos));
+		
 	}
 	
 	public void deleteAll() {
