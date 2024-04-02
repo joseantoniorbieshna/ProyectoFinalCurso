@@ -2,9 +2,11 @@ package com.faltasproject.domain.persistance_ports.profesorado;
 
 import java.util.stream.Stream;
 
-import com.faltasproject.domain.models.clases.Curso;
+import org.springframework.stereotype.Repository;
+
 import com.faltasproject.domain.models.profesorado.Profesor;
 
+@Repository
 public interface ProfesorPersistance {
 	
 	Profesor create(Profesor profesor);
@@ -15,7 +17,7 @@ public interface ProfesorPersistance {
 	
 	boolean delete(String referencia);
 	
-	Curso readByReferencia(String referencia);
+	Profesor readByReferencia(String referencia);
 
 	boolean existReferencia(String referencia);
 }

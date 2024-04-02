@@ -28,6 +28,7 @@ import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.models.horario.TramoHorario;
+import com.faltasproject.domain.models.profesorado.Profesor;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -237,6 +238,47 @@ public class XmlTreatment {
 			log.warn(e.getMessage());
 		}
 		return grupos;
+	}
+	
+	
+	public Set<Profesor> getAllProfesores() {
+
+		Set<Profesor> profesores = new HashSet<>();
+
+		XPathFactory xPathFactory = XPathFactory.newInstance();
+		XPath xpath = xPathFactory.newXPath();
+
+		// OBTENEMOS LA LISTA DE CURSOSS
+		String expr = "//profesores/profesor";
+
+		try {
+			
+			XPathExpression expression = xpath.compile(expr);
+
+			NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
+			// ITERO LA LISTA DEL NODO CURSO
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node child = nodeList.item(i);
+				
+				if (child.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element)child;
+					Node claveExportacionNode = element.getElementsByTagName("claveDeExportacion").item(0);
+					String claveExportacion= new String();
+					// A VECES NO FUNCIONA BIEN POR TANTO HAY QUE HACER ESTO
+					if(claveExportacionNode==null) {
+						claveExportacion=element.getElementsByTagName("nombre").item(0).getTextContent();
+					}else {
+						claveExportacion=claveExportacionNode.getTextContent();
+					}
+					String nombreCompleto = element.getElementsByTagName("nombreCompleto").item(0).getTextContent();
+					
+					profesores.add(new Profesor(claveExportacion,nombreCompleto));
+				}
+			}
+		} catch (XPathExpressionException e) {
+			log.warn(e.getMessage());
+		}
+		return profesores;
 	}
 
 }

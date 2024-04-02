@@ -14,11 +14,13 @@ import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.models.horario.TramoHorario;
+import com.faltasproject.domain.models.profesorado.Profesor;
 import com.faltasproject.domain.services.clases.AulaService;
 import com.faltasproject.domain.services.clases.CursoService;
 import com.faltasproject.domain.services.clases.GrupoService;
 import com.faltasproject.domain.services.clases.MateriaService;
 import com.faltasproject.domain.services.horario.TramoHorarioService;
+import com.faltasproject.domain.services.profesorado.ProfesorService;
 import com.faltasproject.utils.XmlTreatment;
 
 
@@ -31,17 +33,20 @@ public class GeneralController {
 	private final TramoHorarioService tramoHorarioService;
 	private final AulaService aulaService;
 	private final GrupoService grupoService;
+	private final ProfesorService profesorService;
 	
 	public GeneralController(MateriaService materiaService,
 			CursoService cursoService,
 			TramoHorarioService tramoHorarioService,
 			AulaService aulaService,
-			GrupoService grupoService) {
+			GrupoService grupoService,
+			ProfesorService profesorService) {
 		this.materiaService=materiaService;
 		this.cursoService=cursoService;
 		this.tramoHorarioService=tramoHorarioService;
 		this.aulaService=aulaService;
 		this.grupoService=grupoService;
+		this.profesorService=profesorService;
 	}
 
 
@@ -120,6 +125,20 @@ public class GeneralController {
 		}
 
 		return "se han guardado " + grupos.size() + " grupos";
+	}
+	
+	@PostMapping("profesores")
+	public String introducirProfesores(@RequestParam("xml") MultipartFile xml) {
+
+		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+
+		Set<Profesor> profesores = xmlTreatment.getAllProfesores();
+		
+		for(Profesor profesor:profesores) {
+			profesorService.create(profesor);
+		}
+
+		return "se han guardado " + profesores.size() + " profesores";
 	}
 	
 	
