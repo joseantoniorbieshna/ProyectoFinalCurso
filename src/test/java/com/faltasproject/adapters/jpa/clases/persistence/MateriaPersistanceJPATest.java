@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.faltasproject.domain.exceptions.ConflictExceptions;
+import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Materia;
 
@@ -46,7 +46,7 @@ class MateriaPersistanceJPATest {
     @Test
     void create() {
     	final Materia materiaUpdate = new Materia("01", "PM","Programación");
-    	assertThrows(ConflictExceptions.class, () -> materiaPersistenceJPA.create(materiaUpdate));
+    	assertThrows(ConflictException.class, () -> materiaPersistenceJPA.create(materiaUpdate));
     	
     	String referencia="FF";
     	Materia materiaCreate = new Materia(referencia, "PM2","Programación 2");
@@ -101,7 +101,7 @@ class MateriaPersistanceJPATest {
     	//2º
     	final String referenciaExceptionExist="01";
     	final Materia materiaExceptionExist = new Materia(referenciaExceptionExist);
-    	assertThrows(ConflictExceptions.class, ()->materiaPersistenceJPA.create(materiaExceptionExist));
+    	assertThrows(ConflictException.class, ()->materiaPersistenceJPA.create(materiaExceptionExist));
 	}
     
     @Test

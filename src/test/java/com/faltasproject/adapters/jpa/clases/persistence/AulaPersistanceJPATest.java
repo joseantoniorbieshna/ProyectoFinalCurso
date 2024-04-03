@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.faltasproject.domain.exceptions.ConflictExceptions;
+import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Aula;
 
@@ -42,7 +42,7 @@ class AulaPersistanceJPATest {
 	@Test
 	void create() {
 		final Aula aulaUpdate = new Aula("1","AULA A");
-		assertThrows(ConflictExceptions.class, ()->aulaPersistanceJPA.create(aulaUpdate));
+		assertThrows(ConflictException.class, ()->aulaPersistanceJPA.create(aulaUpdate));
 		
 		String referencia="10";
 		String nombreAula="AULA TEMPORAL";

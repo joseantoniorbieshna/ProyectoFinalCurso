@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.entities.TramoHorarioEntity;
 import com.faltasproject.adapters.jpa.horario.entities.key_compound.TramoHorarioKey;
-import com.faltasproject.domain.exceptions.ConflictExceptions;
+import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
@@ -30,7 +30,7 @@ public class TramoHorarioPersistanceJPA implements TramoHorarioPersistance {
 	@Override
 	public TramoHorario create(TramoHorario tramoHorario) {
 		if(existId(tramoHorario)) {
-			throw new ConflictExceptions(getMessageErrorExist(tramoHorario.getDia(),tramoHorario.getIndice()));
+			throw new ConflictException(getMessageErrorExist(tramoHorario.getDia(),tramoHorario.getIndice()));
 		}
 		return tramoHorarioRepositoryJPA.save(new TramoHorarioEntity(tramoHorario)).toTramoHorario();
 	}

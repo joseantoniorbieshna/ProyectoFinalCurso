@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
 import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
-import com.faltasproject.domain.exceptions.ConflictExceptions;
+import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.profesorado.Profesor;
 import com.faltasproject.domain.persistance_ports.profesorado.ProfesorPersistance;
@@ -24,7 +24,7 @@ public class ProfesorPersistanceJPA implements ProfesorPersistance {
 	@Override
 	public Profesor create(Profesor profesor) {
 		if(existReferencia(profesor.getReferencia())) {
-			throw new ConflictExceptions(profesor.getReferencia());
+			throw new ConflictException(profesor.getReferencia());
 		}
 		
 		return profesorRepositoryJPA.save(new ProfesorEntity(profesor)).toProfesor();
@@ -40,7 +40,7 @@ public class ProfesorPersistanceJPA implements ProfesorPersistance {
 			profesor.setReferencia(referencia);
 		}else if( !referencia.equals(profesor.getReferencia()) &&
 				existReferencia(profesor.getReferencia())) {
-			throw new ConflictExceptions(getMessageErrorExist(profesor.getReferencia()));
+			throw new ConflictException(getMessageErrorExist(profesor.getReferencia()));
 		}
 		// actualizamos
 		profesorEntiy.fromProfesor(profesor);

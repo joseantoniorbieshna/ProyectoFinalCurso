@@ -8,7 +8,7 @@ import com.faltasproject.adapters.jpa.clases.daos.CursoRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.GrupoRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
 import com.faltasproject.adapters.jpa.clases.entities.GrupoEntity;
-import com.faltasproject.domain.exceptions.ConflictExceptions;
+import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.persistance_ports.clases.GrupoPersistance;
@@ -32,7 +32,7 @@ public class GrupoPersistanceJPA implements GrupoPersistance {
 	@Override
 	public Grupo create(Grupo grupo) {
 		if(existNombre(grupo.getNombre())) {
-			throw new ConflictExceptions(getMessageErrorExist(grupo.getNombre()));
+			throw new ConflictException(getMessageErrorExist(grupo.getNombre()));
 		}
 		GrupoEntity grupoEntity = new GrupoEntity(grupo);
 		grupoEntity.setCurso(getCursoPersistByReferenciaCurso(grupo.getReferenciaCurso()));
@@ -50,7 +50,7 @@ public class GrupoPersistanceJPA implements GrupoPersistance {
 			grupo.setNombre(nombre);
 		}else if( !nombre.equals(grupo.getNombre()) &&
 				existNombre(grupo.getNombre())) {
-			throw new ConflictExceptions(getMessageErrorExist(grupo.getNombre()));
+			throw new ConflictException(getMessageErrorExist(grupo.getNombre()));
 		}
 		//CAMBIAMOS LOS DATOS
 		grupoEntity.fromGrupo(grupo);

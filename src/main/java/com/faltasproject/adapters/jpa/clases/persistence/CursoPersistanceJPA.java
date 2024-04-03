@@ -11,7 +11,7 @@ import com.faltasproject.adapters.jpa.clases.daos.CursoRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.MateriaRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
 import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
-import com.faltasproject.domain.exceptions.ConflictExceptions;
+import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.persistance_ports.clases.CursoPersistance;
@@ -32,7 +32,7 @@ public class CursoPersistanceJPA implements CursoPersistance {
 	@Override
 	public Curso create(Curso curso) {
 		if(existReferencia(curso.getReferencia())) {
-			throw new ConflictExceptions(getMessageErrorExist(curso.getReferencia()));
+			throw new ConflictException(getMessageErrorExist(curso.getReferencia()));
 		}
 		
 		CursoEntity cursoEntity = new CursoEntity(curso);
@@ -55,7 +55,7 @@ public class CursoPersistanceJPA implements CursoPersistance {
 			curso.setReferencia(referencia);
 		}else if( !referencia.equals(curso.getReferencia()) &&
 				existReferencia(curso.getReferencia())) {
-			throw new ConflictExceptions(getMessageErrorExist(curso.getReferencia()));
+			throw new ConflictException(getMessageErrorExist(curso.getReferencia()));
 		}
 		//CAMBIAMOS LOS DATOS Y PERSISTIMOS MATERIAS
 		cursoEntity.fromCurso(curso);

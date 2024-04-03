@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.faltasproject.adapters.jpa.clases.daos.MateriaRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
-import com.faltasproject.domain.exceptions.ConflictExceptions;
+import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.persistance_ports.clases.MateriaPersistance;
@@ -25,7 +25,7 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	@Override
 	public Materia create(Materia materia) {
 		if(this.existReferencia(materia.getReferencia())) {
-			throw new ConflictExceptions(getMessageErrorExist(materia.getReferencia())); 
+			throw new ConflictException(getMessageErrorExist(materia.getReferencia())); 
 		}
 		MateriasEntity materiaEntity = new MateriasEntity(materia);
 		return materiaRepository.save(materiaEntity)
@@ -42,7 +42,7 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 			materia.setReferencia(referencia);
 		}else if( !referencia.equals(materia.getReferencia()) &&
 				existReferencia(materia.getReferencia())) {
-			throw new ConflictExceptions(getMessageErrorExist(materia.getReferencia()));
+			throw new ConflictException(getMessageErrorExist(materia.getReferencia()));
 		}
 		// CAMBIAMOS LOS DATOS
 		materiaEntity.fromMateria(materia);
