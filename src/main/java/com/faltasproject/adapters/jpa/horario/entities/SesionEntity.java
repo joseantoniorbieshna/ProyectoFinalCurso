@@ -2,9 +2,11 @@ package com.faltasproject.adapters.jpa.horario.entities;
 
 import java.util.Set;
 
+import com.faltasproject.adapters.jpa.clases.entities.AulaEntity;
 import com.faltasproject.adapters.jpa.clases.entities.GrupoEntity;
 import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
 import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
+import com.faltasproject.domain.models.clases.Aula;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -39,9 +41,11 @@ public class SesionEntity {
 	private String referencia;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "materia_id")
 	private MateriasEntity materia;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "profesor_id")
 	private ProfesorEntity profesor;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -55,12 +59,17 @@ public class SesionEntity {
 			cascade = CascadeType.REMOVE,
 			mappedBy = "sesion")
 	private Set<HoraHorarioEntity> horasHorario;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "aula_id")
+	private AulaEntity aula;
 
-	public SesionEntity(String referencia, MateriasEntity materia, ProfesorEntity profesor, Set<GrupoEntity> grupos) {
+	public SesionEntity(String referencia, MateriasEntity materia, ProfesorEntity profesor,AulaEntity aula, Set<GrupoEntity> grupos) {
 		super();
 		this.referencia = referencia;
 		this.materia = materia;
 		this.profesor = profesor;
+		this.aula=aula;
 		this.grupos = grupos;
 	}
 	
@@ -68,6 +77,9 @@ public class SesionEntity {
 	@PreRemove
 	private void beforeRemove() {
 		this.grupos.clear();
+		this.setMateria(null);
+		this.setProfesor(null);
+		this.setAula(null);
 	}
 	
 	

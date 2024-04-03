@@ -9,8 +9,10 @@ import org.apache.logging.log4j.Logger;
 import org.assertj.core.util.Sets;
 import org.springframework.stereotype.Service;
 
+import com.faltasproject.adapters.jpa.clases.daos.AulaRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.GrupoRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.MateriaRepositoryJPA;
+import com.faltasproject.adapters.jpa.clases.entities.AulaEntity;
 import com.faltasproject.adapters.jpa.clases.entities.GrupoEntity;
 import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
 import com.faltasproject.adapters.jpa.horario.daos.SesionRepositoryJPA;
@@ -28,6 +30,7 @@ public class HorarioSeederService {
 	
 	private final ProfesorRepositoryJPA profesorRepositoryJPA;
 	private final MateriaRepositoryJPA materiaRepositoryJPA;
+	private final AulaRepositoryJPA aulaRepositoryJPA;
 	private final GrupoRepositoryJPA grupoRepositoryJPA;
 	
 	
@@ -35,7 +38,8 @@ public class HorarioSeederService {
 			SesionRepositoryJPA sesionRepositoryJPA,
 			ProfesorRepositoryJPA profesorRepositoryJPA,
 			MateriaRepositoryJPA materiaRepositoryJPA,
-			GrupoRepositoryJPA grupoRepositoryJPA) {
+			GrupoRepositoryJPA grupoRepositoryJPA,
+			AulaRepositoryJPA aulaRepositoryJPA) {
 		
 		this.tramoHorarioRepositoryJPA = tramoHorarioRepositoryJPA;
 		this.sesionRepositoryJPA=sesionRepositoryJPA;
@@ -43,6 +47,7 @@ public class HorarioSeederService {
 		this.profesorRepositoryJPA=profesorRepositoryJPA;
 		this.materiaRepositoryJPA=materiaRepositoryJPA;
 		this.grupoRepositoryJPA=grupoRepositoryJPA;
+		this.aulaRepositoryJPA=aulaRepositoryJPA;
 	}
 
 	public void seedDatabase() {
@@ -85,10 +90,18 @@ public class HorarioSeederService {
 				grupoRepositoryJPA.findByNombreEquals("1C").get()
 		};
 		
+		AulaEntity[] aulas= {
+				aulaRepositoryJPA.findByReferencia("1").get(),
+				aulaRepositoryJPA.findByReferencia("2").get(),
+				aulaRepositoryJPA.findByReferencia("3").get(),
+				aulaRepositoryJPA.findByReferencia("4").get(),
+				aulaRepositoryJPA.findByReferencia("5").get(),
+		};
+		
 		SesionEntity[] sesiones= {
-				new SesionEntity( "01",materias[0],profesores[0],Sets.set(grupos[0],grupos[1],grupos[2])),
-				new SesionEntity( "02",materias[1],profesores[1],Sets.set(grupos[1],grupos[2])),
-				new SesionEntity( "02",materias[2],profesores[2],Sets.set(grupos[0],grupos[1])),
+				new SesionEntity( "01",materias[0],profesores[0],aulas[0],Sets.set(grupos[0],grupos[1],grupos[2])),
+				new SesionEntity( "02",materias[1],profesores[1],aulas[2],Sets.set(grupos[1],grupos[2])),
+				new SesionEntity( "02",materias[2],profesores[2],aulas[4],Sets.set(grupos[0],grupos[1])),
 				
 		};
 		sesionRepositoryJPA.saveAll(Arrays.asList(sesiones));

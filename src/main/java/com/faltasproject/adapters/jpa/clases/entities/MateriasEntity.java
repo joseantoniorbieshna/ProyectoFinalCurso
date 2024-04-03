@@ -5,15 +5,20 @@ import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 
+import com.faltasproject.adapters.jpa.horario.entities.SesionEntity;
 import com.faltasproject.domain.models.clases.Materia;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -40,6 +45,9 @@ public class MateriasEntity {
 	
 	@ManyToMany(mappedBy = "materias",fetch = FetchType.EAGER)
 	private Set<CursoEntity> cursos;
+	
+	@OneToMany(fetch = FetchType.EAGER,mappedBy = "materia",cascade = CascadeType.REMOVE)
+	private Set<SesionEntity> materia;
 	
 	public MateriasEntity(String referencia, String nombreAbreviado, String nombreCompleto) {
 		super();

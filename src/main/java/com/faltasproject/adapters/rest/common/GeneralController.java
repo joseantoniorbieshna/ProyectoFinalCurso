@@ -27,7 +27,7 @@ import com.faltasproject.utils.XmlTreatment;
 @RestController
 @RequestMapping("general")
 public class GeneralController {
-	
+	private static final String MENSAJE_GURADADO_TOTAL_DE = "Se ha guardado un total de ";
 	private final MateriaService materiaService;
 	private final CursoService cursoService;
 	private final TramoHorarioService tramoHorarioService;
@@ -66,7 +66,7 @@ public class GeneralController {
 			materiaService.create(materia);
 		}
 
-		return "se han guardado " + materias.size() + " materias";
+		return MENSAJE_GURADADO_TOTAL_DE + materias.size() + " materias";
 	}
 	
 	
@@ -82,7 +82,7 @@ public class GeneralController {
 			cursoService.create(curso);
 		}
 
-		return "se han guardado " + cursos.size() + " Cursos y en total tienen "+cursos.stream().flatMap(curso -> curso.getMaterias().stream()).count()+" materias relacionadas";
+		return MENSAJE_GURADADO_TOTAL_DE + cursos.size() + " Cursos y en total tienen "+cursos.stream().flatMap(curso -> curso.getMaterias().stream()).count()+" materias relacionadas";
 	}
 	
 	@PostMapping("tramoshorarios")
@@ -96,7 +96,7 @@ public class GeneralController {
 			tramoHorarioService.create(tramoHorario);
 		}
 
-		return "se han guardado " + tramosHorarios.size() + " TramosHorario";
+		return MENSAJE_GURADADO_TOTAL_DE + tramosHorarios.size() + " TramosHorario";
 	}
 	
 	@PostMapping("aulas")
@@ -110,7 +110,7 @@ public class GeneralController {
 			aulaService.create(aula);
 		}
 
-		return "se han guardado " + aulas.size() + " Aulas";
+		return MENSAJE_GURADADO_TOTAL_DE + aulas.size() + " Aulas";
 	}
 	
 	@PostMapping("grupos")
@@ -124,7 +124,7 @@ public class GeneralController {
 			grupoService.create(grupo);
 		}
 
-		return "se han guardado " + grupos.size() + " grupos";
+		return MENSAJE_GURADADO_TOTAL_DE + grupos.size() + " grupos";
 	}
 	
 	@PostMapping("profesores")
@@ -138,7 +138,7 @@ public class GeneralController {
 			profesorService.create(profesor);
 		}
 
-		return "se han guardado " + profesores.size() + " profesores";
+		return MENSAJE_GURADADO_TOTAL_DE + profesores.size() + " profesores";
 	}
 	
 	

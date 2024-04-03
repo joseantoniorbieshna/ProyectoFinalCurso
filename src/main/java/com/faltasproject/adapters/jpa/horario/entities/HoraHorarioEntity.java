@@ -34,10 +34,8 @@ public class HoraHorarioEntity {
 	@JoinColumn(name = "sesion_id")
 	private SesionEntity sesion;
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumns({
-			@JoinColumn(name = "tramo_horario_id_dia",referencedColumnName = "dia"),
-			@JoinColumn(name = "tramo_horario_id_indice",referencedColumnName = "indice")
-	})
+	@JoinColumn(name = "tramo_horario_id_dia",referencedColumnName = "dia")
+	@JoinColumn(name = "tramo_horario_id_indice",referencedColumnName = "indice")
 	private TramoHorarioEntity tramoHorario;
 	
 	@PreRemove

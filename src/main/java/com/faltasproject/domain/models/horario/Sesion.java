@@ -3,6 +3,7 @@ package com.faltasproject.domain.models.horario;
 import java.util.Objects;
 import java.util.Set;
 
+import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.models.profesorado.Profesor;
@@ -13,15 +14,16 @@ public class Sesion {
 	private Profesor profesor;
 	private Set<Grupo> grupos;
 	private Set<TramoHorario> tramoHorarios;
-
+	private Aula aula;
 	public Sesion(String referencia, Materia materia, Profesor profesor, Set<Grupo> grupos,
-			Set<TramoHorario> tramoHorarios) {
+			Set<TramoHorario> tramoHorarios, Aula aula) {
 		super();
 		this.referencia = referencia;
 		this.materia = materia;
 		this.profesor = profesor;
 		this.grupos = grupos;
 		this.tramoHorarios = tramoHorarios;
+		this.aula=aula;
 	}
 
 	public String getReferencia() {
@@ -62,6 +64,14 @@ public class Sesion {
 
 	public void setTramoHorarios(Set<TramoHorario> tramoHorarios) {
 		this.tramoHorarios = tramoHorarios;
+	}
+	
+	public Aula getAula() {
+		return aula;
+	}
+
+	public void setAula(Aula aula) {
+		this.aula = aula;
 	}
 
 	@Override
