@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 
-import com.faltasproject.adapters.jpa.horario.entities.SesionEntity;
 import com.faltasproject.domain.models.clases.Grupo;
 
 import jakarta.persistence.Column;
@@ -55,8 +54,11 @@ public class GrupoEntity {
 	
 	public void fromGrupo(Grupo grupo) {
 		BeanUtils.copyProperties(grupo, this);
-		//No persistido
-		this.curso = new CursoEntity(grupo.getReferenciaCurso());
+		
+		if(grupo.getCurso()!=null) {
+			//No persistido
+			this.curso = new CursoEntity(grupo.getReferenciaCurso());
+		}
 	}
 	
 	public Grupo toGrupo() {

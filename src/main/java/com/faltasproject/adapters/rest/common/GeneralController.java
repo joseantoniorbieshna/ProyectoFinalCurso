@@ -13,12 +13,14 @@ import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
+import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.models.profesorado.Profesor;
 import com.faltasproject.domain.services.clases.AulaService;
 import com.faltasproject.domain.services.clases.CursoService;
 import com.faltasproject.domain.services.clases.GrupoService;
 import com.faltasproject.domain.services.clases.MateriaService;
+import com.faltasproject.domain.services.clases.SesionService;
 import com.faltasproject.domain.services.horario.TramoHorarioService;
 import com.faltasproject.domain.services.profesorado.ProfesorService;
 import com.faltasproject.utils.XmlTreatment;
@@ -34,19 +36,23 @@ public class GeneralController {
 	private final AulaService aulaService;
 	private final GrupoService grupoService;
 	private final ProfesorService profesorService;
+	private final SesionService sesionService;
 	
 	public GeneralController(MateriaService materiaService,
 			CursoService cursoService,
 			TramoHorarioService tramoHorarioService,
 			AulaService aulaService,
 			GrupoService grupoService,
-			ProfesorService profesorService) {
+			ProfesorService profesorService,
+			SesionService sesionService) {
+		
 		this.materiaService=materiaService;
 		this.cursoService=cursoService;
 		this.tramoHorarioService=tramoHorarioService;
 		this.aulaService=aulaService;
 		this.grupoService=grupoService;
 		this.profesorService=profesorService;
+		this.sesionService=sesionService;
 	}
 
 
@@ -139,6 +145,20 @@ public class GeneralController {
 		}
 
 		return MENSAJE_GURADADO_TOTAL_DE + profesores.size() + " profesores";
+	}
+	
+	@PostMapping("sesiones")
+	public String introducirSesiones(@RequestParam("xml") MultipartFile xml) {
+
+		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+
+		Set<Sesion> sesiones = xmlTreatment.getAllSesiones();
+		
+		for(Sesion sesion:sesiones) {
+			sesionService.create(sesion);
+		}
+
+		return MENSAJE_GURADADO_TOTAL_DE + sesiones.size() + " sesiones";
 	}
 	
 	

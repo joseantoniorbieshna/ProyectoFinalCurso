@@ -12,10 +12,14 @@ import com.faltasproject.adapters.jpa.clases.daos.AulaRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.CursoRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.GrupoRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.MateriaRepositoryJPA;
+import com.faltasproject.adapters.jpa.clases.daos.SesionRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.entities.AulaEntity;
 import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
 import com.faltasproject.adapters.jpa.clases.entities.GrupoEntity;
 import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
+import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
+import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
+import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
 
 @Service
 public class ClasesSeederService {
@@ -23,16 +27,24 @@ public class ClasesSeederService {
 	private final CursoRepositoryJPA cursoRepositoryJPA;
 	private final AulaRepositoryJPA aulaRepositoryJPA;
 	private final GrupoRepositoryJPA grupoRepositoryJPA;
+	private final SesionRepositoryJPA sesionRepositoryJPA;
+	
+	private final ProfesorRepositoryJPA profesorRepositoryJPA;
 	
 	public ClasesSeederService(MateriaRepositoryJPA materiaRepository,
 			CursoRepositoryJPA cursoRepositoryJPA,
 			AulaRepositoryJPA aulaRepositoryJPA,
-			 GrupoRepositoryJPA grupoRepositoryJPA) {
+			 GrupoRepositoryJPA grupoRepositoryJPA,
+			 SesionRepositoryJPA sesionRepositoryJPA,
+			 ProfesorRepositoryJPA profesorRepositoryJPA) {
+		
 		
 		this.materiaRepository=materiaRepository;
 		this.cursoRepositoryJPA=cursoRepositoryJPA;
 		this.aulaRepositoryJPA=aulaRepositoryJPA;
 		this.grupoRepositoryJPA=grupoRepositoryJPA;
+		this.sesionRepositoryJPA=sesionRepositoryJPA;
+		this.profesorRepositoryJPA=profesorRepositoryJPA;
 	}
 	
 	public void seedDatabase() {
@@ -64,7 +76,7 @@ public class ClasesSeederService {
 		cursoRepositoryJPA.saveAll(Arrays.asList(cursos));
 		
 		// AULA
-		AulaEntity[] aula={
+		AulaEntity[] aulas={
 			new AulaEntity("1","AULA A"),
 			new AulaEntity("2","AULA B"),
 			new AulaEntity("3","AULA C"),
@@ -72,7 +84,7 @@ public class ClasesSeederService {
 			new AulaEntity("5","AULA E"),
 		};
 		
-		aulaRepositoryJPA.saveAll(Arrays.asList(aula));
+		aulaRepositoryJPA.saveAll(Arrays.asList(aulas));
 		
 		// GRUPO
 		GrupoEntity[] grupos= {
@@ -89,9 +101,26 @@ public class ClasesSeederService {
 		};
 		grupoRepositoryJPA.saveAll(Arrays.asList(grupos));
 		
+		//GRUPOS
+		ProfesorEntity[] profesores= {
+				profesorRepositoryJPA.findByReferencia("01").get(),
+				profesorRepositoryJPA.findByReferencia("02").get(),
+				profesorRepositoryJPA.findByReferencia("03").get(),
+				profesorRepositoryJPA.findByReferencia("04").get(),
+				profesorRepositoryJPA.findByReferencia("05").get(),
+		};
+		
+		// SESIONES
+		SesionEntity[] sesiones = {
+				new SesionEntity("01",materias[0],profesores[0],aulas[1],Sets.set(grupos[1],grupos[2],grupos[3])),
+				new SesionEntity("02",materias[2],profesores[2],aulas[2],Sets.set(grupos[1],grupos[2])),
+				new SesionEntity("03",materias[3],profesores[1],aulas[3],Sets.set(grupos[3],grupos[2])),
+		};
+		sesionRepositoryJPA.saveAll(Arrays.asList(sesiones));
 	}
 	
 	public void deleteAll() {
+		sesionRepositoryJPA.deleteAll();
 		materiaRepository.deleteAll();
 		grupoRepositoryJPA.deleteAll();
 		cursoRepositoryJPA.deleteAll();

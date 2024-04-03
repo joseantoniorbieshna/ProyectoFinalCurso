@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 
-import com.faltasproject.adapters.jpa.horario.entities.SesionEntity;
+import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
 import com.faltasproject.domain.models.profesorado.Profesor;
 
 import jakarta.persistence.CascadeType;
@@ -43,9 +43,13 @@ public class ProfesorEntity {
 		fromProfesor(profesor);
 	}
 	
-	public ProfesorEntity(String referencia, String nombre) {
+	public ProfesorEntity(String referencia) {
 		super();
 		this.referencia = referencia;
+	}
+	
+	public ProfesorEntity(String referencia, String nombre) {
+		this(referencia);
 		this.nombre = nombre;
 	}
 	

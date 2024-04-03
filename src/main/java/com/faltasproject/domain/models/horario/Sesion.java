@@ -34,6 +34,10 @@ public class Sesion {
 	public Materia getMateria() {
 		return materia;
 	}
+	
+	public String getReferenciaMateria() {
+		return this.materia.getReferencia();
+	}
 
 	public void setMateria(Materia materia) {
 		this.materia = materia;
@@ -45,6 +49,10 @@ public class Sesion {
 
 	public void setProfesor(Profesor profesor) {
 		this.profesor = profesor;
+	}
+	
+	public String getProfesorReferencia() {
+		return this.profesor.getReferencia();
 	}
 
 	public Set<Grupo> getGrupos() {
@@ -61,6 +69,10 @@ public class Sesion {
 
 	public void setAula(Aula aula) {
 		this.aula = aula;
+	}
+	
+	public String getAulaReferencia() {
+		return this.aula.getReferencia();
 	}
 
 	@Override

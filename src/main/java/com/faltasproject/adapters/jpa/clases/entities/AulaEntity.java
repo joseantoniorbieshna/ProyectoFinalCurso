@@ -2,7 +2,6 @@ package com.faltasproject.adapters.jpa.clases.entities;
 
 import java.util.Set;
 
-import com.faltasproject.adapters.jpa.horario.entities.SesionEntity;
 import com.faltasproject.domain.models.clases.Aula;
 
 import jakarta.persistence.CascadeType;
@@ -38,9 +37,13 @@ public class AulaEntity {
 	@OneToMany(fetch = FetchType.EAGER,mappedBy = "aula",cascade = CascadeType.REMOVE)
 	private Set<SesionEntity> materia;
 		
-	public AulaEntity(String referencia, String nombre) {
+	public AulaEntity(String referencia) {
 		super();
 		this.referencia = referencia;
+	}
+	
+	public AulaEntity(String referencia, String nombre) {
+		this(referencia);
 		this.nombre = nombre;
 	}
 	

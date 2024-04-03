@@ -1,14 +1,15 @@
-package com.faltasproject.adapters.jpa.horario.entities;
+package com.faltasproject.adapters.jpa.clases.entities;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import com.faltasproject.adapters.jpa.clases.entities.AulaEntity;
-import com.faltasproject.adapters.jpa.clases.entities.GrupoEntity;
-import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
+import com.faltasproject.adapters.jpa.horario.entities.HoraHorarioEntity;
 import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
 import com.faltasproject.domain.models.clases.Aula;
+import com.faltasproject.domain.models.horario.Sesion;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -38,6 +39,7 @@ public class SesionEntity {
 	@EqualsAndHashCode.Include
 	private Long id;
 	@EqualsAndHashCode.Include
+	@Column(name = "referencia",unique = true)
 	private String referencia;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -61,9 +63,12 @@ public class SesionEntity {
 	private Set<HoraHorarioEntity> horasHorario;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "aula_id")
+	@JoinColumn(name = "aula_id",nullable = true)
 	private AulaEntity aula;
 
+	public SesionEntity(Sesion sesion) {
+		fromSesion(sesion);
+	}
 	public SesionEntity(String referencia, MateriasEntity materia, ProfesorEntity profesor,AulaEntity aula, Set<GrupoEntity> grupos) {
 		super();
 		this.referencia = referencia;
@@ -73,6 +78,38 @@ public class SesionEntity {
 		this.grupos = grupos;
 	}
 	
+	public void fromSesion(Sesion sesion) {
+		this.referencia = sesion.getReferencia();
+		this.materia = new MateriasEntity(sesion.getMateria());
+		this.profesor = new ProfesorEntity(sesion.getProfesor());
+		this.aula = sesion.getAula()!=null? new AulaEntity(sesion.getAula()):null;
+		this.grupos = sesion.getGrupos().stream()
+				.map(grupo->new GrupoEntity(grupo))
+				.collect(Collectors.toSet());
+	}
+	
+	public Sesion toSesion() {
+		Aula aulaSave = this.aula!=null?this.aula.toAula():null;
+		
+		return new Sesion(referencia,
+				materia.toMateria(),
+				profesor.toProfesor(),
+				grupos.stream()
+					.map(grupoEntity->grupoEntity.toGrupo())
+					.collect(Collectors.toSet()),
+				aulaSave
+				);
+	}
+	
+	public String getReferenciaMateria() {
+		return this.materia.getReferencia();
+	}
+	public String getReferenciaAula() {
+		return this.aula.getReferencia();
+	}
+	public String getReferenciaProfesor() {
+		return this.profesor.getReferencia();
+	}
 	
 	@PreRemove
 	private void beforeRemove() {

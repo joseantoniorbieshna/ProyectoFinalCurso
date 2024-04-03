@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 
-import com.faltasproject.adapters.jpa.horario.entities.SesionEntity;
 import com.faltasproject.domain.models.clases.Materia;
 
 import jakarta.persistence.CascadeType;
@@ -49,9 +48,12 @@ public class MateriasEntity {
 	@OneToMany(fetch = FetchType.EAGER,mappedBy = "materia",cascade = CascadeType.REMOVE)
 	private Set<SesionEntity> materia;
 	
-	public MateriasEntity(String referencia, String nombreAbreviado, String nombreCompleto) {
+	public MateriasEntity(String referencia){
 		super();
-		this.referencia = referencia;
+		this.referencia=referencia;
+	}	
+	public MateriasEntity(String referencia, String nombreAbreviado, String nombreCompleto) {
+		this(referencia);
 		this.nombreAbreviado = nombreAbreviado;
 		this.nombreCompleto = nombreCompleto;
 		this.cursos=new HashSet<>();

@@ -12,26 +12,15 @@ import org.springframework.stereotype.Service;
 import com.faltasproject.adapters.jpa.clases.daos.AulaRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.GrupoRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.MateriaRepositoryJPA;
-import com.faltasproject.adapters.jpa.clases.entities.AulaEntity;
-import com.faltasproject.adapters.jpa.clases.entities.GrupoEntity;
-import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
-import com.faltasproject.adapters.jpa.horario.daos.SesionRepositoryJPA;
+import com.faltasproject.adapters.jpa.clases.daos.SesionRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
-import com.faltasproject.adapters.jpa.horario.entities.SesionEntity;
 import com.faltasproject.adapters.jpa.horario.entities.TramoHorarioEntity;
 import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
-import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
 
 @Service
 public class HorarioSeederService {
 	
 	private final TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA;
-	private final SesionRepositoryJPA sesionRepositoryJPA;
-	
-	private final ProfesorRepositoryJPA profesorRepositoryJPA;
-	private final MateriaRepositoryJPA materiaRepositoryJPA;
-	private final AulaRepositoryJPA aulaRepositoryJPA;
-	private final GrupoRepositoryJPA grupoRepositoryJPA;
 	
 	
 	public HorarioSeederService(TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA,
@@ -42,12 +31,7 @@ public class HorarioSeederService {
 			AulaRepositoryJPA aulaRepositoryJPA) {
 		
 		this.tramoHorarioRepositoryJPA = tramoHorarioRepositoryJPA;
-		this.sesionRepositoryJPA=sesionRepositoryJPA;
 		
-		this.profesorRepositoryJPA=profesorRepositoryJPA;
-		this.materiaRepositoryJPA=materiaRepositoryJPA;
-		this.grupoRepositoryJPA=grupoRepositoryJPA;
-		this.aulaRepositoryJPA=aulaRepositoryJPA;
 	}
 
 	public void seedDatabase() {
@@ -70,46 +54,9 @@ public class HorarioSeederService {
 		
 		tramoHorarioRepositoryJPA.saveAll( Arrays.asList(tramosHorarios) );
 		
-		
-		// SESIONES
-		MateriasEntity[] materias = {
-				materiaRepositoryJPA.findByReferencia("01").get(),
-				materiaRepositoryJPA.findByReferencia("02").get(),
-				materiaRepositoryJPA.findByReferencia("03").get(),
-		};
-		
-		ProfesorEntity[] profesores = {
-				profesorRepositoryJPA.findByReferencia("01").get(),
-				profesorRepositoryJPA.findByReferencia("02").get(),
-				profesorRepositoryJPA.findByReferencia("03").get()
-		};
-		
-		GrupoEntity[] grupos = {
-				grupoRepositoryJPA.findByNombreEquals("1A").get(),
-				grupoRepositoryJPA.findByNombreEquals("1B").get(),
-				grupoRepositoryJPA.findByNombreEquals("1C").get()
-		};
-		
-		AulaEntity[] aulas= {
-				aulaRepositoryJPA.findByReferencia("1").get(),
-				aulaRepositoryJPA.findByReferencia("2").get(),
-				aulaRepositoryJPA.findByReferencia("3").get(),
-				aulaRepositoryJPA.findByReferencia("4").get(),
-				aulaRepositoryJPA.findByReferencia("5").get(),
-		};
-		
-		SesionEntity[] sesiones= {
-				new SesionEntity( "01",materias[0],profesores[0],aulas[0],Sets.set(grupos[0],grupos[1],grupos[2])),
-				new SesionEntity( "02",materias[1],profesores[1],aulas[2],Sets.set(grupos[1],grupos[2])),
-				new SesionEntity( "02",materias[2],profesores[2],aulas[4],Sets.set(grupos[0],grupos[1])),
-				
-		};
-		sesionRepositoryJPA.saveAll(Arrays.asList(sesiones));
-		
 	}
 	
 	public void deleteAll() {
 		tramoHorarioRepositoryJPA.deleteAll();
-		sesionRepositoryJPA.deleteAll();
 	}
 }

@@ -21,6 +21,7 @@ import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
+import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.models.profesorado.Profesor;
 
@@ -175,6 +176,51 @@ public class XmlTreatment {
 			
 		};
 		return treatmentProfesores.getSet();
+	}
+	
+	
+	public Set<Sesion> getAllSesiones() {
+		// OBTENEMOS LA LISTA DE CURSOSS
+		String expr = "//sesionesLectivas/sesion";
+		XpathUtile<Sesion> treatmentCurso = new XpathUtile<Sesion>(doc,expr) {
+
+			@Override
+			public Sesion treatment(Element element) {
+				Set<Grupo> grupos = new HashSet<>();
+				String referencia = element.getAttribute("id");
+				
+				
+				Element aulasElement = ((Element)element.getElementsByTagName("listaDeAulas").item(0));
+				Element aulaElement = (Element)aulasElement.getElementsByTagName("aula").item(0);
+				String aulaReferencia = aulaElement!=null? aulaElement.getTextContent():null;
+				
+				String materiaReferencia = element.getElementsByTagName("materia").item(0).getTextContent();
+				String grupoReferenciaNombreBase = element.getElementsByTagName("grupo").item(0).getTextContent();
+				String profesorReferencia = element.getElementsByTagName("profesor").item(0).getTextContent();
+				
+				grupos.add(new Grupo(grupoReferenciaNombreBase));
+				
+				//MIRAR SI HAY OTROS ELEMENTOS
+				Element otroGrupoElement = ((Element)element.getElementsByTagName("otrosGrupos").item(0));
+				if(otroGrupoElement!=null) {
+					NodeList otroGrupoNodeList = otroGrupoElement.getElementsByTagName("grupo");
+					//MATERIA ID
+					for (int j = 0; j < otroGrupoNodeList.getLength(); j++) {
+						Node grupoChild = otroGrupoNodeList.item(j);
+						if (grupoChild.getNodeType() == Node.ELEMENT_NODE) {
+							// OBTENGO EL ID 
+							String otroGrupoNombreReferencia = grupoChild.getTextContent();
+							grupos.add(new Grupo(otroGrupoNombreReferencia));
+						}
+					}
+				}
+				
+				return new Sesion(referencia,new Materia(materiaReferencia),new Profesor(profesorReferencia),grupos, new Aula(aulaReferencia));
+			}
+			
+		};
+
+		return treatmentCurso.getSet();
 	}
 
 }

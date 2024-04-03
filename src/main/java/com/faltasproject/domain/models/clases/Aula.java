@@ -6,14 +6,14 @@ public class Aula {
 	private String referencia;
 	private String nombre;
 
-	public Aula(String nombre) {
+	public Aula(String referencia) {
 		super();
-		setNombre(nombre);
+		setReferencia(referencia);
 	}
 
 	public Aula(String referencia, String nombre) {
-		this(nombre);
-		setReferencia(referencia);
+		this(referencia);
+		setNombre(nombre);
 	}
 
 	public String getReferencia() {

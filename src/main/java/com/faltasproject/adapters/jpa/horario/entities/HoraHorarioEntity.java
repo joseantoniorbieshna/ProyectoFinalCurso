@@ -1,5 +1,7 @@
 package com.faltasproject.adapters.jpa.horario.entities;
 
+import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
