@@ -13,16 +13,13 @@ public class Sesion {
 	private Materia materia;
 	private Profesor profesor;
 	private Set<Grupo> grupos;
-	private Set<TramoHorario> tramoHorarios;
 	private Aula aula;
-	public Sesion(String referencia, Materia materia, Profesor profesor, Set<Grupo> grupos,
-			Set<TramoHorario> tramoHorarios, Aula aula) {
+	public Sesion(String referencia, Materia materia, Profesor profesor, Set<Grupo> grupos, Aula aula) {
 		super();
 		this.referencia = referencia;
 		this.materia = materia;
 		this.profesor = profesor;
 		this.grupos = grupos;
-		this.tramoHorarios = tramoHorarios;
 		this.aula=aula;
 	}
 
@@ -56,14 +53,6 @@ public class Sesion {
 
 	public void setGrupos(Set<Grupo> grupos) {
 		this.grupos = grupos;
-	}
-
-	public Set<TramoHorario> getTramoHorarios() {
-		return tramoHorarios;
-	}
-
-	public void setTramoHorarios(Set<TramoHorario> tramoHorarios) {
-		this.tramoHorarios = tramoHorarios;
 	}
 	
 	public Aula getAula() {

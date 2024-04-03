@@ -20,11 +20,11 @@ public interface SesionPersistance {
 	
 	boolean delete(String referencia);
 	
+	boolean existReferencia(String referencia);
+	
 	boolean removeTramoHorarioToSesion(String referenciaSesion,IdTramoHorarioDTO idTramoHorarioDTO);
 	
 	boolean addTramoHorarioToSesion(String referencia,IdTramoHorarioDTO idTramoHorarioDTO);
-	
-	boolean existReferencia(String referencia);
 	
 	boolean existTramoHorarioInSesion(String referenciaSesion,IdTramoHorarioDTO idTramoHorarioDTO);
 }
