@@ -71,8 +71,12 @@ public class Sesion {
 		this.aula = aula;
 	}
 	
-	public String getAulaReferencia() {
+	public String getReferenciaAula() {
 		return this.aula.getReferencia();
+	}
+	
+	public String getReferenciaProfesor() {
+		return this.profesor.getReferencia();
 	}
 
 	@Override

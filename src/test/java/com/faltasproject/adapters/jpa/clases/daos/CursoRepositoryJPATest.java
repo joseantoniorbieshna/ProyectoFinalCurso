@@ -11,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
 
-import jakarta.transaction.Transactional;
-
 @SpringBootTest
 class CursoRepositoryJPATest {
 
@@ -42,7 +40,6 @@ class CursoRepositoryJPATest {
 		assertEquals(3, curso.get().getMaterias().size());
 	}
 	@Test
-	@Transactional
 	void deleteByReferencia() {
 		String referencia="10000";
 		CursoEntity cursoEntity = new CursoEntity(referencia,"4º CARRERA");

@@ -1,12 +1,8 @@
 package com.faltasproject.adapters.jpa.clases.entities;
 
-
 import java.util.Set;
-
 import org.springframework.beans.BeanUtils;
-
 import com.faltasproject.domain.models.clases.Grupo;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,19 +14,22 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "GRUPOS")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class GrupoEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private Long id;
 	@Column(unique = true)
 	@EqualsAndHashCode.Include
@@ -38,7 +37,7 @@ public class GrupoEntity {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private CursoEntity curso;
 	
-	@ManyToMany(mappedBy = "grupos")
+	@ManyToMany(mappedBy = "grupos",fetch = FetchType.EAGER)
 	private Set<SesionEntity> sesiones;
 
 	public GrupoEntity(Grupo grupo) {
@@ -67,9 +66,11 @@ public class GrupoEntity {
 	
 	@PreRemove
 	private void beforeRemove() {
-		for(SesionEntity sesion: sesiones) {
-			sesion.getGrupos().remove(this);
+		for(SesionEntity sesion: getSesiones()) {
+			sesion.removeGrupoEntity(this);
 		}
+		sesiones.clear();
+		
+		this.setCurso(null);
 	}
-
 }

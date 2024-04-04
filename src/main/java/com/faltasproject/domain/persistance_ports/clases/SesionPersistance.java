@@ -5,7 +5,6 @@ import java.util.stream.Stream;
 import org.springframework.stereotype.Repository;
 
 import com.faltasproject.domain.models.horario.Sesion;
-import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 
 @Repository
 public interface SesionPersistance {

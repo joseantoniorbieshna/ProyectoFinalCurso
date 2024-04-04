@@ -36,11 +36,7 @@ public class CursoPersistanceJPA implements CursoPersistance {
 		}
 		
 		CursoEntity cursoEntity = new CursoEntity(curso);
-		Set<MateriasEntity> materias = cursoEntity.getMaterias().stream()
-				.map(materia->materiaRepositoryJPA.findByReferencia(materia.getReferencia())
-						.orElseThrow(()-> new NotFoundException( getMateriaErrorNotFound(materia.getReferencia()) )))
-				.collect(Collectors.toSet());
-		cursoEntity.setMaterias(materias);
+		convertDataToPersistData(cursoEntity);
 		return cursoRepositoryJPA.save(cursoEntity).toCurso();
 	}
 
@@ -49,22 +45,19 @@ public class CursoPersistanceJPA implements CursoPersistance {
 		CursoEntity cursoEntity = cursoRepositoryJPA.findByReferencia(referencia)
 		.orElseThrow(() -> new NotFoundException(getMessageErrorNotExist(referencia)));
 		
-		
-		//OBLIGAMOS A TENER REFERENCIA
-		if(curso.getReferencia()==null) {
-			curso.setReferencia(referencia);
-		}else if( !referencia.equals(curso.getReferencia()) &&
-				existReferencia(curso.getReferencia())) {
-			throw new ConflictException(getMessageErrorExist(curso.getReferencia()));
-		}
+
 		//CAMBIAMOS LOS DATOS Y PERSISTIMOS MATERIAS
 		cursoEntity.fromCurso(curso);
+		convertDataToPersistData(cursoEntity);
+		
+		return cursoRepositoryJPA.save(cursoEntity).toCurso();
+	}
+
+	private void convertDataToPersistData(CursoEntity cursoEntity) {
 		Set<MateriasEntity> materias=cursoEntity.getMaterias().stream().map(materia -> materiaRepositoryJPA.findByReferencia(materia.getReferencia())
 				.orElseThrow(()->new NotFoundException( getMateriaErrorNotFound(materia.getReferencia()) )))
 				.collect(Collectors.toSet());
 		cursoEntity.setMaterias(materias);
-		
-		return cursoRepositoryJPA.save(cursoEntity).toCurso();
 	}
 
 	@Override

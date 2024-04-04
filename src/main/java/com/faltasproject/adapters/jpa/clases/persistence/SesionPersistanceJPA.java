@@ -69,7 +69,7 @@ public class SesionPersistanceJPA implements SesionPersistance {
 	@Override
 	public Stream<Sesion> readAll() {
 		return sesionRepositoryJPA.findAll().stream()
-				.map(sesionEntity->sesionEntity.toSesion());
+				.map(SesionEntity::toSesion);
 	}
 
 	@Override

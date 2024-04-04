@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,9 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
-import com.faltasproject.adapters.jpa.clases.entities.GrupoEntity;
-import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Grupo;
@@ -42,19 +38,19 @@ class CursoPesistanceJPATest {
 	@Test
     void update() {
 		final String referenciaUpdate = "500";
-		final Curso updateCurso = new Curso("Curso 1");
+		final Curso updateCurso = new Curso(referenciaUpdate,"Curso 1");
     	assertThrows( NotFoundException.class, () -> cursoPersistanceJPA.update(referenciaUpdate,updateCurso ) );
 
     	String referencia="1";
     	Curso curso = cursoPersistanceJPA.readByReferencia(referencia);
     	assertNotEquals(0, curso.getMaterias().size());
     	
-    	curso = cursoPersistanceJPA.update(referencia, new Curso(null,"44º E.S.O"));
+    	curso = cursoPersistanceJPA.update(referencia, new Curso(referencia,"44º E.S.O"));
     	assertEquals("44º E.S.O", curso.getNombre());
     	assertEquals(0, curso.getMaterias().size());
     	
     	
-    	curso = cursoPersistanceJPA.update(referencia, new Curso(null,"4º E.S.O", Sets.set( new Materia("01"),new Materia("02"),new Materia("03") )));
+    	curso = cursoPersistanceJPA.update(referencia, new Curso(referencia,"4º E.S.O", Sets.set( new Materia("01"),new Materia("02"),new Materia("03") )));
     	assertEquals("4º E.S.O", curso.getNombre());
     	assertEquals(3, curso.getMaterias().size());
     }
@@ -105,6 +101,7 @@ class CursoPesistanceJPATest {
 	void delete() {
 		// EXCEPCION
 		assertThrows(NotFoundException.class, ()->cursoPersistanceJPA.delete("1000"));
+		//TODO
 		// PROBAMOS A BORRAR MATERIA Y QUE NO SE BORRE CURSO
 		String referenciaCurso="2";
 		Curso curso=cursoPersistanceJPA.readByReferencia(referenciaCurso);

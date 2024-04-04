@@ -1,5 +1,6 @@
 package com.faltasproject.adapters.jpa.clases.entities;
 
+import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -84,7 +85,7 @@ public class SesionEntity {
 		this.profesor = new ProfesorEntity(sesion.getProfesor());
 		this.aula = sesion.getAula()!=null? new AulaEntity(sesion.getAula()):null;
 		this.grupos = sesion.getGrupos().stream()
-				.map(grupo->new GrupoEntity(grupo))
+				.map(GrupoEntity::new)
 				.collect(Collectors.toSet());
 	}
 	
@@ -95,7 +96,7 @@ public class SesionEntity {
 				materia.toMateria(),
 				profesor.toProfesor(),
 				grupos.stream()
-					.map(grupoEntity->grupoEntity.toGrupo())
+					.map(GrupoEntity::toGrupo)
 					.collect(Collectors.toSet()),
 				aulaSave
 				);
@@ -109,6 +110,20 @@ public class SesionEntity {
 	}
 	public String getReferenciaProfesor() {
 		return this.profesor.getReferencia();
+	}
+	
+	public void addGrupoEntity(GrupoEntity grupo) {
+		this.grupos.add(grupo);
+	}
+	public boolean removeGrupoEntity(GrupoEntity grupo) {
+		for (Iterator<GrupoEntity> iterator = getGrupos().iterator(); iterator.hasNext();) {
+			GrupoEntity elemento = iterator.next();
+		    if (elemento.equals(grupo)) {
+		        iterator.remove();
+		        return true;
+		    }
+		}
+		return false;
 	}
 	
 	@PreRemove

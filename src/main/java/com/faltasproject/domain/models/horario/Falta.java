@@ -1,7 +1,6 @@
 package com.faltasproject.domain.models.horario;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 import com.faltasproject.domain.models.profesorado.Profesor;
 

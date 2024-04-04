@@ -35,13 +35,6 @@ public class AulaPersistanceJPA implements AulaPersistance {
 		AulaEntity aulaEntity=aulaRepositoryJPA.findByReferencia(referencia)
 		.orElseThrow(() -> new NotFoundException( getMessageErrorNotExist(referencia) ));
 		
-		//TRATAMOS LA REFERENCIA
-		if(aula.getReferencia()==null) {
-			aula.setReferencia(referencia);
-		}else if( !referencia.equals(aula.getReferencia()) &&
-				existReferencia(aula.getReferencia())){
-			throw new ConflictException("La referencia a la que quieres cambiar el Aula ya existe");
-		}
 		//CAMBIAMOS DATOS
 		aulaEntity.fromAula(aula);
 		

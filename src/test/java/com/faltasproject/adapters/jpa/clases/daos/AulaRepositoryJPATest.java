@@ -14,8 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.faltasproject.adapters.jpa.clases.entities.AulaEntity;
 
-import jakarta.transaction.Transactional;
-
 @SpringBootTest
 class AulaRepositoryJPATest {
 
@@ -53,7 +51,6 @@ class AulaRepositoryJPATest {
 	}
 	
 	@Test
-	@Transactional
 	void deleteByReferencia() {
 		String referencia="100";
 		AulaEntity aulaEntity= new AulaEntity(referencia,"AULA MILLA");

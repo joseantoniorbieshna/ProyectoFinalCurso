@@ -11,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
 
-import jakarta.transaction.Transactional;
-
 @SpringBootTest
 class MateriaRepositoryJPATest {
 	@Autowired
@@ -42,7 +40,6 @@ class MateriaRepositoryJPATest {
 	}
 	
 	@Test
-	@Transactional
 	void deleteByReferencia() {
 		MateriasEntity materia=new MateriasEntity("100","ML","Machine Learning");
 		materiaRepositoryJPA.save(materia);

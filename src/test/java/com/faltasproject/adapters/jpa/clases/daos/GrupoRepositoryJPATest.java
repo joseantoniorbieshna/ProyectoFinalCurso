@@ -2,14 +2,13 @@ package com.faltasproject.adapters.jpa.clases.daos;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
 import com.faltasproject.adapters.jpa.clases.entities.GrupoEntity;
+import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
 
 
 @SpringBootTest
@@ -19,6 +18,8 @@ class GrupoRepositoryJPATest {
 	GrupoRepositoryJPA grupoRepositoryJPA;
 	@Autowired
 	CursoRepositoryJPA cursoRepositoryJPA;
+	@Autowired
+	SesionRepositoryJPA sesionRepositoryJPA;
 	
 	@Test	
 	void findByNombreEquals() {
@@ -40,23 +41,38 @@ class GrupoRepositoryJPATest {
 	}
 	@Test	
 	void deleteByNombreEquals() {
-		String nombre="1A";
-		Optional<GrupoEntity> grupo = grupoRepositoryJPA.findByNombreEquals(nombre);
-		assertTrue(grupo.isPresent());
-		String referenciaCurso = grupo.get().getCurso().getReferencia();
+		//CREACION
+		String nombreGrupoNuevo = "5B";
+		String referenciaCurso = "5";
+		String sesionReferencia = "01";
+		//CREAMOS CURSO
+		CursoEntity curso = cursoRepositoryJPA.findByReferencia(referenciaCurso).get();
+		GrupoEntity grupoEntity = new GrupoEntity(nombreGrupoNuevo,curso);
+		grupoEntity = grupoRepositoryJPA.save(grupoEntity);
+		
+		// AÑADIMOS EL GRUPO A LA SESION
+		SesionEntity sesionPersistance = sesionRepositoryJPA.findByReferencia(sesionReferencia).get();
+		sesionPersistance.addGrupoEntity(grupoEntity);
+		sesionPersistance = sesionRepositoryJPA.save(sesionPersistance);
+		
+		assertTrue(grupoRepositoryJPA.findByNombreEquals(nombreGrupoNuevo).isPresent());
+		long expected=4L;
+		assertEquals(expected, sesionRepositoryJPA.findByReferencia(sesionReferencia).get()
+				.getGrupos().stream().count());
+		assertEquals(referenciaCurso, grupoRepositoryJPA.findByNombreEquals(nombreGrupoNuevo).get()
+				.getCurso()
+				.getReferencia());
 		
 		
-		grupoRepositoryJPA.deleteByNombreEquals(nombre);
-		assertFalse(grupoRepositoryJPA.findByNombreEquals(nombre).isPresent());
-		Optional<CursoEntity> curso = cursoRepositoryJPA.findByReferencia(referenciaCurso);
-		assertTrue(curso.isPresent());
+		//BORRAMOS Y COMPROBAMOS QUE LOS OTROS DATOS EXISTAN
+		grupoRepositoryJPA.deleteByNombreEquals(nombreGrupoNuevo);
+		assertFalse(grupoRepositoryJPA.findByNombreEquals(nombreGrupoNuevo).isPresent());
 		
-		//VOLVER AL ESTADO DE ANTES
-		//No los pone  
-		grupoRepositoryJPA.save(new GrupoEntity(nombre,curso.get()));
-		assertTrue(grupoRepositoryJPA.findByNombreEquals(nombre).isPresent());
+		assertTrue(sesionRepositoryJPA.findByReferencia(sesionReferencia).isPresent());
+		expected=3L;
+		assertEquals(expected, sesionRepositoryJPA.findByReferencia(sesionReferencia).get()
+				.getGrupos().stream().count());
 		assertTrue(cursoRepositoryJPA.findByReferencia(referenciaCurso).isPresent());
-	
 		
 	}
 
