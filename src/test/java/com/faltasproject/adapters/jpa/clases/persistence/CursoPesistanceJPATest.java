@@ -56,8 +56,7 @@ class CursoPesistanceJPATest {
     }
 	
 	@Test
-	void create() {
-		//TODO
+	void create() {	
 		String referencia="1000";
 		String nombreCurso = "CURSO TEMPORAL";
 		Curso curso = new Curso(referencia,nombreCurso);
@@ -77,6 +76,11 @@ class CursoPesistanceJPATest {
 		//VOLVER AL ESTADO DE ANTES
 		cursoPersistanceJPA.delete(referencia);
 		assertFalse(cursoPersistanceJPA.existReferencia(referencia));
+		
+		//COMPROBAMOS QUE NO SE HAYA BORRADO EN CASCADA
+		assertTrue(materiaPersistenceJPA.existReferencia("01"));
+		assertTrue(materiaPersistenceJPA.existReferencia("02"));
+		assertTrue(materiaPersistenceJPA.existReferencia("03"));
 	}
 	
 	@Test
@@ -102,49 +106,58 @@ class CursoPesistanceJPATest {
 		// EXCEPCION
 		assertThrows(NotFoundException.class, ()->cursoPersistanceJPA.delete("1000"));
 		//TODO
+		String referenciaCurso="1000";
+		String nombreCurso = "CURSO TEMPORAL";
+		Curso cursoCreate = new Curso(referenciaCurso,nombreCurso);
+		Set<Materia> materias = new HashSet<>();
+		String referenciaMateria1="101";
+		String referenciaMateria2="102";
+		String referenciaMateria3="103";
+		materias.add( materiaPersistenceJPA.create(new Materia(referenciaMateria1,"nombreabreviado1","nombrecompleto1")) );
+		materias.add( materiaPersistenceJPA.create(new Materia(referenciaMateria2,"nombreabreviado2","nombrecompleto2")) );
+		materias.add( materiaPersistenceJPA.create(new Materia(referenciaMateria3,"nombreabreviado3","nombrecompleto3")) );
+		cursoCreate.setMaterias(materias);
+		cursoPersistanceJPA.create(cursoCreate);
+		
+		
+		
 		// PROBAMOS A BORRAR MATERIA Y QUE NO SE BORRE CURSO
-		String referenciaCurso="2";
 		Curso curso=cursoPersistanceJPA.readByReferencia(referenciaCurso);
-		int materiaExpected=2;
+		int materiaExpected=3;
 		assertEquals(materiaExpected, curso.getMaterias().size());
 		//BORRAMOS UNA MATERIA
-		Boolean response=materiaPersistenceJPA.delete("05");
-		materiaExpected=1;
+		Boolean response=materiaPersistenceJPA.delete(referenciaMateria1);
 		assertTrue(response);
 		
+		materiaExpected=2;
 		curso=cursoPersistanceJPA.readByReferencia(referenciaCurso);
 		assertEquals(materiaExpected, curso.getMaterias().size());
 		
-		// VOLVEMOS AL ESTADO ANTERIOR
-		Materia materia = materiaPersistenceJPA.create(new Materia("05","Fi","Filosofia"));
-		materiaExpected=2;
-		Set<Materia> materiasSave = curso.getMaterias();
-		materiasSave.add(materia);
-		cursoPersistanceJPA.update(referenciaCurso,curso);
-		curso=cursoPersistanceJPA.readByReferencia(referenciaCurso);
-		assertEquals(materiaExpected, curso.getMaterias().size());
 		
 		
 		
 		//PROBAMOS A BORRAR CURSO
-		String referencia="5";
-		assertTrue(cursoPersistanceJPA.existReferencia(referencia));
-		Set<Materia> materias = cursoPersistanceJPA.readByReferencia(referencia).getMaterias();
+		assertTrue(cursoPersistanceJPA.existReferencia(referenciaCurso));
+		materias = cursoPersistanceJPA.readByReferencia(referenciaCurso).getMaterias();
 		
-		boolean result = cursoPersistanceJPA.delete(referencia);
+		boolean result = cursoPersistanceJPA.delete(referenciaCurso);
 		assertTrue(result);
-		assertFalse(cursoPersistanceJPA.existReferencia(referencia));
+		assertFalse(cursoPersistanceJPA.existReferencia(referenciaCurso));
 		
-		//VOLVEMOS AL ESTADO ANTERIOR
-		curso=cursoPersistanceJPA.create( new Curso(referencia,"2º Bachillerato",
-				materias.stream()
-				.map(materiaIterator -> materiaPersistenceJPA.readByReferencia(materiaIterator.getReferencia()))
-				.collect(Collectors.toSet()))
-				);
+		// Comprobamos si existe las referencias de materias y no se hayan borrado
+		assertTrue(materiaPersistenceJPA.existReferencia(referenciaMateria2));
+		assertTrue(materiaPersistenceJPA.existReferencia(referenciaMateria3));
 		
-		grupoPersistanceJPA.create(new Grupo("E4D",curso));
-		assertTrue(cursoPersistanceJPA.existReferencia(referencia));
-		assertEquals(curso,grupoPersistanceJPA.readByNombre("E4D").getCurso());
+		
+		//BORRAMOS LAS MATERIAS
+		response=materiaPersistenceJPA.delete(referenciaMateria2);
+		assertTrue(response);
+		response=materiaPersistenceJPA.delete(referenciaMateria3);
+		assertTrue(response);
+		
+		assertFalse(materiaPersistenceJPA.existReferencia(referenciaMateria1));
+		assertFalse(materiaPersistenceJPA.existReferencia(referenciaMateria2));
+		assertFalse(materiaPersistenceJPA.existReferencia(referenciaMateria3));
 		
 	}
 	

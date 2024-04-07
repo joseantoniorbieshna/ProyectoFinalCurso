@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import com.faltasproject.domain.models.horario.HoraHorario;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
-import com.faltasproject.domain.models.horario.dtos.ReferenciaHoraHorarioDTO;
 
 @Repository
 public interface HoraHorarioPersistance {
@@ -17,13 +16,19 @@ public interface HoraHorarioPersistance {
 	
 	Stream<HoraHorario> readAll();
 	
+	Stream<HoraHorario> readAllByReferenciaProfesor(String referenciaProfesor);
+	
 	Stream<HoraHorario> readAllByReferenciaSesion(String referenciaSesion);
+
+	Stream<HoraHorario> readAllByIdTramoHorario(IdTramoHorarioDTO referenciaTramoHorario);
 	
-	Stream<HoraHorario> readAllByReferenciaTramoHorario(IdTramoHorarioDTO referenciaTramoHorario);
+	HoraHorario readByReferenciaProfesorAndTramoHorario(String referenciaProfesor,IdTramoHorarioDTO referenciaTramoHorario);
 	
-	HoraHorario readByReferencia(ReferenciaHoraHorarioDTO referencia);
+	HoraHorario readByReferenciaSesionAndTramoHorario(String referenciaSesion,IdTramoHorarioDTO idTramoHorarioDTO);
 	
-	boolean deleteByReferenciaSesion(String referenciaSesion);
+	boolean deleteByReferenciaSesionAndTramoHorario(String referenciaSesion,IdTramoHorarioDTO idTramoHorarioDTO);
+
+	boolean deleteByReferenciaProfesorAndTramoHorario(String referenciaProfesor,IdTramoHorarioDTO referenciaTramoHorario);
 	
 	boolean existReferencia(String referencia);
 	
