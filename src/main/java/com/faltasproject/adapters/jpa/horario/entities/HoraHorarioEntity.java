@@ -1,6 +1,7 @@
 package com.faltasproject.adapters.jpa.horario.entities;
 
 import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
+import com.faltasproject.domain.models.horario.HoraHorario;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -39,10 +40,29 @@ public class HoraHorarioEntity {
 	@JoinColumn(name = "tramo_horario_id_dia",referencedColumnName = "dia")
 	@JoinColumn(name = "tramo_horario_id_indice",referencedColumnName = "indice")
 	private TramoHorarioEntity tramoHorario;
+
+	public HoraHorarioEntity(TramoHorarioEntity tramoHorarioEntity, SesionEntity sesionEntity) {
+		this.tramoHorario=tramoHorarioEntity;
+		this.sesion=sesionEntity;
+	}
 	
 	@PreRemove
 	public void beforeRemove () {
 		setSesion(null);
 		setTramoHorario(null);
 	}
+
+	public HoraHorarioEntity(HoraHorario horaHorario) {
+		super();
+		fromHoraHorario(horaHorario);
+	}
+	
+	public void fromHoraHorario(HoraHorario horaHorario) {
+		this.sesion = new SesionEntity(horaHorario.getSesion());
+		this.tramoHorario = new TramoHorarioEntity(horaHorario.getTramoHorario());
+	}
+	public HoraHorario toHoraHorario() {
+		return new HoraHorario(sesion.toSesion(), tramoHorario.toTramoHorario());
+	}
+
 }

@@ -13,7 +13,10 @@ import com.faltasproject.adapters.jpa.clases.daos.AulaRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.GrupoRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.MateriaRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.SesionRepositoryJPA;
+import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
+import com.faltasproject.adapters.jpa.horario.daos.HoraHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
+import com.faltasproject.adapters.jpa.horario.entities.HoraHorarioEntity;
 import com.faltasproject.adapters.jpa.horario.entities.TramoHorarioEntity;
 import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
 
@@ -21,17 +24,16 @@ import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
 public class HorarioSeederService {
 	
 	private final TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA;
-	
+	private final SesionRepositoryJPA sesionRepositoryJPA;
+	private final HoraHorarioRepositoryJPA horaHorarioRepositoryJPA;
 	
 	public HorarioSeederService(TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA,
 			SesionRepositoryJPA sesionRepositoryJPA,
-			ProfesorRepositoryJPA profesorRepositoryJPA,
-			MateriaRepositoryJPA materiaRepositoryJPA,
-			GrupoRepositoryJPA grupoRepositoryJPA,
-			AulaRepositoryJPA aulaRepositoryJPA) {
+			HoraHorarioRepositoryJPA horaHorarioRepositoryJPA) {
 		
 		this.tramoHorarioRepositoryJPA = tramoHorarioRepositoryJPA;
-		
+		this.sesionRepositoryJPA=sesionRepositoryJPA;
+		this.horaHorarioRepositoryJPA=horaHorarioRepositoryJPA;
 	}
 
 	public void seedDatabase() {
@@ -54,9 +56,35 @@ public class HorarioSeederService {
 		
 		tramoHorarioRepositoryJPA.saveAll( Arrays.asList(tramosHorarios) );
 		
+		
+		
+		SesionEntity[] sesiones = {
+				sesionRepositoryJPA.findByReferencia("01").get(),
+				sesionRepositoryJPA.findByReferencia("02").get(),
+				sesionRepositoryJPA.findByReferencia("03").get(),
+		};
+		
+		HoraHorarioEntity[] horaHorarios= {
+				new HoraHorarioEntity(tramosHorarios[2],sesiones[2]),
+				new HoraHorarioEntity(tramosHorarios[1],sesiones[2]),
+				new HoraHorarioEntity(tramosHorarios[5],sesiones[2]),
+
+				new HoraHorarioEntity(tramosHorarios[5],sesiones[1]),
+				new HoraHorarioEntity(tramosHorarios[3],sesiones[1]),
+				new HoraHorarioEntity(tramosHorarios[2],sesiones[1]),
+				
+				new HoraHorarioEntity(tramosHorarios[0],sesiones[0]),
+				new HoraHorarioEntity(tramosHorarios[6],sesiones[0]),
+				new HoraHorarioEntity(tramosHorarios[5],sesiones[0]),
+				
+		};
+		
+		horaHorarioRepositoryJPA.saveAll( Arrays.asList(horaHorarios));
+		
 	}
 	
 	public void deleteAll() {
+		horaHorarioRepositoryJPA.deleteAll();
 		tramoHorarioRepositoryJPA.deleteAll();
 	}
 }

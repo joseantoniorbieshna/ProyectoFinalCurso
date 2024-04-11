@@ -12,7 +12,7 @@ public interface HoraHorarioPersistance {
 
 	HoraHorario create(HoraHorario horaHorarioEntity);
 	
-	HoraHorario update(String referencia,HoraHorario horaHorarioEntity);
+	HoraHorario update(String referenciaSesion,int dia, int indice,HoraHorario horaHorarioUpdate);
 	
 	Stream<HoraHorario> readAll();
 	
@@ -27,9 +27,7 @@ public interface HoraHorarioPersistance {
 	HoraHorario readByReferenciaSesionAndTramoHorario(String referenciaSesion,IdTramoHorarioDTO idTramoHorarioDTO);
 	
 	boolean deleteByReferenciaSesionAndTramoHorario(String referenciaSesion,IdTramoHorarioDTO idTramoHorarioDTO);
-
-	boolean deleteByReferenciaProfesorAndTramoHorario(String referenciaProfesor,IdTramoHorarioDTO referenciaTramoHorario);
 	
-	boolean existReferencia(String referencia);
+	boolean existDiaIndiceTramoHorarioAndReferenciaSesion(String referenciaSesion,IdTramoHorarioDTO idTramoHorarioDTO);
 	
 }

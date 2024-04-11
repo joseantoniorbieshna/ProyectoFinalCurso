@@ -81,12 +81,16 @@ public class SesionEntity {
 	
 	public void fromSesion(Sesion sesion) {
 		this.referencia = sesion.getReferencia();
-		this.materia = new MateriasEntity(sesion.getMateria());
-		this.profesor = new ProfesorEntity(sesion.getProfesor());
+		
+		this.materia = sesion.getMateria()!=null? new MateriasEntity(sesion.getMateria()):null;
+		
+		this.profesor = sesion.getProfesor()!=null? new ProfesorEntity(sesion.getProfesor()):null;
+		
 		this.aula = sesion.getAula()!=null? new AulaEntity(sesion.getAula()):null;
-		this.grupos = sesion.getGrupos().stream()
+		this.grupos = sesion.getGrupos()!=null?
+				sesion.getGrupos().stream()
 				.map(GrupoEntity::new)
-				.collect(Collectors.toSet());
+				.collect(Collectors.toSet()):null;
 	}
 	
 	public Sesion toSesion() {

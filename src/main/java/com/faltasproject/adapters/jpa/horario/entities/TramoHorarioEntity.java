@@ -63,10 +63,13 @@ public class TramoHorarioEntity {
 		if(key==null) {
 			this.setKey( new TramoHorarioKey(tramohorario.getDia(), tramohorario.getIndice()) );			
 		}
-		this.setHoraEntrada( Time.valueOf(tramohorario.getHoraEntrada()) );
-		this.setHoraSalida( Time.valueOf(tramohorario.getHoraSalida()) );
+		if(tramohorario.getHoraEntrada()!=null) {
+			this.setHoraEntrada( Time.valueOf(tramohorario.getHoraEntrada()) );
+		}
+		if(tramohorario.getHoraSalida()!=null) {
+			this.setHoraSalida( Time.valueOf(tramohorario.getHoraSalida()) );
+		}
 	}
-	
 	
 	public void setDia(Integer dia) {
 		this.key.setDia(dia);
