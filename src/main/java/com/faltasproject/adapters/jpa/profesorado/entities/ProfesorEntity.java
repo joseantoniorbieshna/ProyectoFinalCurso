@@ -54,7 +54,8 @@ public class ProfesorEntity {
 	}
 	
 	public void fromProfesor(Profesor profesor) {
-		BeanUtils.copyProperties(profesor, this);
+		if(profesor.getReferencia()!=null) { setReferencia(profesor.getReferencia()); }
+		if(profesor.getNombre()!=null) { setNombre(profesor.getNombre()); }
 	}
 	
 	public Profesor toProfesor() {

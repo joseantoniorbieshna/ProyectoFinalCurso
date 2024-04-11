@@ -17,7 +17,7 @@ public interface SesionPersistance {
 	
 	Sesion readByReferencia(String referencia);
 	
-	boolean delete(String referencia);
+	void delete(String referencia);
 	
 	boolean existReferencia(String referencia);
 	

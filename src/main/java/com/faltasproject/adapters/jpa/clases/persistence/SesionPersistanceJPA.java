@@ -80,12 +80,11 @@ public class SesionPersistanceJPA implements SesionPersistance {
 	}
 
 	@Override
-	public boolean delete(String referencia) {
+	public void delete(String referencia) {
 		if(!existReferencia(referencia)) {
 			throw new NotFoundException(getMessageErrorNotFound(referencia));
 		}
 		sesionRepositoryJPA.deleteByReferencia(referencia);
-		return !existReferencia(referencia);
 	}
 
 	@Override
@@ -102,16 +101,17 @@ public class SesionPersistanceJPA implements SesionPersistance {
 	}
 	
 	private void changeDataToPersistData(SesionEntity sesionEntity) {
+		String lastPartPersistMessage=" introducida al crear la sesion";
 		// Persist
 		// AULA OPCIONAL
-		AulaEntity aulaPersist = sesionEntity.getReferenciaAula()==null? null : aulaRepositoryJPA.findByReferencia(sesionEntity.getReferenciaAula())
-				.orElseThrow(()-> new NotFoundException("No existe la referencia de aula "+sesionEntity.getReferenciaAula()+" introducida al crear la sesion") );
+		AulaEntity aulaPersist = sesionEntity.getAula()==null || sesionEntity.getReferenciaAula()==null? null : aulaRepositoryJPA.findByReferencia(sesionEntity.getReferenciaAula())
+				.orElseThrow(()-> new NotFoundException("No existe la referencia de aula "+sesionEntity.getReferenciaAula()+lastPartPersistMessage) );
 		
 		MateriasEntity materiaPersist = materiaRepositoryJPA.findByReferencia(sesionEntity.getReferenciaMateria())
-				.orElseThrow(()-> new NotFoundException("No existe la referencia de materia "+sesionEntity.getReferenciaMateria()+" introducida al crear la sesion"));
+				.orElseThrow(()-> new NotFoundException("No existe la referencia de materia "+sesionEntity.getReferenciaMateria()+lastPartPersistMessage));
 		
 		ProfesorEntity profesorPersist = profesorRepositoryJPA.findByReferencia(sesionEntity.getReferenciaProfesor())
-				.orElseThrow(()-> new NotFoundException("No existe la referencia de profesor "+sesionEntity.getReferenciaProfesor()+" introducida al crear la sesion"));
+				.orElseThrow(()-> new NotFoundException("No existe la referencia de profesor "+sesionEntity.getReferenciaProfesor()+lastPartPersistMessage));
 		
 		Set<GrupoEntity> gruposPersist = sesionEntity.getGrupos().stream()
 				.map(grupo-> grupoRepositoryJPA.findByNombreEquals(grupo.getNombre())

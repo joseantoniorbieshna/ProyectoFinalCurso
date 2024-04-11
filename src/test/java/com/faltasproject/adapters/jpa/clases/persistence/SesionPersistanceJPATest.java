@@ -1,5 +1,6 @@
 package com.faltasproject.adapters.jpa.clases.persistence;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -64,6 +65,19 @@ class SesionPersistanceJPATest {
 		sesionPersistance.delete(referenciaSesion);
 		assertFalse(sesionPersistance.existReferencia(referenciaSesion));
 		
+		// VOLVEMOS A CREAR PERO SIN AULA
+		sesion = new Sesion(referenciaSesion,materia,profesor,grupos,null);
+		sesion = sesionPersistance.create(sesion);
+		assertNull(sesion.getAula());
+		sesionPersistance.delete(referenciaSesion);
+		
+		// VOLVEMOS A CREAR PERO SIN REFERENCIA AULA
+		sesion = new Sesion(referenciaSesion,materia,profesor,grupos,new Aula(null));
+		sesion = sesionPersistance.create(sesion);
+		assertNull(sesion.getAula());
+		sesionPersistance.delete(referenciaSesion);
+		
+		
 		//EXCEPCIONES
 		String referenciaSesionExistente = "01";
 		final Sesion sesionException1 = new Sesion(referenciaSesionExistente, materia, profesor, grupos, aula);
@@ -88,7 +102,9 @@ class SesionPersistanceJPATest {
 		//EXCEPCION GRUPO
 		Set<Grupo> gruposAnOneNotExist = Sets.set(new Grupo("1A"),new Grupo("FFFFFFFF"));
 		Sesion sesionException5 = new Sesion(referenciaSesion,materia,profesor,gruposAnOneNotExist,aula);
-		assertThrows(NotFoundException.class,()->sesionPersistance.create(sesionException4));
+		assertThrows(NotFoundException.class,()->sesionPersistance.create(sesionException5));
+		
+		
 	}
 	
 	@Test
@@ -123,7 +139,6 @@ class SesionPersistanceJPATest {
 		assertEquals("AULA C", sesionUpdate.getAula().getNombre());
 		
 		assertTrue(sesionUpdate.getGrupos().stream().anyMatch( grupo -> grupo.getNombre().equals(nombresGrupo[0]) ));
-		
 		
 		
 		//VOLVER AL ESTADO DE ANTES
@@ -197,7 +212,7 @@ class SesionPersistanceJPATest {
 		
 		
 		//VOLVER AL ESTADO ANTERIOR BORRANDO
-		assertTrue( sesionPersistance.delete(referenciaSesion) );
+		sesionPersistance.delete(referenciaSesion);
 		assertFalse(sesionPersistance.existReferencia(referenciaSesion));
 		
 		
@@ -216,7 +231,7 @@ class SesionPersistanceJPATest {
 		
 		
 		//VOLVER AL ESTADO ANTERIOR BORRANDO
-		assertTrue( sesionPersistance.delete(referenciaSesion) );
+		sesionPersistance.delete(referenciaSesion);
 		assertFalse(sesionPersistance.existReferencia(referenciaSesion));
 		
 		//EXCEPCION
