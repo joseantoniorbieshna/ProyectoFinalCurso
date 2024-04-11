@@ -196,8 +196,8 @@ class SesionPersistanceJPATest {
 		assertTrue(sesionPersistance.existReferencia(referenciaSesion));
 		
 		
-		//VOLVER AL ESTADO ANTERIOR
-		sesionPersistance.delete(referenciaSesion);
+		//VOLVER AL ESTADO ANTERIOR BORRANDO
+		assertTrue( sesionPersistance.delete(referenciaSesion) );
 		assertFalse(sesionPersistance.existReferencia(referenciaSesion));
 		
 		
@@ -215,8 +215,8 @@ class SesionPersistanceJPATest {
 		assertTrue(sesionPersistance.existReferencia(referenciaSesion));
 		
 		
-		//VOLVER AL ESTADO ANTERIOR
-		sesionPersistance.delete(referenciaSesion);
+		//VOLVER AL ESTADO ANTERIOR BORRANDO
+		assertTrue( sesionPersistance.delete(referenciaSesion) );
 		assertFalse(sesionPersistance.existReferencia(referenciaSesion));
 		
 		//EXCEPCION

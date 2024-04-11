@@ -2,8 +2,19 @@ package com.faltasproject.domain.models.horario.dtos;
 
 import com.faltasproject.domain.models.horario.TramoHorario;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
+@Getter
+@Setter
 public class IdTramoHorarioDTO {
+	@EqualsAndHashCode.Include
 	private Integer dia;
+	@EqualsAndHashCode.Include
 	private Integer indice;
 	
 	public IdTramoHorarioDTO() {
@@ -20,21 +31,4 @@ public class IdTramoHorarioDTO {
 		this.dia = tramoHorario.getDia();
 		this.indice = tramoHorario.getIndice();
 	}
-
-	public Integer getDia() {
-		return dia;
-	}
-
-	public void setDia(Integer dia) {
-		this.dia = dia;
-	}
-
-	public Integer getIndice() {
-		return indice;
-	}
-
-	public void setIndice(Integer indice) {
-		this.indice = indice;
-	}
-
 }

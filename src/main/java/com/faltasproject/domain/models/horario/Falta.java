@@ -4,6 +4,14 @@ import java.time.LocalDate;
 
 import com.faltasproject.domain.models.profesorado.Profesor;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
+@Getter
+@Setter
 public class Falta {
 	// RELACIONES
 	private HoraHorario horaHorario;
@@ -19,38 +27,6 @@ public class Falta {
 		this.profesorSustituto = profesorSustituto;
 		this.comentario = comentario;
 		this.fecha = fecha;
-	}
-
-	public Profesor getProfesorSustituto() {
-		return profesorSustituto;
-	}
-
-	public void setProfesorSustituto(Profesor profesorSustituto) {
-		this.profesorSustituto = profesorSustituto;
-	}
-
-	public String getComentario() {
-		return comentario;
-	}
-
-	public void setComentario(String comentario) {
-		this.comentario = comentario;
-	}
-
-	public LocalDate getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(LocalDate fecha) {
-		this.fecha = fecha;
-	}
-
-	public HoraHorario getHoraHorario() {
-		return horaHorario;
-	}
-
-	public void setHoraHorario(HoraHorario horaHorario) {
-		this.horaHorario = horaHorario;
 	}
 	
 }

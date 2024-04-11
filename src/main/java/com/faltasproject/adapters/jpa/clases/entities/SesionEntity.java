@@ -32,7 +32,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "SESIONES")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SesionEntity {
 	@Id
