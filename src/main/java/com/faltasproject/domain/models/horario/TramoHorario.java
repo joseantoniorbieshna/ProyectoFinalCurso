@@ -29,5 +29,10 @@ public class TramoHorario {
 		this.horaEntrada=horaEntrada;
 		this.horaSalida=horaSalida;
 	}
+
+	public TramoHorario(int dia, int indice) {
+		this.dia=dia;
+		this.indice=indice;
+	}
 	
 }

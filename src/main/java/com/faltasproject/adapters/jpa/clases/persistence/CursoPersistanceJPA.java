@@ -45,6 +45,10 @@ public class CursoPersistanceJPA implements CursoPersistance {
 		CursoEntity cursoEntity = cursoRepositoryJPA.findByReferencia(referencia)
 		.orElseThrow(() -> new NotFoundException(getMessageErrorNotExist(referencia)));
 		
+		if(!referencia.equals(curso.getReferencia()) && existReferencia(curso.getReferencia())) {
+			throw new ConflictException(String.format("El curso con la referencia %s a la que quieres cambiar ya existe.", curso.getReferencia()));
+		}
+		
 
 		//CAMBIAMOS LOS DATOS Y PERSISTIMOS MATERIAS
 		cursoEntity.fromCurso(curso);

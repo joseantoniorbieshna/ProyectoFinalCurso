@@ -45,6 +45,10 @@ public class GrupoPersistanceJPA implements GrupoPersistance {
 		GrupoEntity grupoEntity=grupoRepositoryJPA.findByNombreEquals(nombre)
 		.orElseThrow(()-> new NotFoundException(getMessageErrorNotExist(nombre)));
 		
+		if(!nombre.equals(grupo.getNombre()) && existNombre(grupo.getNombre())) {
+			throw new ConflictException(String.format("El curso con el nombre '%s' al que quieres actualizar ya existe.", grupo.getNombre()));
+		}
+		
 		//CAMBIAMOS LOS DATOS
 		grupoEntity.fromGrupo(grupo);
 		grupoEntity.setCurso(getCursoPersistByReferenciaCurso(grupo.getReferenciaCurso()));

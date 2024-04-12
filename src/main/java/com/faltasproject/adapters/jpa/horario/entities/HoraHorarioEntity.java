@@ -57,12 +57,23 @@ public class HoraHorarioEntity {
 		fromHoraHorario(horaHorario);
 	}
 	
+	public int getDiaTramoHorario() {
+		return this.tramoHorario.getDia();
+	}
+	public int getIndiceTramoHorario() {
+		return this.tramoHorario.getIndice();
+	}
+	
 	public void fromHoraHorario(HoraHorario horaHorario) {
 		this.sesion = new SesionEntity(horaHorario.getSesion());
 		this.tramoHorario = new TramoHorarioEntity(horaHorario.getTramoHorario());
 	}
 	public HoraHorario toHoraHorario() {
 		return new HoraHorario(sesion.toSesion(), tramoHorario.toTramoHorario());
+	}
+
+	public String getReferenciaSesion() {
+		return this.sesion.getReferencia();
 	}
 
 }

@@ -34,6 +34,11 @@ public class ProfesorPersistanceJPA implements ProfesorPersistance {
 	public Profesor update(String referencia, Profesor profesor) {
 		ProfesorEntity profesorEntiy=profesorRepositoryJPA.findByReferencia(referencia)
 		.orElseThrow(()-> new NotFoundException(getMessageErrorExist(referencia)));
+		
+		if(!referencia.equals(profesor.getReferencia()) && existReferencia(profesor.getReferencia())){
+			throw new ConflictException( String.format("El profesor con la referencia '%s' a la que intentas actualizar ya existe.",profesor.getReferencia()) );
+		}
+		
 		// actualizamos
 		profesorEntiy.fromProfesor(profesor);
 		

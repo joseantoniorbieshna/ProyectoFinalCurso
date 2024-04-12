@@ -37,11 +37,10 @@ public class TramoHorarioPersistanceJPA implements TramoHorarioPersistance {
 
 	@Override
 	public TramoHorario update(IdTramoHorarioDTO idTramoHorarioDTO, TramoHorario tramoHorario) {
-		Optional<TramoHorarioEntity> tramoHorarioEntity=tramoHorarioRepositoryJPA.findById(new TramoHorarioKey(idTramoHorarioDTO.getDia(), idTramoHorarioDTO.getIndice()));
-		if(!tramoHorarioEntity.isPresent()) {
-			throw new NotFoundException(getMessageErrorNotFound(idTramoHorarioDTO.getDia(),idTramoHorarioDTO.getIndice()));
-		}
-		TramoHorarioEntity tramo = tramoHorarioEntity.get();
+		TramoHorarioEntity tramoHorarioEntity=tramoHorarioRepositoryJPA.findById(new TramoHorarioKey(idTramoHorarioDTO.getDia(), idTramoHorarioDTO.getIndice()))
+				.orElseThrow(()-> new NotFoundException(getMessageErrorNotFound(idTramoHorarioDTO.getDia(),idTramoHorarioDTO.getIndice())));
+		
+		TramoHorarioEntity tramo = tramoHorarioEntity;
 		tramo.fromTramoHorario(tramoHorario);
 		return tramoHorarioRepositoryJPA.save(tramo).toTramoHorario();
 	}

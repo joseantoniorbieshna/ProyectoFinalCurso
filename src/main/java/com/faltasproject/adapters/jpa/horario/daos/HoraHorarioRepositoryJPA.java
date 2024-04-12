@@ -31,5 +31,12 @@ public interface HoraHorarioRepositoryJPA extends JpaRepository<HoraHorarioEntit
 		       "JOIN hh.tramoHorario th "+
 		       "WHERE th.key.dia = :dia and th.key.indice = :indice")
 	List<HoraHorarioEntity> findAllByTramoHorario(int dia, int indice);
+	
+	@Query("SELECT hh FROM HoraHorarioEntity hh " +
+			   "JOIN hh.tramoHorario th "+
+		       "JOIN hh.sesion s " +
+		       "JOIN s.profesor p " +
+		       "WHERE p.referencia = :referenciaProfesor and th.key.dia = :dia and th.key.indice = :indice")
+ Optional<HoraHorarioEntity> findByProfesorFaltanteAndTramoHorario(String referenciaProfesor, int dia,int indice);
 
 }

@@ -3,6 +3,8 @@ package com.faltasproject.adapters.jpa.horario.persistence;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.springframework.stereotype.Repository;
+
 import com.faltasproject.adapters.jpa.clases.daos.SesionRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
 import com.faltasproject.adapters.jpa.horario.daos.HoraHorarioRepositoryJPA;
@@ -16,6 +18,9 @@ import com.faltasproject.domain.models.horario.HoraHorario;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 import com.faltasproject.domain.persistance_ports.horario.HoraHorarioPersistance;
 
+import jakarta.transaction.Transactional;
+
+@Repository("horaHorarioPersistance")
 public class HoraHorarioPersistanceJPA implements HoraHorarioPersistance{
 	
 	private static final String MESSAGE_EXIST = "La hora del horario no existe.";
@@ -43,10 +48,15 @@ public class HoraHorarioPersistanceJPA implements HoraHorarioPersistance{
 		
 		if(existDiaIndiceTramoHorarioAndReferenciaSesion(horaHorario.getReferenciaSesion(), idTramoHorario)) {
 			throw new ConflictException(MESSAGE_EXIST);
+			
 		}
+		HoraHorarioEntity horaHorarioPersist = new HoraHorarioEntity(horaHorario);
+		persistData(horaHorarioPersist);
 		
-		return horaHorarioRepositoryJPA.save(new HoraHorarioEntity(horaHorario)).toHoraHorario();
+		return horaHorarioRepositoryJPA.save(horaHorarioPersist).toHoraHorario();
 	}
+
+
 
 	@Override
 	public HoraHorario update(String referenciaSesion,int dia, int indice,HoraHorario horaHorarioUpdate) {
@@ -58,7 +68,13 @@ public class HoraHorarioPersistanceJPA implements HoraHorarioPersistance{
 		HoraHorarioEntity horaHorarioEntity = horaHorarioRepositoryJPA.findByReferenciaAndTramoHorario(referenciaSesion, dia, indice)
 				.orElseThrow( ()-> new NotFoundException(MESSAGE_NOT_EXIST));
 		
+		if( (!referenciaSesion.equals(horaHorarioUpdate.getReferenciaSesion()) || dia!=horaHorarioUpdate.getDiaTramoHorario() || indice!=horaHorarioUpdate.getIndiceTramoHorario())
+				&& existDiaIndiceTramoHorarioAndReferenciaSesion(horaHorarioUpdate.getReferenciaSesion(), new IdTramoHorarioDTO(horaHorarioUpdate.getDiaTramoHorario(),horaHorarioUpdate.getIndiceTramoHorario()))) {
+			throw new ConflictException(  String.format("La horaHorario con la referencia de sesion '%s' dia '%d' e indice '%d' a la que quiere actualizar ya existe.", horaHorarioUpdate.getReferenciaSesion(),horaHorarioUpdate.getDiaTramoHorario(),horaHorarioUpdate.getIndiceTramoHorario())  );
+		}
+		
 		horaHorarioEntity.fromHoraHorario(horaHorarioUpdate);
+		persistData(horaHorarioEntity);
 		
 		return horaHorarioRepositoryJPA.save(horaHorarioEntity).toHoraHorario();
 	}
@@ -89,16 +105,14 @@ public class HoraHorarioPersistanceJPA implements HoraHorarioPersistance{
 	@Override
 	public HoraHorario readByReferenciaProfesorAndTramoHorario(String referenciaProfesor,
 			IdTramoHorarioDTO referenciaTramoHorario) {
-		assertReferenciaSesionExist(referenciaProfesor);
-		return null;
+		return horaHorarioRepositoryJPA.findByProfesorFaltanteAndTramoHorario(referenciaProfesor, referenciaTramoHorario.getDia(), referenciaTramoHorario.getIndice())
+				.orElseThrow(()-> new NotFoundException(String.format("La hora de horario con la referencia del profesor %s y el dia %d y el indice %d no existe.", referenciaProfesor,referenciaTramoHorario.getDia(),referenciaTramoHorario.getIndice())))
+				.toHoraHorario();
 	}
 
 	@Override
 	public HoraHorario readByReferenciaSesionAndTramoHorario(String referenciaSesion,
 			IdTramoHorarioDTO idTramoHorarioDTO) {
-		assertReferenciaSesionExist(referenciaSesion);
-		assertReferenciaTramoHorarioExist(idTramoHorarioDTO);
-		
 		return horaHorarioRepositoryJPA
 				.findByReferenciaAndTramoHorario(referenciaSesion, idTramoHorarioDTO.getDia(),idTramoHorarioDTO.getIndice())
 				.orElseThrow( ()-> new NotFoundException(MESSAGE_NOT_EXIST))
@@ -139,5 +153,17 @@ public class HoraHorarioPersistanceJPA implements HoraHorarioPersistance{
 			throw new NotFoundException("La sesion con la referencia "+referencia+" no existe");
 		}
 	}
+	
+	private void persistData(HoraHorarioEntity horaHorarioPersist) {
+		TramoHorarioEntity tramoHorarioPersist = tramoHorarioRepositoryJPA.findById( new TramoHorarioKey(horaHorarioPersist.getDiaTramoHorario(), horaHorarioPersist.getIndiceTramoHorario()) )
+				.orElseThrow(()-> new NotFoundException(String.format("El tramo horario con el dia %d y el indice %d no existe.", horaHorarioPersist.getDiaTramoHorario(),horaHorarioPersist.getIndiceTramoHorario())));
+		SesionEntity sesionPersist = sesionRepositoryJPA.findByReferencia(horaHorarioPersist.getReferenciaSesion())
+				.orElseThrow(()-> new NotFoundException( String.format("La sesion co la referencia %s no existe.", horaHorarioPersist.getReferenciaSesion())) );
+		
+		horaHorarioPersist.setSesion(sesionPersist);
+		horaHorarioPersist.setTramoHorario(tramoHorarioPersist);
+	}
+	
+	
 	
 }

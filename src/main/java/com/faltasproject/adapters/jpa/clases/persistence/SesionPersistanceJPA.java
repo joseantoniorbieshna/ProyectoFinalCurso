@@ -59,6 +59,11 @@ public class SesionPersistanceJPA implements SesionPersistance {
 		SesionEntity sesionEntity = sesionRepositoryJPA.findByReferencia(referencia)
 				.orElseThrow( ()-> new NotFoundException(getMessageErrorNotFound(referencia)) );
 		
+		if(!referencia.equals(sesion.getReferencia()) && existReferencia(sesion.getReferencia())) {
+			throw new ConflictException(String.format("La sesion con la referencia '%s' a la que quieres cambiar ya existe.", sesion.getReferencia()));
+		}
+		
+		// CAMBIAMOS DATOS
 		sesionEntity.fromSesion(sesion);
 		changeDataToPersistData(sesionEntity);
 		

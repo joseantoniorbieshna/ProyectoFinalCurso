@@ -15,21 +15,25 @@ class HoraHorarioRepositoryJPATest {
 	@Test
 	void findAllByProfesorFaltante() {
 		long result=horaHorarioRepositoryJPA.findAllByProfesorFaltante("02").stream().count();
-		long expected=3;
+		long expected=6;
+		assertEquals(expected,result);
+		
+		result=horaHorarioRepositoryJPA.findAllByProfesorFaltante("01").stream().count();
+		expected=3;
 		assertEquals(expected,result);
 
 		result=horaHorarioRepositoryJPA.findAllByProfesorFaltante("100").stream().count();
 		expected=0;
 		assertEquals(expected,result);
 	}
-	
+	@Test
 	void findAllByReferenciaSesion() {
 		long result=horaHorarioRepositoryJPA.findAllByReferenciaSesion("01").stream().count();
 		long expected=3;
 		assertEquals(expected,result);
 		
 		result=horaHorarioRepositoryJPA.findAllByReferenciaSesion("03").stream().count();
-		expected=0;
+		expected=3;
 		assertEquals(expected,result);
 
 		result=horaHorarioRepositoryJPA.findAllByReferenciaSesion("100").stream().count();

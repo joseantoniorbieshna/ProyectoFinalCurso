@@ -38,6 +38,10 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 		MateriasEntity materiaEntity = materiaRepository.findByReferencia(referencia)
 				.orElseThrow(() -> new NotFoundException(getMessageErrorNotExist(referencia)));
 
+		if(!referencia.equals(materia.getReferencia()) && existReferencia(materia.getReferencia())) {
+			throw new ConflictException(String.format("La materia con la referencia '%s' a la que quieres actualizar ya existe.", materia.getReferencia()));
+		}
+		
 		// CAMBIAMOS LOS DATOS
 		materiaEntity.fromMateria(materia);
 		

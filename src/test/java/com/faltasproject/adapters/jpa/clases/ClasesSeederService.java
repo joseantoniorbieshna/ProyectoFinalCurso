@@ -113,7 +113,7 @@ public class ClasesSeederService {
 		// SESIONES
 		SesionEntity[] sesiones = {
 				new SesionEntity("01",materias[0],profesores[0],aulas[1],Sets.set(grupos[1],grupos[2],grupos[3])),
-				new SesionEntity("02",materias[2],profesores[2],aulas[2],Sets.set(grupos[1],grupos[2])),
+				new SesionEntity("02",materias[2],profesores[1],aulas[2],Sets.set(grupos[1],grupos[2])),
 				new SesionEntity("03",materias[3],profesores[1],aulas[3],Sets.set(grupos[3],grupos[2])),
 		};
 		sesionRepositoryJPA.saveAll(Arrays.asList(sesiones));
