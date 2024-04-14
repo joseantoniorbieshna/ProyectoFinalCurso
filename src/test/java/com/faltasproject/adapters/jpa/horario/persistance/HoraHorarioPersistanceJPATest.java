@@ -179,7 +179,7 @@ class HoraHorarioPersistanceJPATest {
 		int dia=0;
 		int indice=1;
 		IdTramoHorarioDTO idTramoHorarioDTO=new IdTramoHorarioDTO(dia, indice);
-		HoraHorario horaHorario = horaHorarioPersistanceJPA.readByReferenciaSesionAndTramoHorario(profesorReferencia, idTramoHorarioDTO);
+		HoraHorario horaHorario = horaHorarioPersistanceJPA.readByReferenciaProfesorAndTramoHorario(profesorReferencia, idTramoHorarioDTO);
 		assertEquals(dia, horaHorario.getDiaTramoHorario());
 		assertEquals(indice, horaHorario.getIndiceTramoHorario());
 		assertEquals(profesorReferencia, horaHorario.getSesion().getProfesor().getReferencia());
@@ -187,7 +187,7 @@ class HoraHorarioPersistanceJPATest {
 		dia=1;
 		indice=2;
 		idTramoHorarioDTO=new IdTramoHorarioDTO(dia, indice);
-		horaHorario = horaHorarioPersistanceJPA.readByReferenciaSesionAndTramoHorario(profesorReferencia, idTramoHorarioDTO);
+		horaHorario = horaHorarioPersistanceJPA.readByReferenciaProfesorAndTramoHorario(profesorReferencia, idTramoHorarioDTO);
 		assertEquals(dia, horaHorario.getDiaTramoHorario());
 		assertEquals(indice, horaHorario.getIndiceTramoHorario());
 		assertEquals(profesorReferencia, horaHorario.getSesion().getProfesor().getReferencia());
@@ -195,12 +195,12 @@ class HoraHorarioPersistanceJPATest {
 		// ERROR
 		final String profesorReferenciaError = "100";
 		final IdTramoHorarioDTO idTramoHorarioDTONoError=new IdTramoHorarioDTO(dia, indice);
-		assertThrows( NotFoundException.class,()-> horaHorarioPersistanceJPA.readByReferenciaSesionAndTramoHorario(profesorReferenciaError, idTramoHorarioDTONoError) );
+		assertThrows( NotFoundException.class,()-> horaHorarioPersistanceJPA.readByReferenciaProfesorAndTramoHorario(profesorReferenciaError, idTramoHorarioDTONoError) );
 		
 		//ERROR2
 		final String profesorReferenciaNoError = "01";
 		final IdTramoHorarioDTO idTramoHorarioDToError=new IdTramoHorarioDTO(100, 0);
-		assertThrows( NotFoundException.class,()-> horaHorarioPersistanceJPA.readByReferenciaSesionAndTramoHorario(profesorReferenciaNoError, idTramoHorarioDToError) );
+		assertThrows( NotFoundException.class,()-> horaHorarioPersistanceJPA.readByReferenciaProfesorAndTramoHorario(profesorReferenciaNoError, idTramoHorarioDToError) );
 		
 	
 	}

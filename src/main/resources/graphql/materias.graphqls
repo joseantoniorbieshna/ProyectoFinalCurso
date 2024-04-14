@@ -1,0 +1,10 @@
+extend type Query {
+	materias : [Materia],
+	findMateriaByReferencia(referencia : String) : Materia
+}
+
+type Materia {
+	referencia: String,
+	nombreAbreviado: String,
+	nombreCompleto: String
+}

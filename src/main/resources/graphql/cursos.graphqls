@@ -1,0 +1,9 @@
+extend type Query {
+	cursos : [Curso]
+}
+
+type Curso {
+	referencia : String
+	nombre : String
+	materias : [Materia]
+}

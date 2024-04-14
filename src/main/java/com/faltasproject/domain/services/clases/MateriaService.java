@@ -1,5 +1,7 @@
 package com.faltasproject.domain.services.clases;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.faltasproject.domain.models.clases.Materia;
@@ -18,6 +20,13 @@ public class MateriaService {
 		return materiaPersistance.create(materia);
 	}
 	
+	public List<Materia> findAll(){
+		return materiaPersistance.readAll().toList();
+	}
+
+	public Materia findMateriaByReferencia(String referencia) {
+		return this.materiaPersistance.readByReferencia(referencia);
+	}
 
 
 }
