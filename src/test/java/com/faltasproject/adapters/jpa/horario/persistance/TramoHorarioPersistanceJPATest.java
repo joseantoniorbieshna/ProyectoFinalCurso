@@ -31,7 +31,7 @@ class TramoHorarioPersistanceJPATest {
 	
 	@Test
     void update() {
-    	TramoHorarioEntity tramoHorarioEntity=new TramoHorarioEntity(0, 1, Time.valueOf( LocalTime.of(8, 0) ),Time.valueOf( LocalTime.of(9, 0)));
+    	TramoHorarioEntity tramoHorarioEntity=new TramoHorarioEntity(0, 1,LocalTime.of(8, 0),LocalTime.of(9, 0));
     	final TramoHorario tramoMateriaUpdateError = tramoHorarioEntity.toTramoHorario();
     	final IdTramoHorarioDTO idTramoHorarioUpdateError = new IdTramoHorarioDTO(0, 10);
     	assertThrows( NotFoundException.class, () -> tramoHorarioPersistanceJPA.update(idTramoHorarioUpdateError, tramoMateriaUpdateError ));

@@ -3,6 +3,7 @@ package com.faltasproject.adapters.jpa.horario.entities.key_compound;
 import java.time.LocalDate;
 
 import com.faltasproject.adapters.jpa.horario.entities.HoraHorarioEntity;
+import com.faltasproject.adapters.jpa.horario.entities.TramoHorarioEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
@@ -24,4 +25,19 @@ public class FaltaKey {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha")
 	private LocalDate fecha; 
+	
+	public TramoHorarioEntity getTramoHorario() {
+		return this.horaHorario.getTramoHorario();
+	}
+	
+	public int getDiaTramoHorario() {
+		return this.getHoraHorario().getDiaTramoHorario();
+	}
+	public int getIndiceTramoHorario() {
+		return this.getHoraHorario().getIndiceTramoHorario();
+	}
+	
+	public String getReferenciaSesion() {
+		return this.getHoraHorario().getReferenciaSesion();
+	}
 }

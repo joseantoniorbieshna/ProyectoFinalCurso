@@ -1,6 +1,7 @@
 package com.faltasproject.domain.models.horario;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import com.faltasproject.domain.models.profesorado.Profesor;
 
@@ -15,7 +16,7 @@ import lombok.ToString;
 public class Falta {
 	// RELACIONES
 	private HoraHorario horaHorario;
-	private Profesor profesorSustituto;
+	private Optional<Profesor> profesorSustituto;
 	// DATOS EXTRAS
 	private String comentario;
 	private LocalDate fecha;
@@ -24,9 +25,30 @@ public class Falta {
 			LocalDate fecha) {
 		super();
 		this.horaHorario=horaHorario;
-		this.profesorSustituto = profesorSustituto;
+		this.profesorSustituto = Optional.of(profesorSustituto);
 		this.comentario = comentario;
 		this.fecha = fecha;
 	}
+
+	public Falta(HoraHorario horaHorario, String comentario, LocalDate fecha) {
+		super();
+		this.horaHorario = horaHorario;
+		this.comentario = comentario;
+		this.fecha = fecha;
+	}
+	
+	public int getDiaTramoHorario() {
+		return horaHorario.getDiaTramoHorario();
+	}
+	
+	public int getIndiceTramoHorario() {
+		return horaHorario.getIndiceTramoHorario();
+	}
+	
+	public String getReferenciaSesion() {
+		return horaHorario.getReferenciaSesion();
+	}
+	
+	
 	
 }

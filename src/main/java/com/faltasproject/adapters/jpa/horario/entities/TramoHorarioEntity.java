@@ -1,6 +1,6 @@
 package com.faltasproject.adapters.jpa.horario.entities;
 
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Set;
 
 import com.faltasproject.adapters.jpa.horario.entities.key_compound.TramoHorarioKey;
@@ -32,10 +32,10 @@ public class TramoHorarioEntity {
 	private TramoHorarioKey key;
 	@Column(name = "hora_entrada")
 	@Temporal(TemporalType.TIME)
-	private Time horaEntrada;
+	private LocalTime horaEntrada;
 	@Column(name = "hora_salida")
 	@Temporal(TemporalType.TIME)
-	private Time horaSalida;
+	private LocalTime horaSalida;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "tramoHorario",cascade = CascadeType.REMOVE)
 	private Set<HoraHorarioEntity> horaHorarioEntity;
@@ -44,7 +44,7 @@ public class TramoHorarioEntity {
 		fromTramoHorario(tramoHorario);
 	}
 	
-	public TramoHorarioEntity(Integer dia,Integer indice,Time horaEntrada,Time horaSalida) {
+	public TramoHorarioEntity(Integer dia,Integer indice,LocalTime horaEntrada,LocalTime horaSalida) {
 		this.key = new TramoHorarioKey(dia,indice);
 		setHoraEntrada(horaEntrada);
 		setHoraSalida(horaSalida);
@@ -54,8 +54,8 @@ public class TramoHorarioEntity {
 		TramoHorario tramohorario = new TramoHorario();
 		tramohorario.setDia(getDia());
 		tramohorario.setIndice(getIndice());
-		tramohorario.setHoraEntrada(this.horaEntrada.toLocalTime());
-		tramohorario.setHoraSalida(this.horaSalida.toLocalTime());
+		tramohorario.setHoraEntrada(getHoraEntrada());
+		tramohorario.setHoraSalida(getHoraSalida());
 		return tramohorario;
 	}
 	
@@ -64,10 +64,10 @@ public class TramoHorarioEntity {
 			this.setKey( new TramoHorarioKey(tramohorario.getDia(), tramohorario.getIndice()) );			
 		}
 		if(tramohorario.getHoraEntrada()!=null) {
-			this.setHoraEntrada( Time.valueOf(tramohorario.getHoraEntrada()) );
+			this.setHoraEntrada( tramohorario.getHoraEntrada() );
 		}
 		if(tramohorario.getHoraSalida()!=null) {
-			this.setHoraSalida( Time.valueOf(tramohorario.getHoraSalida()) );
+			this.setHoraSalida( tramohorario.getHoraSalida() );
 		}
 	}
 	

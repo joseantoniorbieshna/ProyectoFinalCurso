@@ -1,6 +1,7 @@
 package com.faltasproject.adapters.jpa.horario;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 
@@ -14,8 +15,10 @@ import com.faltasproject.adapters.jpa.clases.daos.GrupoRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.MateriaRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.SesionRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
+import com.faltasproject.adapters.jpa.horario.daos.FaltaRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.HoraHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
+import com.faltasproject.adapters.jpa.horario.entities.FaltaEntity;
 import com.faltasproject.adapters.jpa.horario.entities.HoraHorarioEntity;
 import com.faltasproject.adapters.jpa.horario.entities.TramoHorarioEntity;
 import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
@@ -26,14 +29,17 @@ public class HorarioSeederService {
 	private final TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA;
 	private final SesionRepositoryJPA sesionRepositoryJPA;
 	private final HoraHorarioRepositoryJPA horaHorarioRepositoryJPA;
+	private final FaltaRepositoryJPA faltaRepositoryJPA;
 	
 	public HorarioSeederService(TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA,
 			SesionRepositoryJPA sesionRepositoryJPA,
-			HoraHorarioRepositoryJPA horaHorarioRepositoryJPA) {
+			HoraHorarioRepositoryJPA horaHorarioRepositoryJPA,
+			FaltaRepositoryJPA faltaRepositoryJPA) {
 		
 		this.tramoHorarioRepositoryJPA = tramoHorarioRepositoryJPA;
 		this.sesionRepositoryJPA=sesionRepositoryJPA;
 		this.horaHorarioRepositoryJPA=horaHorarioRepositoryJPA;
+		this.faltaRepositoryJPA=faltaRepositoryJPA;
 	}
 
 	public void seedDatabase() {
@@ -43,15 +49,15 @@ public class HorarioSeederService {
 		
 		// TRAMOS
 		TramoHorarioEntity[] tramosHorarios= {
-			new TramoHorarioEntity(0, 1, Time.valueOf( LocalTime.of(8, 0) ),Time.valueOf( LocalTime.of(9, 0))),
-			new TramoHorarioEntity(0, 2, Time.valueOf( LocalTime.of(9, 0) ),Time.valueOf( LocalTime.of(10, 0))),
-			new TramoHorarioEntity(0, 3, Time.valueOf( LocalTime.of(10, 0) ),Time.valueOf( LocalTime.of(11, 0))),
-			new TramoHorarioEntity(0, 4, Time.valueOf( LocalTime.of(11, 30) ),Time.valueOf( LocalTime.of(12, 30))),
+			new TramoHorarioEntity(0, 1,  LocalTime.of(8, 0), LocalTime.of(9, 0)),
+			new TramoHorarioEntity(0, 2,  LocalTime.of(9, 0), LocalTime.of(10, 0)),
+			new TramoHorarioEntity(0, 3,  LocalTime.of(10, 0), LocalTime.of(11, 0)),
+			new TramoHorarioEntity(0, 4,  LocalTime.of(11, 30), LocalTime.of(12, 30)),
 			
-			new TramoHorarioEntity(1, 1, Time.valueOf( LocalTime.of(8, 0) ),Time.valueOf( LocalTime.of(9, 0))),
-			new TramoHorarioEntity(1, 2, Time.valueOf( LocalTime.of(9, 0) ),Time.valueOf( LocalTime.of(10, 0))),
-			new TramoHorarioEntity(1, 3, Time.valueOf( LocalTime.of(10, 0) ),Time.valueOf( LocalTime.of(11, 0))),
-			new TramoHorarioEntity(1, 4, Time.valueOf( LocalTime.of(11, 30) ),Time.valueOf( LocalTime.of(12, 30))),
+			new TramoHorarioEntity(1, 1,  LocalTime.of(8, 0), LocalTime.of(9, 0)),
+			new TramoHorarioEntity(1, 2,  LocalTime.of(9, 0), LocalTime.of(10, 0)),
+			new TramoHorarioEntity(1, 3,  LocalTime.of(10, 0), LocalTime.of(11, 0)),
+			new TramoHorarioEntity(1, 4,  LocalTime.of(11, 30), LocalTime.of(12, 30)),
 		};
 		
 		tramoHorarioRepositoryJPA.saveAll( Arrays.asList(tramosHorarios) );
@@ -81,9 +87,21 @@ public class HorarioSeederService {
 		
 		horaHorarioRepositoryJPA.saveAll( Arrays.asList(horaHorarios));
 		
+		
+		// FALTAS
+		FaltaEntity[] faltas= {
+				new FaltaEntity(horaHorarios[0], LocalDate.of(2024, 04, 5), null,"comentario profesor1"),
+				new FaltaEntity(horaHorarios[1], LocalDate.of(2024, 04, 8), null,"comentario profesor2"),
+				
+				new FaltaEntity(horaHorarios[2], LocalDate.of(2024, 04, 2), null,"comentario profesor3"),
+				new FaltaEntity(horaHorarios[3], LocalDate.of(2024, 04, 23), null,"comentario profesor4"),
+		};
+		
+		faltaRepositoryJPA.saveAll(Arrays.asList(faltas));
 	}
 	
 	public void deleteAll() {
+		faltaRepositoryJPA.deleteAll();
 		horaHorarioRepositoryJPA.deleteAll();
 		tramoHorarioRepositoryJPA.deleteAll();
 	}

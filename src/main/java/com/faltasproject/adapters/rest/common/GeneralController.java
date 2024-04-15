@@ -161,6 +161,19 @@ public class GeneralController {
 		return MENSAJE_GURADADO_TOTAL_DE + sesiones.size() + " sesiones";
 	}
 	
+	@PostMapping("all")
+	public String all(@RequestParam("xml") MultipartFile xml) {
+		String result = "";
+		result = result + introducirMaterias(xml) +"\n";
+		result = result + introducirCursos(xml)+"\n";
+		result = result + introducirTramosHorarios(xml)+"\n";
+		result = result + introducirAulas(xml)+"\n";
+		result = result + introducirGrupos(xml)+"\n";
+		result = result + introducirProfesores(xml)+"\n";
+		result = result + introducirSesiones(xml)+"\n";
+		return result;
+	}
+	
 	
 
 }

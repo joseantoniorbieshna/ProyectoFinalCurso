@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.assertj.core.util.Sets;
@@ -17,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Curso;
-import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
 
 @SpringBootTest
