@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.faltasproject.domain.dto.InputHoraHorarioDTO;
 import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Grupo;
@@ -21,6 +22,7 @@ import com.faltasproject.domain.services.clases.CursoService;
 import com.faltasproject.domain.services.clases.GrupoService;
 import com.faltasproject.domain.services.clases.MateriaService;
 import com.faltasproject.domain.services.clases.SesionService;
+import com.faltasproject.domain.services.horario.HoraHorarioService;
 import com.faltasproject.domain.services.horario.TramoHorarioService;
 import com.faltasproject.domain.services.profesorado.ProfesorService;
 import com.faltasproject.utils.XmlTreatment;
@@ -37,6 +39,7 @@ public class GeneralController {
 	private final GrupoService grupoService;
 	private final ProfesorService profesorService;
 	private final SesionService sesionService;
+	private final HoraHorarioService horaHorarioService;
 	
 	public GeneralController(MateriaService materiaService,
 			CursoService cursoService,
@@ -44,7 +47,8 @@ public class GeneralController {
 			AulaService aulaService,
 			GrupoService grupoService,
 			ProfesorService profesorService,
-			SesionService sesionService) {
+			SesionService sesionService,
+			HoraHorarioService horaHorarioService) {
 		
 		this.materiaService=materiaService;
 		this.cursoService=cursoService;
@@ -53,6 +57,7 @@ public class GeneralController {
 		this.grupoService=grupoService;
 		this.profesorService=profesorService;
 		this.sesionService=sesionService;
+		this.horaHorarioService=horaHorarioService;
 	}
 
 
@@ -159,6 +164,20 @@ public class GeneralController {
 		}
 
 		return MENSAJE_GURADADO_TOTAL_DE + sesiones.size() + " sesiones";
+	}
+	
+	@PostMapping("horahorario")
+	public String introducirHoraHorario(@RequestParam("xml") MultipartFile xml) {
+
+		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+
+		Set<InputHoraHorarioDTO> horarios = xmlTreatment.getAllHoraHorario();
+		
+		for(InputHoraHorarioDTO horario:horarios) {
+			horaHorarioService.create(horario);
+		}
+
+		return MENSAJE_GURADADO_TOTAL_DE + horarios.size() + " hora de horarios";
 	}
 	
 	@PostMapping("all")

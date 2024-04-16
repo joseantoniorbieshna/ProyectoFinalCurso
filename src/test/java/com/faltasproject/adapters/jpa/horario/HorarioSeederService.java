@@ -1,18 +1,13 @@
 package com.faltasproject.adapters.jpa.horario;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.assertj.core.util.Sets;
 import org.springframework.stereotype.Service;
 
-import com.faltasproject.adapters.jpa.clases.daos.AulaRepositoryJPA;
-import com.faltasproject.adapters.jpa.clases.daos.GrupoRepositoryJPA;
-import com.faltasproject.adapters.jpa.clases.daos.MateriaRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.SesionRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
 import com.faltasproject.adapters.jpa.horario.daos.FaltaRepositoryJPA;
@@ -21,7 +16,6 @@ import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.entities.FaltaEntity;
 import com.faltasproject.adapters.jpa.horario.entities.HoraHorarioEntity;
 import com.faltasproject.adapters.jpa.horario.entities.TramoHorarioEntity;
-import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
 
 @Service
 public class HorarioSeederService {

@@ -8,6 +8,11 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
@@ -16,6 +21,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.faltasproject.domain.dto.InputHoraHorarioDTO;
 import com.faltasproject.domain.exceptions.BadRequestException;
 import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Curso;
@@ -25,7 +31,9 @@ import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.models.profesorado.Profesor;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class XmlTreatment {
 	private static final String CLAVE_EXPORTACION_NAME_ELEMENT="claveDeExportacion";
 	private static final String NOMBRE_COMPLETO_NAME_ELEMENT="nombreCompleto";
@@ -221,6 +229,48 @@ public class XmlTreatment {
 		};
 
 		return treatmentCurso.getSet();
+	}
+	
+	public Set<InputHoraHorarioDTO> getAllHoraHorario() {
+		Set<InputHoraHorarioDTO> result = new HashSet<>();
+
+		XPathFactory xPathFactory = XPathFactory.newInstance();
+		XPath xpath = xPathFactory.newXPath();
+
+		// OBTENEMOS LA LISTA DE CURSOSS
+		String expr = "//horario/tramo";
+
+		try {
+			
+			XPathExpression expression = xpath.compile(expr);
+
+			NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
+			// ITERO LA LISTA DEL NODO CURSO
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node child = nodeList.item(i);
+				
+				if (child.getNodeType() == Node.ELEMENT_NODE) {
+					
+					Element element = (Element)child;
+					int dia = Integer.valueOf(element.getAttribute("dia"));
+					int indice = Integer.valueOf(element.getAttribute("indice"));
+					//Volvemos a recorrer
+					   NodeList aulas = element.getElementsByTagName("aula");
+					   if (child.getNodeType() == Node.ELEMENT_NODE) {
+						   for (int j = 0; j < aulas.getLength(); j++) {
+			                    Element aula = (Element) aulas.item(j);
+			                    Element sesion = (Element) aula.getElementsByTagName("sesion").item(0);
+			                    String sesionReferencia = sesion.getTextContent();
+			                    result.add(new InputHoraHorarioDTO(sesionReferencia,dia,indice));
+			                }
+					   }
+		                
+				}
+			}
+		} catch (XPathExpressionException e) {
+			log.warn(e.getMessage());
+		}
+		return result;
 	}
 
 }
