@@ -62,7 +62,9 @@ public class XmlTreatment {
 				String idNombre = element.getElementsByTagName(CLAVE_EXPORTACION_NAME_ELEMENT).item(0).getTextContent();
 				String abreviadoMateria = element.getElementsByTagName("abreviatura").item(0).getTextContent();
 				String nombreCompleto = element.getElementsByTagName(NOMBRE_COMPLETO_NAME_ELEMENT).item(0).getTextContent();
-				return new Materia(idNombre, abreviadoMateria,nombreCompleto);
+				String[] partesNombreCopleto = nombreCompleto.split("~");
+				String nombreCompletoTratado = partesNombreCopleto.length>1?partesNombreCopleto[1].trim():nombreCompleto.trim();
+				return new Materia(idNombre, abreviadoMateria,nombreCompletoTratado);
 			}
 		};
 		return treatmentMateria.getSet();
