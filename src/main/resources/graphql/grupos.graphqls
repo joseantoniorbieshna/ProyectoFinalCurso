@@ -1,0 +1,8 @@
+extend type Query {
+	grupos : [Grupo],
+}
+
+type Grupo {
+	nombre: String,
+	curso: Curso,
+}

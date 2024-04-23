@@ -11,11 +11,11 @@ import com.faltasproject.domain.services.clases.MateriaService;
 
 
 @Controller
-public class MateriaQuery{
+public class MateriaControllerGraphql{
 
 	private final MateriaService materiaService;
 
-	public MateriaQuery(MateriaService materiaService) {
+	public MateriaControllerGraphql(MateriaService materiaService) {
 		super();
 		this.materiaService = materiaService;
 	}

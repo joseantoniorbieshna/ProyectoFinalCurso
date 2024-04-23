@@ -1,0 +1,8 @@
+extend type Query {
+	aulas : [Aula],
+}
+
+type Aula {
+	referencia: String,
+	nombre: String,
+}

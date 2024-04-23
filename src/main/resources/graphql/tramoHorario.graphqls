@@ -1,0 +1,10 @@
+extend type Query {
+	tramosHorarios : [TramoHorario],
+}
+
+type TramoHorario {
+	dia: Int,
+	indice: Int,
+	horaEntrada: LocalTime,
+	horaSalida: LocalTime
+}

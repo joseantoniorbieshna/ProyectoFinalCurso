@@ -1,5 +1,8 @@
 package com.faltasproject.domain.services.profesorado;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.faltasproject.domain.models.profesorado.Profesor;
@@ -16,6 +19,10 @@ public class ProfesorService {
 	
 	public Profesor create(Profesor profesor) {
 		return profesorPersistance.create(profesor);
+	}
+	
+	public List<Profesor> findAll(){
+		return this.profesorPersistance.readAll().collect(Collectors.toList());
 	}
 	
 }

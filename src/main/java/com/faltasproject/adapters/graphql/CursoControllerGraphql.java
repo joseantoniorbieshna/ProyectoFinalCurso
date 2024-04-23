@@ -9,11 +9,11 @@ import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.services.clases.CursoService;
 
 @Controller
-public class CursoQuery {
+public class CursoControllerGraphql {
 	
 	private final CursoService cursoService;
 
-	public CursoQuery(CursoService cursoService) {
+	public CursoControllerGraphql(CursoService cursoService) {
 		super();
 		this.cursoService = cursoService;
 	}

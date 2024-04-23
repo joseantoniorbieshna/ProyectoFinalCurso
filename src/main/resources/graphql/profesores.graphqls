@@ -1,0 +1,8 @@
+extend type Query {
+	profesores : [Profesor],
+}
+
+type Profesor {
+	referencia: String,
+	nombre: String,
+}

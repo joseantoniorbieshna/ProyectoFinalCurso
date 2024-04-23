@@ -1,0 +1,11 @@
+extend type Query {
+	sesiones : [Sesion],
+}
+
+type Sesion {
+	referencia: String,
+	materia: Materia,
+	profesor: Profesor,
+	grupos: [Grupo]
+	aula: Aula
+}
