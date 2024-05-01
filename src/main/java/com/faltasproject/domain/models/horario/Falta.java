@@ -35,6 +35,7 @@ public class Falta {
 		this.horaHorario = horaHorario;
 		this.comentario = comentario;
 		this.fecha = fecha;
+		profesorSustituto = Optional.ofNullable(null);
 	}
 	
 	public int getDiaTramoHorario() {

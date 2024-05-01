@@ -190,6 +190,7 @@ public class GeneralController {
 		result = result + introducirGrupos(xml)+"\n";
 		result = result + introducirProfesores(xml)+"\n";
 		result = result + introducirSesiones(xml)+"\n";
+		result = result + introducirHoraHorario(xml)+"\n";
 		return result;
 	}
 	

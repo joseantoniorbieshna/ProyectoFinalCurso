@@ -1,5 +1,6 @@
 # java.time.LocalTime implementation
 scalar LocalTime
+scalar LocalDate
 
 type Query {
 }

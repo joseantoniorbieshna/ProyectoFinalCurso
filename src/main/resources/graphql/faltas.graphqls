@@ -1,0 +1,23 @@
+extend type Query {
+	faltas : [Falta],
+	getAllFaltaBetweenFechas(fechaInicio:LocalDate,fechaFin:LocalDate) : [Falta]
+}
+
+extend type Mutation{
+	createFalta(faltaCreateInput:FaltaCreateInputDTO) : Falta,
+}
+
+input FaltaCreateInputDTO {
+	dia : Int!,
+	indice : Int!,
+	referenciaSesion : String!,
+	comentario : String,
+	fecha : LocalDate!
+}
+
+type Falta {
+	horaHorario: HoraHorario,
+	profesorSustituto: Profesor,
+	comentario: String,
+	fecha: LocalDate
+}

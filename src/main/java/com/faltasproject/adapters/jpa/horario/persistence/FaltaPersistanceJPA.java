@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.springframework.stereotype.Repository;
+
 import com.faltasproject.adapters.jpa.horario.daos.FaltaRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.HoraHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.entities.FaltaEntity;
@@ -11,13 +13,14 @@ import com.faltasproject.adapters.jpa.horario.entities.HoraHorarioEntity;
 import com.faltasproject.adapters.jpa.horario.entities.key_compound.FaltaKey;
 import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
 import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
+import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.horario.Falta;
 import com.faltasproject.domain.models.horario.dtos.IdFaltaDTO;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 import com.faltasproject.domain.models.horario.mappers.FaltaIdMapper;
 import com.faltasproject.domain.persistance_ports.horario.FaltaPersistance;
-
+@Repository("faltaPersistance")
 public class FaltaPersistanceJPA implements FaltaPersistance{
 	private static final String MESSAGE_NOT_EXIST_HORA_HORARIO="La hora horario introducida no existe.";
 	private static final String MESSAGE_NOT_EXIST_FALTA="La falta introducida no existe.";
@@ -45,6 +48,11 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 	public Falta create(Falta falta) {
 		HoraHorarioEntity horaHorarioPersist=getHoraHorarioPersist(faltaIdMapper.toDto(falta))
 				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
+		
+		if(existId(faltaIdMapper.toDto(falta))) {
+			throw new ConflictException("La Falta ya existe");
+		}
+		
 		FaltaEntity faltaEntity = new FaltaEntity(falta);
 		
 		faltaEntity.setHoraHorario(horaHorarioPersist);

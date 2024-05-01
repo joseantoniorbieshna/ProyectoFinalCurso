@@ -44,7 +44,7 @@ public class MateriasEntity {
 	private Set<CursoEntity> cursos;
 	
 	@OneToMany(fetch = FetchType.EAGER,mappedBy = "materia",cascade = CascadeType.REMOVE)
-	private Set<SesionEntity> materia;
+	private Set<SesionEntity> sesiones;
 	
 	public MateriasEntity(String referencia){
 		super();

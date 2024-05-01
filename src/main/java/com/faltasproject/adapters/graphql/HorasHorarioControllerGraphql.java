@@ -27,7 +27,7 @@ public class HorasHorarioControllerGraphql{
 	} 
 	
 	
-	@MutationMapping
+	@QueryMapping
 	public List<HoraHorario> getHorasHorarioByReferenciaProfesor(@Argument String referenciaProfesor){
 		return horaHorarioService.findByProfesorId(referenciaProfesor);
 	}

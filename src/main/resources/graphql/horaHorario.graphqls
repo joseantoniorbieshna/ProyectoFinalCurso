@@ -1,9 +1,6 @@
 extend type Query {
 	horasHorario : [HoraHorario]
-}
-
-extend type Mutation {
-  getHorasHorarioByReferenciaProfesor(referenciaProfesor: String!): [HoraHorario]
+	getHorasHorarioByReferenciaProfesor(referenciaProfesor: String!): [HoraHorario]
 }
 
 type HoraHorario {
