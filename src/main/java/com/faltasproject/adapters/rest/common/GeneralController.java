@@ -26,6 +26,7 @@ import com.faltasproject.domain.services.clases.SesionService;
 import com.faltasproject.domain.services.horario.HoraHorarioService;
 import com.faltasproject.domain.services.horario.TramoHorarioService;
 import com.faltasproject.domain.services.profesorado.ProfesorService;
+import com.faltasproject.security.usuarios.service.UserDetailsServiceImpl;
 import com.faltasproject.utils.XmlTreatment;
 
 
@@ -33,6 +34,7 @@ import com.faltasproject.utils.XmlTreatment;
 @RequestMapping("general")
 public class GeneralController {
 	private static final String MENSAJE_GURADADO_TOTAL_DE = "Se ha guardado un total de ";
+	
 	private final MateriaService materiaService;
 	private final CursoService cursoService;
 	private final TramoHorarioService tramoHorarioService;
@@ -41,6 +43,7 @@ public class GeneralController {
 	private final ProfesorService profesorService;
 	private final SesionService sesionService;
 	private final HoraHorarioService horaHorarioService;
+	private final UserDetailsServiceImpl userDetailsServiceImpl;
 	
 	public GeneralController(MateriaService materiaService,
 			CursoService cursoService,
@@ -49,7 +52,8 @@ public class GeneralController {
 			GrupoService grupoService,
 			ProfesorService profesorService,
 			SesionService sesionService,
-			HoraHorarioService horaHorarioService) {
+			HoraHorarioService horaHorarioService,
+			UserDetailsServiceImpl userDetailsServiceImpl) {
 		
 		this.materiaService=materiaService;
 		this.cursoService=cursoService;
@@ -59,6 +63,8 @@ public class GeneralController {
 		this.profesorService=profesorService;
 		this.sesionService=sesionService;
 		this.horaHorarioService=horaHorarioService;
+		
+		this.userDetailsServiceImpl=userDetailsServiceImpl;
 	}
 
 
@@ -70,11 +76,12 @@ public class GeneralController {
 	@GetMapping("holamy")
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	public String holamy() {
-		return "respuesta admin";
+		String algo = userDetailsServiceImpl.getCurrentUsername();
+		return algo;
 	}
 	
 	@GetMapping("hola-secure-role")
-	@PreAuthorize("hasAuthority('READ')")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String holaSecurerole() {
 		return "respuesta secure";
 	}

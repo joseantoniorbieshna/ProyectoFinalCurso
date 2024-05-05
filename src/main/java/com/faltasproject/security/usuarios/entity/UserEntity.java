@@ -51,5 +51,19 @@ public class UserEntity {
 	public String getStringRole() {
 		return this.getRole().getRoleEnum().name();
 	}
+
+	public UserEntity(String username, String password, boolean isEnabled, boolean accountNoExpired,
+			boolean accountNoLocked, boolean credentialNoExpired, RoleEntity role) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.isEnabled = isEnabled;
+		this.accountNoExpired = accountNoExpired;
+		this.accountNoLocked = accountNoLocked;
+		this.credentialNoExpired = credentialNoExpired;
+		this.role = role;
+	}
+	
+	
 	
 }
