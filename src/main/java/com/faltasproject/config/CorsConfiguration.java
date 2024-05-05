@@ -1,4 +1,4 @@
-package com.faltasproject;
+package com.faltasproject.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-public class MyConfiguration {
+public class CorsConfiguration {
 	@Bean
 	public WebMvcConfigurer corsConfigure() {
 		return new WebMvcConfigurer() {

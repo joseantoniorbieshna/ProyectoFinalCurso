@@ -2,6 +2,7 @@ package com.faltasproject.adapters.rest.common;
 
 import java.util.Set;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,7 +66,19 @@ public class GeneralController {
 	public String hola() {
 		return "respuesta";
 	}
-
+	
+	@GetMapping("holamy")
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	public String holamy() {
+		return "respuesta admin";
+	}
+	
+	@GetMapping("hola-secure-role")
+	@PreAuthorize("hasAuthority('READ')")
+	public String holaSecurerole() {
+		return "respuesta secure";
+	}
+	
 	@PostMapping("materias")
 	public String introducirMaterias(@RequestParam("xml") MultipartFile xml) {
 
