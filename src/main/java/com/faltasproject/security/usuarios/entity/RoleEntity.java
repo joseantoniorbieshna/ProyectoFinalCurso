@@ -1,4 +1,4 @@
-package com.faltasproject.adapters.jpa.usuarios.entities;
+package com.faltasproject.security.usuarios.entity;
 
 import java.util.Set;
 

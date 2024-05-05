@@ -1,4 +1,4 @@
-package com.faltasproject.adapters.jpa.usuarios.entities;
+package com.faltasproject.security.usuarios.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,10 +10,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name="USERS")
@@ -40,6 +46,10 @@ public class UserEntity {
 	@PreRemove
 	private void beforeRemove() {
 		this.setRole(null);
+	}
+	
+	public String getStringRole() {
+		return this.getRole().getRoleEnum().name();
 	}
 	
 }

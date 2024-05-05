@@ -1,9 +1,10 @@
-package com.faltasproject.adapters.jpa.usuarios.daos;
+package com.faltasproject.security.usuarios.daos;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.faltasproject.adapters.jpa.usuarios.entities.RoleEntity;
-import com.faltasproject.adapters.jpa.usuarios.entities.RoleEnum;
+import com.faltasproject.security.usuarios.entity.RoleEntity;
+import com.faltasproject.security.usuarios.entity.RoleEnum;
+
 import java.util.Optional;
 
 
