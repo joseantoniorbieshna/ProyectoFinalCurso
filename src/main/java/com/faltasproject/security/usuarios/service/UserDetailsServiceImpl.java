@@ -25,6 +25,7 @@ import com.faltasproject.security.usuarios.daos.UserRepositoryJPA;
 import com.faltasproject.security.usuarios.dtos.AuthCreateUser;
 import com.faltasproject.security.usuarios.dtos.AuthLoginRequest;
 import com.faltasproject.security.usuarios.dtos.AuthReponse;
+import com.faltasproject.security.usuarios.dtos.UserInfo;
 import com.faltasproject.security.usuarios.entity.RoleEntity;
 import com.faltasproject.security.usuarios.entity.RoleEnum;
 import com.faltasproject.security.usuarios.entity.UserEntity;
@@ -121,6 +122,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     
     public void assertUserLoggedCanEditProfesor(String referenciaProfesor) {
     	//TODO comprobar si es admin o si la referencia del profesor es la misma que el logeado
+    }
+    
+    public UserInfo getuserInfo() {
+    	Optional<UserEntity> userEntity = userRepositoryJPA.findByUsername(getCurrentUsername());
+    	
+    	if(!userEntity.isPresent()) {
+    		throw new NotFoundException("No se ha encontrado el usuario");
+    	}
+    	UserEntity userPersistance = userEntity.get();
+    	return new UserInfo(userPersistance.getUsername(), userPersistance.getStringRole());
+    	
     }
 	
 }
