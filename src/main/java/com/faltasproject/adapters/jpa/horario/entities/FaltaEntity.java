@@ -4,29 +4,41 @@ package com.faltasproject.adapters.jpa.horario.entities;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import com.faltasproject.adapters.jpa.horario.entities.key_compound.FaltaKey;
 import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
 import com.faltasproject.domain.models.horario.Falta;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 @Entity
-@Table(name = "FALTAS")
+@Table(name = "FALTAS", uniqueConstraints = {@UniqueConstraint(columnNames = {"horaHorario","fecha"})})
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class FaltaEntity {
-	@EmbeddedId
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "hora_horario")
 	@EqualsAndHashCode.Include
-	private FaltaKey key;
+	HoraHorarioEntity horaHorario;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "fecha")
+	@EqualsAndHashCode.Include
+	private LocalDate fecha;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "profesor_sustituto")
 	private ProfesorEntity profesorSustituto;
@@ -39,38 +51,30 @@ public class FaltaEntity {
 	
 	public FaltaEntity(HoraHorarioEntity horaHorario,LocalDate fecha, ProfesorEntity profesorSustituto, String comentario) {
 		super();
-		this.key = new FaltaKey(horaHorario,fecha);
+		this.horaHorario=horaHorario;
+		this.fecha=fecha;
 		this.profesorSustituto = profesorSustituto;
 		this.comentario = comentario;
 	}
 	
-	public LocalDate getFecha() {
-		return this.key.getFecha();
-	}
-	public void setFecha(LocalDate fecha) {
-		this.key.setFecha(fecha);
-	}
 	public TramoHorarioEntity getTramoHorario() {
-		return this.getKey().getTramoHorario();
+		return this.horaHorario.getTramoHorario();
 	}
 	
 	public int getDiaTramoHorario() {
-		return this.getKey().getDiaTramoHorario();
+		return this.horaHorario.getDiaTramoHorario();
 	}
 	public int getIndiceTramoHorario() {
-		return this.getKey().getIndiceTramoHorario();
+		return this.horaHorario.getIndiceTramoHorario();
 	}
 	
 	public String getReferenciaSesion() {
-		return this.key.getReferenciaSesion();
-	}
-	
-	public HoraHorarioEntity getHoraHorario() {
-		return this.key.getHoraHorario();
+		return this.horaHorario.getReferenciaSesion();
 	}
 	
 	public void fromFalta(Falta falta) {
-		this.key = new FaltaKey(new HoraHorarioEntity(falta.getHoraHorario()),falta.getFecha());
+		this.horaHorario=new HoraHorarioEntity(falta.getHoraHorario());
+		this.fecha=falta.getFecha();
 		this.comentario=falta.getComentario();
 		
 		if(falta.getProfesorSustituto().isPresent()) {
@@ -88,10 +92,6 @@ public class FaltaEntity {
 	
 	public boolean isValidDateAndDay() {
 		 return this.getFecha().getDayOfWeek().getValue()==this.getTramoHorario().getDia()+1;
-	}
-
-	public void setHoraHorario(HoraHorarioEntity horaHorario) {
-		getKey().setHoraHorario(horaHorario);
 	}
 
 

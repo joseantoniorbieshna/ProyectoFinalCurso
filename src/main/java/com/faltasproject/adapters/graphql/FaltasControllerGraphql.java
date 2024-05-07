@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 
 import com.faltasproject.domain.models.horario.Falta;
 import com.faltasproject.domain.models.horario.dtos.FaltaCreateInputDTO;
+import com.faltasproject.domain.models.horario.dtos.FaltaUpdateInputDTO;
 import com.faltasproject.domain.services.horario.FaltaService;
 
 @Controller
@@ -29,6 +30,11 @@ public class FaltasControllerGraphql {
 	@MutationMapping
 	public Falta createFalta(@Argument FaltaCreateInputDTO faltaCreateInput) {
 		return this.faltaService.create(faltaCreateInput);
+	}
+	
+	@MutationMapping
+	public Falta updateFalta(@Argument FaltaUpdateInputDTO faltaUpdateInput) {
+		return this.faltaService.update(faltaUpdateInput);
 	}
 	
 	@QueryMapping

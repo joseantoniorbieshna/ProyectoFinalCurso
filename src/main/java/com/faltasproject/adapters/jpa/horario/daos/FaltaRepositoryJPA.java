@@ -8,14 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.faltasproject.adapters.jpa.horario.entities.FaltaEntity;
 import com.faltasproject.adapters.jpa.horario.entities.HoraHorarioEntity;
-import com.faltasproject.adapters.jpa.horario.entities.key_compound.FaltaKey;
 
-public interface FaltaRepositoryJPA extends JpaRepository<FaltaEntity, FaltaKey> {
+public interface FaltaRepositoryJPA extends JpaRepository<FaltaEntity, Long> {
+	Optional<FaltaEntity> findByHoraHorarioAndFecha(HoraHorarioEntity horaHorario, LocalDate fecha);
 	
-	List<FaltaEntity> findByKeyFecha(LocalDate fecha);
+	List<FaltaEntity> findByFecha(LocalDate fecha);
 	
-	List<FaltaEntity> findByKeyFechaBetween(LocalDate fechaInicio,LocalDate fechaFin);
-	
-	Optional<FaltaEntity> findByKeyHoraHorarioAndKeyFecha(HoraHorarioEntity horaHorarioEntity, LocalDate fehca);
-
+	List<FaltaEntity> findByFechaBetween(LocalDate fechaInicio,LocalDate fechaFin);
 }

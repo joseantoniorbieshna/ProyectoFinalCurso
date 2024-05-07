@@ -21,7 +21,7 @@ class FaltaHoraHorarioRepositoryJPATest {
 	void findByFecha() {
 		
 		LocalDate fecha = LocalDate.of(2024,04,5);
-		List<FaltaEntity> faltas = faltaRepositoryJPA.findByKeyFecha(fecha);
+		List<FaltaEntity> faltas = faltaRepositoryJPA.findByFecha(fecha);
 		
 		long expected=1;
 		assertEquals(expected, faltas.stream().count());
@@ -32,7 +32,7 @@ class FaltaHoraHorarioRepositoryJPATest {
 		
 		LocalDate fecha = LocalDate.of(2024,04,1);
 		LocalDate fecha2 = LocalDate.of(2024,04,8);
-		List<FaltaEntity> faltas = faltaRepositoryJPA.findByKeyFechaBetween(fecha,fecha2);
+		List<FaltaEntity> faltas = faltaRepositoryJPA.findByFechaBetween(fecha,fecha2);
 		
 		long expected=3;
 		assertEquals(expected, faltas.stream().count());

@@ -10,7 +10,6 @@ import com.faltasproject.adapters.jpa.horario.daos.FaltaRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.HoraHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.entities.FaltaEntity;
 import com.faltasproject.adapters.jpa.horario.entities.HoraHorarioEntity;
-import com.faltasproject.adapters.jpa.horario.entities.key_compound.FaltaKey;
 import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
 import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
 import com.faltasproject.domain.exceptions.ConflictException;
@@ -67,11 +66,16 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 		HoraHorarioEntity horaHorarioPersist=getHoraHorarioPersist(idFaltaDTO)
 				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
 		
-		FaltaEntity faltaUpdate = faltaRepositoryJPA.findByKeyHoraHorarioAndKeyFecha(horaHorarioPersist, idFaltaDTO.getFecha())
+		FaltaEntity faltaUpdate = faltaRepositoryJPA.findByHoraHorarioAndFecha(horaHorarioPersist, idFaltaDTO.getFecha())
 				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
 		
 		faltaUpdate.fromFalta(falta);
 		changeToPersistData(faltaUpdate,falta);
+		
+		/*SI HAY CONFLICTO AL CAMBIAR LA FALTA*/
+		if(!falta.getFecha().equals(idFaltaDTO.getFecha()) && existId(idFaltaDTO)) {
+			throw new ConflictException("La falta a la que quiere cambiar ya existe");
+		}
 		
 		return faltaRepositoryJPA.save(faltaUpdate).toFalta();
 	}
@@ -83,12 +87,12 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 
 	@Override
 	public Stream<Falta> readByFecha(LocalDate fecha) {
-		return faltaRepositoryJPA.findByKeyFecha(fecha).stream().map(FaltaEntity::toFalta);
+		return faltaRepositoryJPA.findByFecha(fecha).stream().map(FaltaEntity::toFalta);
 	}
 
 	@Override
 	public Stream<Falta> readFaltasBetweenFechas(LocalDate primeraFecha, LocalDate segundaFecha) {
-		return faltaRepositoryJPA.findByKeyFechaBetween(primeraFecha, segundaFecha).stream().map(FaltaEntity::toFalta);
+		return faltaRepositoryJPA.findByFechaBetween(primeraFecha, segundaFecha).stream().map(FaltaEntity::toFalta);
 	}
 
 	@Override
@@ -96,7 +100,7 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 		HoraHorarioEntity horaHorarioPersist=getHoraHorarioPersist(idFaltaDTO)
 			.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
 		
-		return faltaRepositoryJPA.findByKeyHoraHorarioAndKeyFecha(horaHorarioPersist, idFaltaDTO.getFecha())
+		return faltaRepositoryJPA.findByHoraHorarioAndFecha(horaHorarioPersist, idFaltaDTO.getFecha())
 				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_FALTA))
 				.toFalta();
 	}
@@ -106,7 +110,7 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 		HoraHorarioEntity horaHorarioPersist=getHoraHorarioPersist(idFaltaDTO)
 				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
 		
-		FaltaEntity faltaEntity= faltaRepositoryJPA.findByKeyHoraHorarioAndKeyFecha(horaHorarioPersist, idFaltaDTO.getFecha())
+		FaltaEntity faltaEntity= faltaRepositoryJPA.findByHoraHorarioAndFecha(horaHorarioPersist, idFaltaDTO.getFecha())
 				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_FALTA));
 		
 		faltaRepositoryJPA.delete(faltaEntity);
@@ -117,7 +121,7 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 		Optional<HoraHorarioEntity> horaHorarioEntity = getHoraHorarioPersist(idFaltaDTO);
 		
 		if(horaHorarioEntity.isPresent()) {
-			return faltaRepositoryJPA.findById(new FaltaKey(horaHorarioEntity.get(),idFaltaDTO.getFecha()))
+			return faltaRepositoryJPA.findByHoraHorarioAndFecha(horaHorarioEntity.get(),idFaltaDTO.getFecha())
 					.isPresent();
 		}
 		return false;
@@ -130,11 +134,13 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 	private void changeToPersistData(FaltaEntity faltaUpdate,Falta falta) {
 		HoraHorarioEntity horaHorarioPersist=getHoraHorarioPersist(faltaIdMapper.toDto(falta))
 				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
-		ProfesorEntity profesorPersistance = profesorRepositoryJPA.findByReferencia(falta.getReferenciaSesion())
-				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_PROFESOR));
-		
 		faltaUpdate.setHoraHorario(horaHorarioPersist);
-		faltaUpdate.setProfesorSustituto(profesorPersistance);
+		
+		if(falta.getProfesorSustituto().isPresent()) {
+			ProfesorEntity profesorPersistance = profesorRepositoryJPA.findByReferencia(falta.getReferenciaSesion())
+					.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_PROFESOR));
+			faltaUpdate.setProfesorSustituto(profesorPersistance);
+		}
 	}
 
 }

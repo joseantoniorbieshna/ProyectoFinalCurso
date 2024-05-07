@@ -4,15 +4,13 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
-public class FaltaCreateInputDTO {
+public class FaltaUpdateInputDTO {
 	private int dia;
 	private int indice;
 	String referenciaSesion;
 	private Optional<String> comentario;
 	private LocalDate fecha;
-	
+	private LocalDate fechaNueva;
 }
