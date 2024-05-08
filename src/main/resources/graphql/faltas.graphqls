@@ -6,6 +6,7 @@ extend type Query {
 extend type Mutation{
 	createFalta(faltaCreateInput:FaltaCreateInputDTO) : Falta,
 	updateFalta(faltaUpdateInput:FaltaUpdateInputDTO) : Falta,
+	deleteFalta(faltaDeleteInput:FaltaDeleteInputDTO) : String,
 }
 
 input FaltaCreateInputDTO {
@@ -24,6 +25,13 @@ input FaltaUpdateInputDTO {
 	fecha : LocalDate!,
 	fechaNueva : LocalDate!
 }
+
+input FaltaDeleteInputDTO {
+	dia : Int!,
+	indice : Int!,
+	referenciaSesion : String!,
+	fecha : LocalDate!
+	}
 
 type Falta {
 	horaHorario: HoraHorario,

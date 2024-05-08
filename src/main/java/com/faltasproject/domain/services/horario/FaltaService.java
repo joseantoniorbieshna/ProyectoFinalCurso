@@ -12,6 +12,7 @@ import com.faltasproject.domain.models.horario.HoraHorario;
 import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.models.horario.dtos.FaltaCreateInputDTO;
+import com.faltasproject.domain.models.horario.dtos.FaltaDeleteInputDTO;
 import com.faltasproject.domain.models.horario.dtos.FaltaUpdateInputDTO;
 import com.faltasproject.domain.models.horario.dtos.IdFaltaDTO;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
@@ -77,6 +78,17 @@ public class FaltaService {
 		if(date.isBefore(LocalDate.now())) {
 			throw new ConflictException("La fecha es inferior al día de hoy");
 		}
+	}
+
+	public void delete(FaltaDeleteInputDTO faltaDeleteInputDTO) {
+		assertDayIsTodayOrLater(faltaDeleteInputDTO.getFecha());
+		IdFaltaDTO idFaltaDTO = new IdFaltaDTO(
+				faltaDeleteInputDTO.getReferenciaSesion(), 
+				faltaDeleteInputDTO.getDia(),
+				faltaDeleteInputDTO.getIndice(),
+				faltaDeleteInputDTO.getFecha());
+		
+		this.faltaPersistance.delete(idFaltaDTO);
 	}
 
 

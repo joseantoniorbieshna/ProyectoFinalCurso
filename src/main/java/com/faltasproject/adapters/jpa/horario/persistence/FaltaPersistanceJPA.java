@@ -73,7 +73,7 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 		changeToPersistData(faltaUpdate,falta);
 		
 		/*SI HAY CONFLICTO AL CAMBIAR LA FALTA*/
-		if(!falta.getFecha().equals(idFaltaDTO.getFecha()) && existId(idFaltaDTO)) {
+		if(!falta.getFecha().equals(idFaltaDTO.getFecha()) && existId(faltaIdMapper.toDto(falta))) {
 			throw new ConflictException("La falta a la que quiere cambiar ya existe");
 		}
 		

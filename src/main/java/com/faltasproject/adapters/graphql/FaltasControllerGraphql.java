@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 
 import com.faltasproject.domain.models.horario.Falta;
 import com.faltasproject.domain.models.horario.dtos.FaltaCreateInputDTO;
+import com.faltasproject.domain.models.horario.dtos.FaltaDeleteInputDTO;
 import com.faltasproject.domain.models.horario.dtos.FaltaUpdateInputDTO;
 import com.faltasproject.domain.services.horario.FaltaService;
 
@@ -37,9 +38,17 @@ public class FaltasControllerGraphql {
 		return this.faltaService.update(faltaUpdateInput);
 	}
 	
+	@MutationMapping
+	public String deleteFalta(@Argument FaltaDeleteInputDTO faltaDeleteInput) {
+		this.faltaService.delete(faltaDeleteInput);
+		return "Borrado con existo";
+	}
+	
 	@QueryMapping
 	public List<Falta> getAllFaltaBetweenFechas(@Argument LocalDate fechaInicio,@Argument LocalDate fechaFin){
 		return this.faltaService.findAllByFaltaBetween(fechaInicio,fechaFin);
 	}
+	
+	
 
 }
