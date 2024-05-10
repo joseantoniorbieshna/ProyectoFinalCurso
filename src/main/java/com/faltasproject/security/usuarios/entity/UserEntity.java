@@ -1,5 +1,9 @@
 package com.faltasproject.security.usuarios.entity;
 
+import java.util.Optional;
+
+import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,7 +12,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PreRemove;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,8 +49,14 @@ public class UserEntity {
 	@JoinColumn(name = "role_id",referencedColumnName = "id")
 	private RoleEntity role;
 	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "profesor_id",unique = true)
+	private ProfesorEntity profesor;
+	
+	
 	@PreRemove
 	private void beforeRemove() {
+		this.setProfesor(null);
 		this.setRole(null);
 	}
 	
@@ -62,7 +74,22 @@ public class UserEntity {
 		this.accountNoLocked = accountNoLocked;
 		this.credentialNoExpired = credentialNoExpired;
 		this.role = role;
+		this.setProfesor(null);
 	}
+
+	public UserEntity(String username, String password, boolean isEnabled, boolean accountNoExpired,
+			boolean accountNoLocked, boolean credentialNoExpired, RoleEntity role, ProfesorEntity profesor) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.isEnabled = isEnabled;
+		this.accountNoExpired = accountNoExpired;
+		this.accountNoLocked = accountNoLocked;
+		this.credentialNoExpired = credentialNoExpired;
+		this.role = role;
+		this.profesor = profesor;
+	}
+	
 	
 	
 	

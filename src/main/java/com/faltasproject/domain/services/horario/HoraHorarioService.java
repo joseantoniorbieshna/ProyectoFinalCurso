@@ -9,6 +9,8 @@ import com.faltasproject.domain.dto.InputHoraHorarioDTO;
 import com.faltasproject.domain.models.horario.HoraHorario;
 import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.horario.TramoHorario;
+import com.faltasproject.domain.models.horario.dtos.IdHoraHorarioDTO;
+import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 import com.faltasproject.domain.persistance_ports.horario.HoraHorarioPersistance;
 
 @Service
@@ -35,5 +37,10 @@ public class HoraHorarioService {
 		return horaHorarioPersistance
 				.readAllByReferenciaProfesor(referenciaProfesor)
 				.collect(Collectors.toList());
+	}
+
+	public HoraHorario findById(IdHoraHorarioDTO idHoraHorarioDTO) {
+		IdTramoHorarioDTO idTramoHorarioDTO = new IdTramoHorarioDTO(idHoraHorarioDTO.getDia(),idHoraHorarioDTO.getIndice());
+		return horaHorarioPersistance.readByReferenciaSesionAndTramoHorario(idHoraHorarioDTO.getReferenciaSesion(), idTramoHorarioDTO);	
 	}
 }

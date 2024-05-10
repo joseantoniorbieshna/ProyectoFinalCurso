@@ -2,10 +2,12 @@ package com.faltasproject.domain.services.horario;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.faltasproject.adapters.jpa.profesorado.persistence.ProfesorPersistanceJPA;
 import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.models.horario.Falta;
 import com.faltasproject.domain.models.horario.HoraHorario;
@@ -17,9 +19,12 @@ import com.faltasproject.domain.models.horario.dtos.FaltaUpdateInputDTO;
 import com.faltasproject.domain.models.horario.dtos.IdFaltaDTO;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 import com.faltasproject.domain.models.horario.mappers.FaltaIdMapper;
+import com.faltasproject.domain.models.profesorado.Profesor;
 import com.faltasproject.domain.persistance_ports.clases.SesionPersistance;
 import com.faltasproject.domain.persistance_ports.horario.FaltaPersistance;
 import com.faltasproject.domain.persistance_ports.horario.TramoHorarioPersistance;
+import com.faltasproject.domain.persistance_ports.profesorado.ProfesorPersistance;
+
 
 @Service
 public class FaltaService {
@@ -27,6 +32,7 @@ public class FaltaService {
 	private FaltaPersistance faltaPersistance;
 	private TramoHorarioPersistance tramoPersistance;
 	private SesionPersistance sesionPersistance;
+	private ProfesorPersistance profesorPersistance;
 	
 	
 	public FaltaService(FaltaPersistance faltaPersistance,
@@ -64,14 +70,12 @@ public class FaltaService {
 		assertDayIsTodayOrLater(faltaUpdateInputDTO.getFecha());
 		assertDayIsTodayOrLater(faltaUpdateInputDTO.getFechaNueva());
 		
-		TramoHorario tramoHorario = tramoPersistance.readById(new IdTramoHorarioDTO(faltaUpdateInputDTO.getDia(),faltaUpdateInputDTO.getIndice()));
-		Sesion sesion = sesionPersistance.readByReferencia(faltaUpdateInputDTO.getReferenciaSesion());
-		HoraHorario horaHorario = new HoraHorario(sesion, tramoHorario);
+		IdFaltaDTO idFaltaActual = new IdFaltaDTO(faltaUpdateInputDTO.getReferenciaSesion(),faltaUpdateInputDTO.getDia(),faltaUpdateInputDTO.getIndice(), faltaUpdateInputDTO.getFecha());
+		Falta faltaActualizar = faltaPersistance.readById(idFaltaActual);
+		faltaActualizar.setComentario(faltaUpdateInputDTO.getComentario().orElse(""));
+		faltaActualizar.setFecha(faltaUpdateInputDTO.getFechaNueva());
 		
-		IdFaltaDTO idFalta = new IdFaltaDTO(faltaUpdateInputDTO.getReferenciaSesion(),faltaUpdateInputDTO.getDia(),faltaUpdateInputDTO.getIndice(), faltaUpdateInputDTO.getFecha());
-		Falta falta = new Falta(horaHorario, faltaUpdateInputDTO.getComentario().orElse(""), faltaUpdateInputDTO.getFechaNueva());
-		
-		return this.faltaPersistance.update(idFalta,falta);
+		return this.faltaPersistance.update(idFaltaActual,faltaActualizar);
 	}
 	
 	private void assertDayIsTodayOrLater(LocalDate date) {
@@ -80,15 +84,19 @@ public class FaltaService {
 		}
 	}
 
-	public void delete(FaltaDeleteInputDTO faltaDeleteInputDTO) {
+	public void delete(IdFaltaDTO faltaDeleteInputDTO) {
 		assertDayIsTodayOrLater(faltaDeleteInputDTO.getFecha());
-		IdFaltaDTO idFaltaDTO = new IdFaltaDTO(
-				faltaDeleteInputDTO.getReferenciaSesion(), 
-				faltaDeleteInputDTO.getDia(),
-				faltaDeleteInputDTO.getIndice(),
-				faltaDeleteInputDTO.getFecha());
+		this.faltaPersistance.delete(faltaDeleteInputDTO);
+	}
+
+	public Falta sustituir(IdFaltaDTO faltaSustituirInput, String referenciaProfesorSustituto) {
+		assertDayIsTodayOrLater(faltaSustituirInput.getFecha());
 		
-		this.faltaPersistance.delete(idFaltaDTO);
+		Falta falta = faltaPersistance.readById(faltaSustituirInput);
+		Optional<Profesor> profesor = Optional.of(profesorPersistance.readByReferencia(referenciaProfesorSustituto));
+		falta.setProfesorSustituto(profesor);
+		
+		return this.faltaPersistance.update(faltaSustituirInput, falta);
 	}
 
 

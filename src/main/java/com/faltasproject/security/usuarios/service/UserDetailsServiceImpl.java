@@ -18,8 +18,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
+import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
 import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
+import com.faltasproject.domain.models.horario.HoraHorario;
+import com.faltasproject.domain.models.horario.dtos.IdHoraHorarioDTO;
+import com.faltasproject.domain.persistance_ports.horario.HoraHorarioPersistance;
+import com.faltasproject.domain.services.horario.HoraHorarioService;
 import com.faltasproject.security.usuarios.daos.RoleRepositoryJPA;
 import com.faltasproject.security.usuarios.daos.UserRepositoryJPA;
 import com.faltasproject.security.usuarios.dtos.AuthCreateUser;
@@ -47,6 +53,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private HoraHorarioService horaHorarioService;
+    
+    @Autowired
+    private ProfesorRepositoryJPA profesorRepositoryJPA;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -95,7 +107,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if(!roleEntity.isPresent()) {
 			throw new NotFoundException("No existe el role USER");
 		}
-		UserEntity userEntity = new UserEntity(authCreateUser.username(), authCreateUser.password(), true, true, true, true,roleEntity.get());
+		
+		Optional<ProfesorEntity> profesor = profesorRepositoryJPA.findByReferencia(authCreateUser.referenciaProfesor());
+		
+		if(!profesor.isPresent()) {
+			throw new NotFoundException("El profesor con la referencia "+authCreateUser.referenciaProfesor()+"no existe");
+		}
+		
+		UserEntity userEntity = new UserEntity(authCreateUser.username(), authCreateUser.password(),
+								true, true, true, true,roleEntity.get(),profesor.get());
+		
 		userEntity = userRepositoryJPA.save(userEntity);
 		
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -120,8 +141,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return username;
     }
     
-    public void assertUserLoggedCanEditProfesor(String referenciaProfesor) {
+    public void assertUserLoggedCanEditHoraHorario(IdHoraHorarioDTO idHoraHorarioDTO) {
+    	Optional<UserEntity> user= userRepositoryJPA.findByUsername(getCurrentUsername());
+    	
+    	if(user.isPresent()) {
+    		throw new NotFoundException("Problema al obtener usuario");
+    	}
+    	HoraHorario horaHorario = horaHorarioService.findById(idHoraHorarioDTO);
     	//TODO comprobar si es admin o si la referencia del profesor es la misma que el logeado
+    	horaHorario.getReferenciaSesion();
     }
     
     public UserInfo getuserInfo() {
@@ -131,8 +159,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     		throw new NotFoundException("No se ha encontrado el usuario");
     	}
     	UserEntity userPersistance = userEntity.get();
-    	return new UserInfo(userPersistance.getUsername(), userPersistance.getStringRole());
     	
-    }
+    	ProfesorEntity profesor = userPersistance.getProfesor();
+    	
+    	String referenciaProfesor=null;
+    	if(profesor!=null) {
+    		referenciaProfesor=profesor.getReferencia();
+    	}
+    	
+    	
+    	return new UserInfo(userPersistance.getUsername(),referenciaProfesor, userPersistance.getStringRole());	
+   }
 	
 }
