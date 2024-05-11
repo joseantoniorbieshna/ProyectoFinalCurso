@@ -123,6 +123,7 @@ public class SesionEntity {
 			GrupoEntity elemento = iterator.next();
 		    if (elemento.equals(grupo)) {
 		        iterator.remove();
+		        grupo.getSesiones().remove(this);
 		        return true;
 		    }
 		}

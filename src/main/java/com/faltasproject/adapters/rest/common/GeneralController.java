@@ -2,6 +2,8 @@ package com.faltasproject.adapters.rest.common;
 
 import java.util.Set;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +29,10 @@ import com.faltasproject.domain.services.horario.HoraHorarioService;
 import com.faltasproject.domain.services.horario.TramoHorarioService;
 import com.faltasproject.domain.services.profesorado.ProfesorService;
 import com.faltasproject.security.usuarios.service.UserDetailsServiceImpl;
+import com.faltasproject.utils.InitialDataBase;
 import com.faltasproject.utils.XmlTreatment;
+
+import jakarta.transaction.Transactional;
 
 
 @RestController
@@ -44,6 +49,7 @@ public class GeneralController {
 	private final SesionService sesionService;
 	private final HoraHorarioService horaHorarioService;
 	private final UserDetailsServiceImpl userDetailsServiceImpl;
+	private final InitialDataBase initialDataBase;
 	
 	public GeneralController(MateriaService materiaService,
 			CursoService cursoService,
@@ -53,7 +59,8 @@ public class GeneralController {
 			ProfesorService profesorService,
 			SesionService sesionService,
 			HoraHorarioService horaHorarioService,
-			UserDetailsServiceImpl userDetailsServiceImpl) {
+			UserDetailsServiceImpl userDetailsServiceImpl,
+			InitialDataBase initialDataBase) {
 		
 		this.materiaService=materiaService;
 		this.cursoService=cursoService;
@@ -65,6 +72,8 @@ public class GeneralController {
 		this.horaHorarioService=horaHorarioService;
 		
 		this.userDetailsServiceImpl=userDetailsServiceImpl;
+		
+		this.initialDataBase=initialDataBase;
 	}
 
 
@@ -201,7 +210,11 @@ public class GeneralController {
 	}
 	
 	@PostMapping("all")
-	public String all(@RequestParam("xml") MultipartFile xml) {
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@Transactional
+	public ResponseEntity<String> all(@RequestParam("xml") MultipartFile xml) {
+		initialDataBase.ClearToInitialDatabase();
+		
 		String result = "";
 		result = result + introducirMaterias(xml) +"\n";
 		result = result + introducirCursos(xml)+"\n";
@@ -211,7 +224,7 @@ public class GeneralController {
 		result = result + introducirProfesores(xml)+"\n";
 		result = result + introducirSesiones(xml)+"\n";
 		result = result + introducirHoraHorario(xml)+"\n";
-		return result;
+		return new ResponseEntity<String>(result,HttpStatus.OK);
 	}
 	
 	
