@@ -13,11 +13,11 @@ import com.faltasproject.adapters.jpa.horario.daos.FaltaRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.HoraHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
+import com.faltasproject.domain.models.usuario.RoleEnum;
 import com.faltasproject.security.usuarios.daos.RoleRepositoryJPA;
 import com.faltasproject.security.usuarios.daos.UserRepositoryJPA;
 import com.faltasproject.security.usuarios.entity.RoleEntity;
-import com.faltasproject.security.usuarios.entity.RoleEnum;
-import com.faltasproject.security.usuarios.entity.UserEntity;
+import com.faltasproject.security.usuarios.entity.UsuarioEntity;
 
 import jakarta.transaction.Transactional;
 
@@ -103,9 +103,9 @@ public class InitialDataBase {
 		}
 
 		/* USUARIO */
-		Optional<UserEntity> admin = userRepositoryJPA.findByUsername("admin");
+		Optional<UsuarioEntity> admin = userRepositoryJPA.findByUsername("admin");
 		if (!admin.isPresent()) {
-			UserEntity adminUser = new UserEntity().builder().username("admin")
+			UsuarioEntity adminUser = new UsuarioEntity().builder().username("admin")
 					.password("$2a$10$qQWsDs2i7N1qDx61DK6W1Ou8hEmUcl5QtQ53tE4Hiw2o2lsRwj1Fi") // admin
 					.role(roleAdmin.get()).isEnabled(true) // cuenta activa
 					.accountNoExpired(true) // cuenta no expirada

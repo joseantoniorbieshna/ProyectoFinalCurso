@@ -2,6 +2,8 @@ package com.faltasproject.security.usuarios.entity;
 
 import java.util.Set;
 
+import com.faltasproject.domain.models.usuario.RoleEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,11 +31,11 @@ public class RoleEntity {
 	private RoleEnum roleEnum;
 	
     @OneToMany(mappedBy = "role")
-    private Set<UserEntity> usuarios;
+    private Set<UsuarioEntity> usuarios;
     
 	@PreRemove
 	private void beforeRemove() {
-		for(UserEntity usuario: usuarios) {
+		for(UsuarioEntity usuario: usuarios) {
 			usuarios.remove(usuario);
 		}
 	}

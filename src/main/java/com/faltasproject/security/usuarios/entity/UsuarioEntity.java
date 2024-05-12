@@ -1,8 +1,9 @@
 package com.faltasproject.security.usuarios.entity;
 
-import java.util.Optional;
 
 import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
+import com.faltasproject.domain.models.usuario.RoleEnum;
+import com.faltasproject.domain.models.usuario.Usuario;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PreRemove;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +28,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="USERS")
-public class UserEntity {
+@Table(name="USUARIOS")
+public class UsuarioEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -49,22 +49,21 @@ public class UserEntity {
 	@JoinColumn(name = "role_id",referencedColumnName = "id")
 	private RoleEntity role;
 	
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "profesor_id",unique = true)
-	private ProfesorEntity profesor;
+    @OneToOne(mappedBy = "usuario")
+    private ProfesorEntity profesor;
 	
 	
 	@PreRemove
 	private void beforeRemove() {
-		this.setProfesor(null);
 		this.setRole(null);
+		this.profesor.setUsuario(null);
 	}
 	
 	public String getStringRole() {
 		return this.getRole().getRoleEnum().name();
 	}
 
-	public UserEntity(String username, String password, boolean isEnabled, boolean accountNoExpired,
+	public UsuarioEntity(String username, String password, boolean isEnabled, boolean accountNoExpired,
 			boolean accountNoLocked, boolean credentialNoExpired, RoleEntity role) {
 		super();
 		this.username = username;
@@ -74,10 +73,9 @@ public class UserEntity {
 		this.accountNoLocked = accountNoLocked;
 		this.credentialNoExpired = credentialNoExpired;
 		this.role = role;
-		this.setProfesor(null);
 	}
 
-	public UserEntity(String username, String password, boolean isEnabled, boolean accountNoExpired,
+	public UsuarioEntity(String username, String password, boolean isEnabled, boolean accountNoExpired,
 			boolean accountNoLocked, boolean credentialNoExpired, RoleEntity role, ProfesorEntity profesor) {
 		super();
 		this.username = username;
@@ -87,7 +85,33 @@ public class UserEntity {
 		this.accountNoLocked = accountNoLocked;
 		this.credentialNoExpired = credentialNoExpired;
 		this.role = role;
-		this.profesor = profesor;
+	}
+	
+	
+	public void fromUsuario(Usuario usuario) {
+		setUsername(usuario.getUsername());
+		setPassword(usuario.getPassword());
+		RoleEnum roleEnum = null;
+		if(usuario.getRole()!=null) {
+			setRole(new RoleEntity(usuario.getRole()));
+		}
+	}
+	
+	public Usuario toUsuario(){
+		RoleEnum roleEnum = null;
+		if(role!=null) {
+			roleEnum = role.getRoleEnum();
+		}
+		return Usuario
+				.builder()
+				.username(username)
+				.password(password)
+				.role(roleEnum)
+				.build();
+	}
+
+	public UsuarioEntity(Usuario usuario) {
+		fromUsuario(usuario);
 	}
 	
 	

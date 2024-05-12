@@ -6,6 +6,8 @@ import org.springframework.beans.BeanUtils;
 
 import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
 import com.faltasproject.domain.models.profesorado.Profesor;
+import com.faltasproject.domain.models.usuario.Usuario;
+import com.faltasproject.security.usuarios.entity.UsuarioEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,7 +16,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,6 +44,10 @@ public class ProfesorEntity {
 	@OneToMany(fetch = FetchType.EAGER,mappedBy = "profesor",cascade = CascadeType.REMOVE)
 	private Set<SesionEntity> materia;
 	
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "usuario_id", unique = true)
+    private UsuarioEntity usuario;
+	
 	public ProfesorEntity(Profesor profesor) {
 		fromProfesor(profesor);
 	}
@@ -56,9 +65,13 @@ public class ProfesorEntity {
 	public void fromProfesor(Profesor profesor) {
 		if(profesor.getReferencia()!=null) { setReferencia(profesor.getReferencia()); }
 		if(profesor.getNombre()!=null) { setNombre(profesor.getNombre()); }
+		if(profesor.getUsuario()!=null) {setUsuario(usuario);}
 	}
 	
 	public Profesor toProfesor() {
+		if(usuario!=null) {
+			return new Profesor(this.referencia,this.nombre,usuario.toUsuario());
+		}
 		return new Profesor(this.referencia,this.nombre);
 	}
 
