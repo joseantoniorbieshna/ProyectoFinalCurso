@@ -32,7 +32,7 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping("/sign-up")
-	@PreAuthorize("hasAnyRole('Admin')")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<AuthReponse> register(@RequestBody @Valid AuthCreateUser authCreateUser) {
 		return new ResponseEntity<AuthReponse>(this.userDetailsService.createUser(authCreateUser),HttpStatus.CREATED);
 	}

@@ -74,18 +74,6 @@ public class UsuarioEntity {
 		this.credentialNoExpired = credentialNoExpired;
 		this.role = role;
 	}
-
-	public UsuarioEntity(String username, String password, boolean isEnabled, boolean accountNoExpired,
-			boolean accountNoLocked, boolean credentialNoExpired, RoleEntity role, ProfesorEntity profesor) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.isEnabled = isEnabled;
-		this.accountNoExpired = accountNoExpired;
-		this.accountNoLocked = accountNoLocked;
-		this.credentialNoExpired = credentialNoExpired;
-		this.role = role;
-	}
 	
 	
 	public void fromUsuario(Usuario usuario) {

@@ -74,7 +74,6 @@ public class InitialDataBase {
 			populateInitialDataIfNotExist();
 		}
 
-		userRepositoryJPA.deleteAllByRole(roleEnum.get());
 		/* HORARIO */
 		faltaRepositoryJPA.deleteAll();
 		horaHorarioRepositoryJPA.deleteAll();
@@ -88,6 +87,7 @@ public class InitialDataBase {
 		aulaRepositoryJPA.deleteAll();
 		sesionRepositoryJPA.deleteAll();
 
+		userRepositoryJPA.deleteAllByRole(roleEnum.get());
 	}
 	
 	public void populateInitialDataIfNotExist() {

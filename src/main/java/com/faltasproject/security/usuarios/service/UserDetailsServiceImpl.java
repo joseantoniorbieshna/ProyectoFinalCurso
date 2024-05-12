@@ -37,6 +37,7 @@ import com.faltasproject.security.usuarios.entity.RoleEntity;
 import com.faltasproject.security.usuarios.entity.UsuarioEntity;
 import com.faltasproject.security.utils.JwtUtils;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @Service
@@ -102,10 +103,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(),userDetails.getAuthorities());
 	}
 
+	@Transactional
 	public AuthReponse createUser(@Valid AuthCreateUser authCreateUser) {
 		Optional<RoleEntity> roleEntity = roleRepositoryJPA.findByRoleEnum(RoleEnum.USER);
 		if(!roleEntity.isPresent()) {
 			throw new NotFoundException("No existe el role USER");
+		}
+		
+		if(existUserByUsername(authCreateUser.username())) {
+			throw new ConflictException("Ya existe el usuario con el username '"+authCreateUser.username()+"'");
 		}
 		
 		Optional<ProfesorEntity> profesor = profesorRepositoryJPA.findByReferencia(authCreateUser.referenciaProfesor());
@@ -114,10 +120,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			throw new NotFoundException("El profesor con la referencia "+authCreateUser.referenciaProfesor()+"no existe");
 		}
 		
-		UsuarioEntity userEntity = new UsuarioEntity(authCreateUser.username(), authCreateUser.password(),
-								true, true, true, true,roleEntity.get(),profesor.get());
+		ProfesorEntity profesorPestistance = profesor.get();
+		if(profesorPestistance.getUsuario()!=null) {
+			throw new ConflictException("El profesor ya tiene asignado un usuario");
+		}
+		
+		UsuarioEntity userEntity = new UsuarioEntity(authCreateUser.username(), passwordEncoder.encode(authCreateUser.password()),
+								true, true, true, true,roleEntity.get());
 		
 		userEntity = userRepositoryJPA.save(userEntity);
+		
+		profesorPestistance.setUsuario(userEntity);
+		profesorRepositoryJPA.save(profesorPestistance);
+		
 		
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		authorities.add( new SimpleGrantedAuthority("ROLE_".concat(userEntity.getStringRole())) );
@@ -170,5 +185,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     	
     	return new UserInfo(userPersistance.getUsername(),referenciaProfesor, userPersistance.getStringRole());	
    }
-	
+    private boolean existUserByUsername(String username) {
+    	return userRepositoryJPA.findByUsername(username).isPresent();
+    }
 }
