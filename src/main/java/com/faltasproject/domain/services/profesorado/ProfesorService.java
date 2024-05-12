@@ -24,5 +24,9 @@ public class ProfesorService {
 	public List<Profesor> findAll(){
 		return this.profesorPersistance.readAll().collect(Collectors.toList());
 	}
+
+	public List<Profesor> findAllWithoutRegistrationUser() {
+		return this.profesorPersistance.readAll().filter(p->p.getUsuario()==null).toList();
+	}
 	
 }

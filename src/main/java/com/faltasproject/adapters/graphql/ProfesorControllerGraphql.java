@@ -24,7 +24,12 @@ public class ProfesorControllerGraphql{
 	@QueryMapping
 	public List<Profesor> profesores(){
 		return profesorService.findAll();
-	} 
+	}
+	
+	@QueryMapping
+	public List<Profesor> profesoresWithoutRegistrationUser(){
+		return profesorService.findAllWithoutRegistrationUser();
+	}
 	
 	
 }

@@ -15,8 +15,6 @@ public interface ProfesorPersistance {
 	
 	Stream<Profesor> readAll();
 	
-	Stream<Profesor> readAllNoUserAsign();
-	
 	boolean delete(String referencia);
 	
 	Profesor readByReferencia(String referencia);

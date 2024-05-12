@@ -44,7 +44,7 @@ public class ProfesorEntity {
 	@OneToMany(fetch = FetchType.EAGER,mappedBy = "profesor",cascade = CascadeType.REMOVE)
 	private Set<SesionEntity> materia;
 	
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id", unique = true)
     private UsuarioEntity usuario;
 	

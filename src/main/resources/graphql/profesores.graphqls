@@ -1,5 +1,6 @@
 extend type Query {
 	profesores : [Profesor],
+	profesoresWithoutRegistrationUser : [Profesor]
 }
 
 type Profesor {
