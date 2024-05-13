@@ -56,6 +56,13 @@ public class FaltasControllerGraphql {
 	}
 	
 	@MutationMapping
+	@PreAuthorize("hasAnyRole('USER')")
+	public Falta cancelarFalta(@Argument IdFaltaDTO faltaCancelarInput) {
+		String referenciaProfesor= userDetailsServiceImpl.getuserInfo().referenciaProfesor();
+		return this.faltaService.cancelar(faltaCancelarInput,referenciaProfesor);
+	}
+	
+	@MutationMapping
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	public String deleteFalta(@Argument IdFaltaDTO faltaDeleteInput) {
 		//TODO validar que sea mi falta sea admin

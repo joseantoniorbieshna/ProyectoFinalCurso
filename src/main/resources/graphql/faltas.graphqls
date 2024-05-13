@@ -8,6 +8,7 @@ extend type Mutation{
 	updateFalta(faltaUpdateInput:FaltaUpdateInputDTO) : Falta,
 	deleteFalta(faltaDeleteInput:IdFaltaDTO) : String,
 	sustituirFalta(faltaSustituirInput:IdFaltaDTO) : Falta,
+	cancelarFalta(faltaCancelarInput:IdFaltaDTO) : Falta
 }
 
 input FaltaCreateInputDTO {

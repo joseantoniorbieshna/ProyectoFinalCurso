@@ -91,6 +91,31 @@ public class FaltaService {
 		this.faltaPersistance.delete(faltaDeleteInputDTO);
 	}
 
+	public Falta cancelar(IdFaltaDTO faltaCancelarInput, String referenciaProfesorEntrada) {
+		assertDayIsTodayOrLater(faltaCancelarInput.getFecha());
+		
+		Falta falta = faltaPersistance.readById(faltaCancelarInput);
+		
+		/*VALIDACIONES*/
+		if(!falta.getProfesorSustituto().isPresent()) {
+			throw new ConflictException("No hay nadie que sustituya esta falta");
+		}
+		
+		if(falta.getReferenciaProfesorPropietario().equals(referenciaProfesorEntrada)) {
+			throw new ConflictException("No puedes cancelar el profesorSustituto de tu propia falta");
+		}
+		
+		if(!falta.getReferenciaProfesorSustituto().equals(referenciaProfesorEntrada)) {
+			throw new ConflictException("No eres el profesor que sustituye esta falta");
+		}
+		
+		/*GUARDAR*/
+		falta.setProfesorSustituto(null);
+		
+		return this.faltaPersistance.update(faltaCancelarInput, falta);
+		
+	}
+	
 	public Falta sustituir(IdFaltaDTO faltaSustituirInput, String referenciaProfesorSustituto) {
 		assertDayIsTodayOrLater(faltaSustituirInput.getFecha());
 		
@@ -103,10 +128,6 @@ public class FaltaService {
 		
 		if(falta.getReferenciaProfesorPropietario().equals(referenciaProfesorSustituto)) {
 			throw new ConflictException("No puedes sustituir tu propia falta");
-		}
-		
-		if(!profesorPersistance.existReferencia(referenciaProfesorSustituto)) {
-			throw new ConflictException("El profesor con la referencia "+referenciaProfesorSustituto+" no existe.");
 		}
 		
 		/*GUARDAR*/

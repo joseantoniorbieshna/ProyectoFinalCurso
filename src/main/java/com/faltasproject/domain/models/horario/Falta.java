@@ -52,7 +52,7 @@ public class Falta {
 		return horaHorario.getReferenciaSesion();
 	}
 	public void setProfesorSustituto(Profesor profesor) {
-		this.profesorSustituto = Optional.of(profesor);
+		this.profesorSustituto = Optional.ofNullable(profesor);
 	}
 	public String getReferenciaProfesorSustituto(){
 		return profesorSustituto.get().getReferencia();

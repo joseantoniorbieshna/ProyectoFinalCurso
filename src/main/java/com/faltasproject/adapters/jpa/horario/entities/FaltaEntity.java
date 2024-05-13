@@ -77,6 +77,7 @@ public class FaltaEntity {
 		this.fecha=falta.getFecha();
 		this.comentario=falta.getComentario();
 		
+		setProfesorSustituto(null);
 		if(falta.getProfesorSustituto().isPresent()) {
 			this.profesorSustituto=new ProfesorEntity(falta.getProfesorSustituto().get());
 		}
