@@ -49,7 +49,7 @@ public class UsuarioEntity {
 	@JoinColumn(name = "role_id",referencedColumnName = "id")
 	private RoleEntity role;
 	
-    @OneToOne(mappedBy = "usuario")
+    @OneToOne(mappedBy = "usuario",fetch = FetchType.EAGER)
     private ProfesorEntity profesor;
 	
 	

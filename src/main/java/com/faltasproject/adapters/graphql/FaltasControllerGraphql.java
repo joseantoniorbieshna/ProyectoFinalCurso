@@ -30,20 +30,21 @@ public class FaltasControllerGraphql {
 	}
 	
 	@QueryMapping
-	//@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	public List<Falta> faltas(){
 		return this.faltaService.findAll();
 	}
 	
 	@MutationMapping
-	//@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	public Falta createFalta(@Argument FaltaCreateInputDTO faltaCreateInput) {
 		return this.faltaService.create(faltaCreateInput);
 	}
 	
 	@MutationMapping
-	//@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	public Falta updateFalta(@Argument FaltaUpdateInputDTO faltaUpdateInput) {
+		//TODO validar que sea mi falta sea admin
 		return this.faltaService.update(faltaUpdateInput);
 	}
 	
@@ -51,19 +52,19 @@ public class FaltasControllerGraphql {
 	@PreAuthorize("hasAnyRole('USER')")
 	public Falta sustituirFalta(@Argument IdFaltaDTO faltaSustituirInput) {
 		String referenciaProfesor= userDetailsServiceImpl.getuserInfo().referenciaProfesor();
-		
 		return this.faltaService.sustituir(faltaSustituirInput,referenciaProfesor);
 	}
 	
 	@MutationMapping
-	//@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	public String deleteFalta(@Argument IdFaltaDTO faltaDeleteInput) {
+		//TODO validar que sea mi falta sea admin
 		this.faltaService.delete(faltaDeleteInput);
 		return "Borrado con existo";
 	}
 	
 	@QueryMapping
-	//@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	public List<Falta> getAllFaltaBetweenFechas(@Argument LocalDate fechaInicio,@Argument LocalDate fechaFin){
 		return this.faltaService.findAllByFaltaBetween(fechaInicio,fechaFin);
 	}

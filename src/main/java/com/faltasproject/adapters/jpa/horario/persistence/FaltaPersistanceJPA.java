@@ -137,7 +137,7 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 		faltaUpdate.setHoraHorario(horaHorarioPersist);
 		
 		if(falta.getProfesorSustituto().isPresent()) {
-			ProfesorEntity profesorPersistance = profesorRepositoryJPA.findByReferencia(falta.getReferenciaSesion())
+			ProfesorEntity profesorPersistance = profesorRepositoryJPA.findByReferencia(falta.getReferenciaProfesorSustituto())
 					.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_PROFESOR));
 			faltaUpdate.setProfesorSustituto(profesorPersistance);
 		}

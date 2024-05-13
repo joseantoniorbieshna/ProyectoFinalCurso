@@ -85,7 +85,7 @@ public class FaltaEntity {
 	public Falta toFalta() {
 		Falta falta = new Falta(getHoraHorario().toHoraHorario(),getComentario(), getFecha());
 		if(this.profesorSustituto!=null) {
-			falta.setProfesorSustituto( Optional.of(profesorSustituto.toProfesor()) );
+			falta.setProfesorSustituto(profesorSustituto.toProfesor());
 		}
 		return falta;
 	}

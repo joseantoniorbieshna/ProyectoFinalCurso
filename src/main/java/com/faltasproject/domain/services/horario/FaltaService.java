@@ -37,11 +37,13 @@ public class FaltaService {
 	
 	public FaltaService(FaltaPersistance faltaPersistance,
 			TramoHorarioPersistance tramoPersistance,
-			SesionPersistance sesionPersistance) {
+			SesionPersistance sesionPersistance,
+			ProfesorPersistance profesorPersistance) {
 		super();
 		this.faltaPersistance = faltaPersistance;
 		this.tramoPersistance=tramoPersistance;
 		this.sesionPersistance=sesionPersistance;
+		this.profesorPersistance=profesorPersistance;
 	}
 	
 	public Falta create(FaltaCreateInputDTO faltaCreateInputDTO) {
@@ -93,8 +95,23 @@ public class FaltaService {
 		assertDayIsTodayOrLater(faltaSustituirInput.getFecha());
 		
 		Falta falta = faltaPersistance.readById(faltaSustituirInput);
-		Optional<Profesor> profesor = Optional.of(profesorPersistance.readByReferencia(referenciaProfesorSustituto));
-		falta.setProfesorSustituto(profesor);
+		
+		/*VALIDACIONES*/
+		if(falta.getProfesorSustituto().isPresent()) {
+			throw new ConflictException("Ya hay un profesor sustituyendo esta falta");
+		}
+		
+		if(falta.getReferenciaProfesorPropietario().equals(referenciaProfesorSustituto)) {
+			throw new ConflictException("No puedes sustituir tu propia falta");
+		}
+		
+		if(!profesorPersistance.existReferencia(referenciaProfesorSustituto)) {
+			throw new ConflictException("El profesor con la referencia "+referenciaProfesorSustituto+" no existe.");
+		}
+		
+		/*GUARDAR*/
+		Profesor profesorSustituto = profesorPersistance.readByReferencia(referenciaProfesorSustituto);
+		falta.setProfesorSustituto(profesorSustituto);
 		
 		return this.faltaPersistance.update(faltaSustituirInput, falta);
 	}

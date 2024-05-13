@@ -33,5 +33,8 @@ public class HoraHorario {
 		return sesion.getReferencia();
 	}
 	
+	public String getReferenciaProfesor() {
+		return this.sesion.getReferenciaProfesor();
+	}	
 
 }

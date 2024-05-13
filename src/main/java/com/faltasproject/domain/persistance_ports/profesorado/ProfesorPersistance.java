@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.faltasproject.domain.models.profesorado.Profesor;
 
 @Repository
-public interface ProfesorPersistance {
-	
+public interface ProfesorPersistance{
 	Profesor create(Profesor profesor);
 	
 	Profesor update(String referencia,Profesor profesor);

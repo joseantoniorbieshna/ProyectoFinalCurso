@@ -38,6 +38,8 @@ public class Falta {
 		profesorSustituto = Optional.ofNullable(null);
 	}
 	
+	
+	
 	public int getDiaTramoHorario() {
 		return horaHorario.getDiaTramoHorario();
 	}
@@ -48,6 +50,16 @@ public class Falta {
 	
 	public String getReferenciaSesion() {
 		return horaHorario.getReferenciaSesion();
+	}
+	public void setProfesorSustituto(Profesor profesor) {
+		this.profesorSustituto = Optional.of(profesor);
+	}
+	public String getReferenciaProfesorSustituto(){
+		return profesorSustituto.get().getReferencia();
+	}
+
+	public String getReferenciaProfesorPropietario() {
+		return horaHorario.getReferenciaProfesor();
 	}
 	
 	

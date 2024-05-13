@@ -25,7 +25,6 @@ import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.horario.HoraHorario;
 import com.faltasproject.domain.models.horario.dtos.IdHoraHorarioDTO;
 import com.faltasproject.domain.models.usuario.RoleEnum;
-import com.faltasproject.domain.persistance_ports.horario.HoraHorarioPersistance;
 import com.faltasproject.domain.services.horario.HoraHorarioService;
 import com.faltasproject.security.usuarios.daos.RoleRepositoryJPA;
 import com.faltasproject.security.usuarios.daos.UserRepositoryJPA;
