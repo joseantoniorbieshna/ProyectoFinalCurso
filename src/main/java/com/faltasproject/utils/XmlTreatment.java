@@ -29,6 +29,7 @@ import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.horario.TramoHorario;
+import com.faltasproject.domain.models.horario.dtos.IdGuardiaDTO;
 import com.faltasproject.domain.models.profesorado.Profesor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -239,7 +240,7 @@ public class XmlTreatment {
 		XPathFactory xPathFactory = XPathFactory.newInstance();
 		XPath xpath = xPathFactory.newXPath();
 
-		// OBTENEMOS LA LISTA DE CURSOSS
+		// OBTENEMOS LA LISTA DE CURSOS
 		String expr = "//horario/tramo";
 
 		try {
@@ -273,6 +274,39 @@ public class XmlTreatment {
 			log.warn(e.getMessage());
 		}
 		return result;
+	}
+	
+	public Set<IdGuardiaDTO> getAllGuardias() {
+	    Set<IdGuardiaDTO> result = new HashSet<>();
+
+	    XPathFactory xPathFactory = XPathFactory.newInstance();
+	    XPath xpath = xPathFactory.newXPath();
+
+	    // OBTENEMOS LA LISTA DE GUARDIAS DE TIPO AULA
+	    String expr = "//horario/tramo/guardia[nombre='Aula']";
+
+	    try {
+	        XPathExpression expression = xpath.compile(expr);
+
+	        NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
+	        // ITERO LA LISTA DE GUARDIAS DE TIPO AULA
+	        for (int i = 0; i < nodeList.getLength(); i++) {
+	            Node guardiaNode = nodeList.item(i);
+
+	            if (guardiaNode.getNodeType() == Node.ELEMENT_NODE) {
+	                Element guardiaElement = (Element) guardiaNode;
+
+	                int dia = Integer.valueOf(guardiaElement.getParentNode().getAttributes().getNamedItem("dia").getNodeValue());
+	                int indice = Integer.valueOf(guardiaElement.getParentNode().getAttributes().getNamedItem("indice").getNodeValue());
+	                String profesorReferencia = guardiaElement.getElementsByTagName("profesor").item(0).getTextContent();
+	                
+	                result.add(new IdGuardiaDTO(profesorReferencia, dia, indice));
+	            }
+	        }
+	    } catch (XPathExpressionException e) {
+	        log.warn(e.getMessage());
+	    }
+	    return result;
 	}
 
 }

@@ -15,10 +15,12 @@ import lombok.ToString;
 @Setter
 public class Falta {
 	// RELACIONES
+	@EqualsAndHashCode.Include
 	private HoraHorario horaHorario;
 	private Optional<Profesor> profesorSustituto;
 	// DATOS EXTRAS
 	private String comentario;
+	@EqualsAndHashCode.Include
 	private LocalDate fecha;
 	
 	public Falta(HoraHorario horaHorario, Profesor profesorSustituto, String comentario,

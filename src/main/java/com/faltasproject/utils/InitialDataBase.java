@@ -10,6 +10,7 @@ import com.faltasproject.adapters.jpa.clases.daos.GrupoRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.MateriaRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.SesionRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.FaltaRepositoryJPA;
+import com.faltasproject.adapters.jpa.horario.daos.GuardiaRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.HoraHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
@@ -23,6 +24,7 @@ import jakarta.transaction.Transactional;
 
 @Component
 public class InitialDataBase {
+	private final GuardiaRepositoryJPA guardiaRepositoryJPA;
 	private final TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA;
 	private final SesionRepositoryJPA sesionRepositoryJPA;
 	private final HoraHorarioRepositoryJPA horaHorarioRepositoryJPA;
@@ -38,7 +40,7 @@ public class InitialDataBase {
 	private final UserRepositoryJPA userRepositoryJPA;
 	private final RoleRepositoryJPA roleRepositoryJPA;
 
-	public InitialDataBase(TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA, SesionRepositoryJPA sesionRepositoryJPA,
+	public InitialDataBase(GuardiaRepositoryJPA guardiaRepositoryJPA,TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA, SesionRepositoryJPA sesionRepositoryJPA,
 			HoraHorarioRepositoryJPA horaHorarioRepositoryJPA, FaltaRepositoryJPA faltaRepositoryJPA,
 
 			ProfesorRepositoryJPA profesorRepositoryJPA,
@@ -49,7 +51,7 @@ public class InitialDataBase {
 			UserRepositoryJPA userRepositoryJPA, RoleRepositoryJPA roleRepositoryJPA
 
 	) {
-
+		this.guardiaRepositoryJPA = guardiaRepositoryJPA;
 		this.tramoHorarioRepositoryJPA = tramoHorarioRepositoryJPA;
 		this.sesionRepositoryJPA = sesionRepositoryJPA;
 		this.horaHorarioRepositoryJPA = horaHorarioRepositoryJPA;
@@ -74,6 +76,7 @@ public class InitialDataBase {
 			populateInitialDataIfNotExist();
 		}
 
+		guardiaRepositoryJPA.deleteAll();
 		/* HORARIO */
 		faltaRepositoryJPA.deleteAll();
 		horaHorarioRepositoryJPA.deleteAll();

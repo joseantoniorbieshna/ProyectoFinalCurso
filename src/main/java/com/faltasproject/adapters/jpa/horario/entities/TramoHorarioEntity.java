@@ -37,8 +37,11 @@ public class TramoHorarioEntity {
 	@Temporal(TemporalType.TIME)
 	private LocalTime horaSalida;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "tramoHorario",cascade = CascadeType.REMOVE)
+	@OneToMany( mappedBy = "tramoHorario",cascade = CascadeType.REMOVE)
 	private Set<HoraHorarioEntity> horaHorarioEntity;
+	
+	@OneToMany( mappedBy = "tramoHorario",cascade = CascadeType.REMOVE)
+	private Set<GuardiaEntity> guardias;
 	
 	public TramoHorarioEntity(TramoHorario tramoHorario) {
 		fromTramoHorario(tramoHorario);

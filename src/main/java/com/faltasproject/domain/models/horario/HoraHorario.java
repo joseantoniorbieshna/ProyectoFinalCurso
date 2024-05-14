@@ -11,8 +11,9 @@ import lombok.ToString;
 @Getter
 @Setter
 public class HoraHorario {
-	
+	@EqualsAndHashCode.Include
 	private Sesion sesion;
+	@EqualsAndHashCode.Include
 	private TramoHorario tramoHorario;
 	
 	public HoraHorario(Sesion sesion, TramoHorario tramoHorario) {

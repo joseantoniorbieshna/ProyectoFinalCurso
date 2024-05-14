@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.faltasproject.adapters.jpa.clases.daos.SesionRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
 import com.faltasproject.adapters.jpa.horario.daos.FaltaRepositoryJPA;
+import com.faltasproject.adapters.jpa.horario.daos.GuardiaRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.HoraHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.entities.FaltaEntity;
@@ -19,7 +20,7 @@ import com.faltasproject.adapters.jpa.horario.entities.TramoHorarioEntity;
 
 @Service
 public class HorarioSeederService {
-	
+	private final GuardiaRepositoryJPA guardiaRepositoryJPA;
 	private final TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA;
 	private final SesionRepositoryJPA sesionRepositoryJPA;
 	private final HoraHorarioRepositoryJPA horaHorarioRepositoryJPA;
@@ -28,12 +29,14 @@ public class HorarioSeederService {
 	public HorarioSeederService(TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA,
 			SesionRepositoryJPA sesionRepositoryJPA,
 			HoraHorarioRepositoryJPA horaHorarioRepositoryJPA,
-			FaltaRepositoryJPA faltaRepositoryJPA) {
+			FaltaRepositoryJPA faltaRepositoryJPA,
+			GuardiaRepositoryJPA guardiaRepositoryJPA) {
 		
 		this.tramoHorarioRepositoryJPA = tramoHorarioRepositoryJPA;
 		this.sesionRepositoryJPA=sesionRepositoryJPA;
 		this.horaHorarioRepositoryJPA=horaHorarioRepositoryJPA;
 		this.faltaRepositoryJPA=faltaRepositoryJPA;
+		this.guardiaRepositoryJPA = guardiaRepositoryJPA;
 	}
 
 	public void seedDatabase() {
@@ -95,6 +98,7 @@ public class HorarioSeederService {
 	}
 	
 	public void deleteAll() {
+		guardiaRepositoryJPA.deleteAll();
 		faltaRepositoryJPA.deleteAll();
 		horaHorarioRepositoryJPA.deleteAll();
 		tramoHorarioRepositoryJPA.deleteAll();

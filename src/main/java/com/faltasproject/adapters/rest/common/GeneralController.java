@@ -19,12 +19,14 @@ import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.horario.TramoHorario;
+import com.faltasproject.domain.models.horario.dtos.IdGuardiaDTO;
 import com.faltasproject.domain.models.profesorado.Profesor;
 import com.faltasproject.domain.services.clases.AulaService;
 import com.faltasproject.domain.services.clases.CursoService;
 import com.faltasproject.domain.services.clases.GrupoService;
 import com.faltasproject.domain.services.clases.MateriaService;
 import com.faltasproject.domain.services.clases.SesionService;
+import com.faltasproject.domain.services.horario.GuardiaService;
 import com.faltasproject.domain.services.horario.HoraHorarioService;
 import com.faltasproject.domain.services.horario.TramoHorarioService;
 import com.faltasproject.domain.services.profesorado.ProfesorService;
@@ -48,6 +50,7 @@ public class GeneralController {
 	private final ProfesorService profesorService;
 	private final SesionService sesionService;
 	private final HoraHorarioService horaHorarioService;
+	private final GuardiaService guardiaService;
 	private final UserDetailsServiceImpl userDetailsServiceImpl;
 	private final InitialDataBase initialDataBase;
 	
@@ -59,6 +62,7 @@ public class GeneralController {
 			ProfesorService profesorService,
 			SesionService sesionService,
 			HoraHorarioService horaHorarioService,
+			GuardiaService guardiaService,
 			UserDetailsServiceImpl userDetailsServiceImpl,
 			InitialDataBase initialDataBase) {
 		
@@ -70,6 +74,7 @@ public class GeneralController {
 		this.profesorService=profesorService;
 		this.sesionService=sesionService;
 		this.horaHorarioService=horaHorarioService;
+		this.guardiaService = guardiaService;
 		
 		this.userDetailsServiceImpl=userDetailsServiceImpl;
 		
@@ -196,7 +201,7 @@ public class GeneralController {
 	}
 	
 	@PostMapping("horahorario")
-	public String introducirHoraHorario(@RequestParam("xml") MultipartFile xml) {
+	public String introducirHorasHorario(@RequestParam("xml") MultipartFile xml) {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
 
@@ -207,6 +212,20 @@ public class GeneralController {
 		}
 
 		return MENSAJE_GURADADO_TOTAL_DE + horarios.size() + " hora de horarios";
+	}
+	
+	@PostMapping("guardias")
+	public String introducirGuardias(@RequestParam("xml") MultipartFile xml) {
+
+		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+
+		Set<IdGuardiaDTO> guardias = xmlTreatment.getAllGuardias();
+		
+		for(IdGuardiaDTO guardia:guardias) {
+			guardiaService.create(guardia);
+		}
+
+		return MENSAJE_GURADADO_TOTAL_DE + guardias.size() + " guardias";
 	}
 	
 	@PostMapping("all")
@@ -223,10 +242,9 @@ public class GeneralController {
 		result = result + introducirGrupos(xml)+"\n";
 		result = result + introducirProfesores(xml)+"\n";
 		result = result + introducirSesiones(xml)+"\n";
-		result = result + introducirHoraHorario(xml)+"\n";
+		result = result + introducirHorasHorario(xml)+"\n";
+		result = result + introducirGuardias(xml)+"\n";
 		return new ResponseEntity<String>(result,HttpStatus.OK);
 	}
-	
-	
 
 }

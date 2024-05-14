@@ -16,7 +16,6 @@ import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.horario.Falta;
 import com.faltasproject.domain.models.horario.dtos.IdFaltaDTO;
-import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 import com.faltasproject.domain.models.horario.mappers.FaltaIdMapper;
 import com.faltasproject.domain.persistance_ports.horario.FaltaPersistance;
 @Repository("faltaPersistance")

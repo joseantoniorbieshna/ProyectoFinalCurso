@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.beans.BeanUtils;
 
 import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
+import com.faltasproject.adapters.jpa.horario.entities.GuardiaEntity;
 import com.faltasproject.domain.models.profesorado.Profesor;
 import com.faltasproject.domain.models.usuario.Usuario;
 import com.faltasproject.security.usuarios.entity.UsuarioEntity;
@@ -43,6 +44,9 @@ public class ProfesorEntity {
 	
 	@OneToMany(fetch = FetchType.EAGER,mappedBy = "profesor",cascade = CascadeType.REMOVE)
 	private Set<SesionEntity> materia;
+	
+	@OneToMany(mappedBy = "profesor",cascade = CascadeType.REMOVE)
+	private Set<GuardiaEntity> guardias;
 	
     @OneToOne(cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id", unique = true)
