@@ -48,7 +48,7 @@ public class GuardiaEntity {
 
 	public void fromGuardia(Guardia guardia) {
 	 	this.setProfesor(new ProfesorEntity(guardia.getProfesor()));
-	 	this.setTramoHorario(new TramoHorarioEntity(guardia.getTamoHorario()));
+	 	this.setTramoHorario(new TramoHorarioEntity(guardia.getTramoHorario()));
 	}
 	
 	public Guardia toGuardia() {

@@ -1,7 +1,10 @@
 package com.faltasproject.domain.services.horario;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.horario.Guardia;
 import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.models.horario.dtos.IdGuardiaDTO;
@@ -33,6 +36,28 @@ public class GuardiaService {
 		Profesor profesor = profesorPersistance.readByReferencia(idGuardiaDTO.getReferenciaProfesor());
 		return this.guardiaPersistance.create(new Guardia(tramoHorario, profesor));
 	}
+
+
+
+	public List<Guardia> findAll() {
+		return guardiaPersistance.readAll().toList();
+	}
 	
+	public List<Guardia> findAllByReferenciaProfesor(String referenciaProfesor) {
+		return guardiaPersistance.readAll()
+				.filter(p->p.getReferenciaProfesor().equals(referenciaProfesor))
+				.toList();
+	}
+	
+	public List<Guardia> findAllByDiaAndIndice(IdTramoHorarioDTO idTramoHorarioDTO) {
+		List<Guardia>guardiasProfesor = guardiaPersistance.readAll()
+		.filter(p->p.getDia()==idTramoHorarioDTO.getDia() && p.getIndice()==idTramoHorarioDTO.getIndice())
+		.toList();
+		
+		if(guardiasProfesor.size()<=0) {
+			throw new NotFoundException("No se ha encontrado ninguna guardia ");
+		}
+		return guardiasProfesor;
+	}
 
 }

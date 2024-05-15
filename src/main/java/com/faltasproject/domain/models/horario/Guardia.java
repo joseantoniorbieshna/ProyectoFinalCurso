@@ -2,24 +2,29 @@ package com.faltasproject.domain.models.horario;
 
 import com.faltasproject.domain.models.profesorado.Profesor;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
+@Data
 @Getter
 @Setter
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Guardia {
 	@EqualsAndHashCode.Include
-	private TramoHorario tamoHorario;
+	private TramoHorario tramoHorario;
 	@EqualsAndHashCode.Include
 	private Profesor profesor;
 	
-	public Guardia(TramoHorario tamoHorario, Profesor profesor) {
+	public Guardia(TramoHorario tramoHorario, Profesor profesor) {
 		super();
-		this.tamoHorario = tamoHorario;
+		this.tramoHorario = tramoHorario;
 		this.profesor = profesor;
 	}
 	
@@ -33,10 +38,10 @@ public class Guardia {
 	}
 	
 	public int getDia() {
-		return this.tamoHorario.getDia();
+		return this.tramoHorario.getDia();
 	}
 	
 	public int getIndice() {
-		return this.tamoHorario.getIndice();
+		return this.tramoHorario.getIndice();
 	}
 }
