@@ -1,6 +1,7 @@
 extend type Query {
 	guardias : [Guardia],
-	gaurdiasByProfesor(referenciaProfesor:String!): [Guardia]
+	gaurdiasByProfesor(referenciaProfesor:String!): [Guardia],
+	guardiasByDiaAndIndice(tramoHorario:IdTramoHorario!) : [Guardia]
 }
 	
 type Guardia {

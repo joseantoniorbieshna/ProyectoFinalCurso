@@ -60,6 +60,12 @@ public class FaltaService {
 		return this.faltaPersistance.readAll().toList();
 	}
 	
+	public List<Falta> findAllTodayAndLaterByIdAndIndice(int dia ,int indice) {
+		return this.faltaPersistance.readAll()
+				.filter(t -> t.getDiaTramoHorario()==dia && t.getIndiceTramoHorario()==indice && ( t.getFecha().isEqual(LocalDate.now()) || t.getFecha().isAfter(LocalDate.now()) ) )
+				.toList();
+	}
+	
 	public List<Falta> findAllByFaltaBetween(LocalDate fechaInicio,LocalDate fechaFin){
 		if(fechaInicio.isAfter(fechaFin)) {
 			throw new ConflictException("La fecha de inicio está después de la de fin");

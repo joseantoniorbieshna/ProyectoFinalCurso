@@ -35,6 +35,12 @@ public class FaltasControllerGraphql {
 		return this.faltaService.findAll();
 	}
 	
+	@QueryMapping
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	public List<Falta> faltasByDiaAndIndice(@Argument int dia, @Argument int indice){
+		return this.faltaService.findAllTodayAndLaterByIdAndIndice(dia,indice);
+	}
+	
 	@MutationMapping
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	public Falta createFalta(@Argument FaltaCreateInputDTO faltaCreateInput) {

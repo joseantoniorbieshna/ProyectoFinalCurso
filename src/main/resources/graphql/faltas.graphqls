@@ -1,6 +1,7 @@
 extend type Query {
 	faltas : [Falta],
-	getAllFaltaBetweenFechas(fechaInicio:LocalDate,fechaFin:LocalDate) : [Falta]
+	getAllFaltaBetweenFechas(fechaInicio:LocalDate,fechaFin:LocalDate) : [Falta],
+	faltasByDiaAndIndice(dia: Int!, indice: Int!): [Falta]
 }
 
 extend type Mutation{

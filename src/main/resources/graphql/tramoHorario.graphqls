@@ -2,6 +2,11 @@ extend type Query {
 	tramosHorarios : [TramoHorario],
 }
 
+input IdTramoHorario{
+	dia: Int,
+	indice: Int
+}
+
 type TramoHorario {
 	dia: Int,
 	indice: Int,

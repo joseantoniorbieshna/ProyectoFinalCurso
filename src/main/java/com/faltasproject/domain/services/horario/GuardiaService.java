@@ -50,14 +50,9 @@ public class GuardiaService {
 	}
 	
 	public List<Guardia> findAllByDiaAndIndice(IdTramoHorarioDTO idTramoHorarioDTO) {
-		List<Guardia>guardiasProfesor = guardiaPersistance.readAll()
-		.filter(p->p.getDia()==idTramoHorarioDTO.getDia() && p.getIndice()==idTramoHorarioDTO.getIndice())
-		.toList();
-		
-		if(guardiasProfesor.size()<=0) {
-			throw new NotFoundException("No se ha encontrado ninguna guardia ");
-		}
-		return guardiasProfesor;
+		return guardiaPersistance.readAll()
+				.filter(p->p.getDia()==idTramoHorarioDTO.getDia() && p.getIndice()==idTramoHorarioDTO.getIndice())
+				.toList();
 	}
 
 }
