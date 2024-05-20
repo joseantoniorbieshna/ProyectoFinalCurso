@@ -9,12 +9,15 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
+import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.models.horario.Falta;
 import com.faltasproject.domain.models.horario.dtos.FaltaCreateInputDTO;
-import com.faltasproject.domain.models.horario.dtos.FaltaDeleteInputDTO;
+import com.faltasproject.domain.models.horario.dtos.FaltaSustituirInputDTO;
 import com.faltasproject.domain.models.horario.dtos.FaltaUpdateInputDTO;
 import com.faltasproject.domain.models.horario.dtos.IdFaltaDTO;
+import com.faltasproject.domain.models.usuario.RoleEnum;
 import com.faltasproject.domain.services.horario.FaltaService;
+import com.faltasproject.security.usuarios.dtos.UserInfo;
 import com.faltasproject.security.usuarios.service.UserDetailsServiceImpl;
 
 @Controller
@@ -44,35 +47,38 @@ public class FaltasControllerGraphql {
 	@MutationMapping
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	public Falta createFalta(@Argument FaltaCreateInputDTO faltaCreateInput) {
-		return this.faltaService.create(faltaCreateInput);
+		UserInfo userInfoDTO = userDetailsServiceImpl.getuserInfo();
+		return this.faltaService.create(faltaCreateInput,userInfoDTO);
 	}
 	
 	@MutationMapping
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	public Falta updateFalta(@Argument FaltaUpdateInputDTO faltaUpdateInput) {
-		//TODO validar que sea mi falta sea admin
-		return this.faltaService.update(faltaUpdateInput);
+		UserInfo userInfoDTO = userDetailsServiceImpl.getuserInfo();
+		return this.faltaService.update(faltaUpdateInput,userInfoDTO);
 	}
 	
 	@MutationMapping
-	@PreAuthorize("hasAnyRole('USER')")
-	public Falta sustituirFalta(@Argument IdFaltaDTO faltaSustituirInput) {
-		String referenciaProfesor= userDetailsServiceImpl.getuserInfo().referenciaProfesor();
-		return this.faltaService.sustituir(faltaSustituirInput,referenciaProfesor);
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public Falta sustituirFalta(@Argument FaltaSustituirInputDTO faltaSustituirInput) {
+		
+		userDetailsServiceImpl.assertForUserAndIsTheSameReferenciaProfesor(faltaSustituirInput.getReferenciaProfesorSustituto());
+		
+		return this.faltaService.sustituir(faltaSustituirInput);
 	}
 	
 	@MutationMapping
-	@PreAuthorize("hasAnyRole('USER')")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public Falta cancelarFalta(@Argument IdFaltaDTO faltaCancelarInput) {
-		String referenciaProfesor= userDetailsServiceImpl.getuserInfo().referenciaProfesor();
-		return this.faltaService.cancelar(faltaCancelarInput,referenciaProfesor);
+		UserInfo userInfo = userDetailsServiceImpl.getuserInfo();
+		return this.faltaService.cancelar(faltaCancelarInput,userInfo);
 	}
 	
 	@MutationMapping
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	public String deleteFalta(@Argument IdFaltaDTO faltaDeleteInput) {
-		//TODO validar que sea mi falta sea admin
-		this.faltaService.delete(faltaDeleteInput);
+		UserInfo userInfoDTO = userDetailsServiceImpl.getuserInfo();
+		this.faltaService.delete(faltaDeleteInput,userInfoDTO);
 		return "Borrado con existo";
 	}
 	

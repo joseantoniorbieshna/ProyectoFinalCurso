@@ -25,19 +25,19 @@ public class GuardiasControllerGraphql {
 	}
 
 	@QueryMapping
-	@PreAuthorize("hasAnyRole('USER')")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public List<Guardia> guardias() {
 		return this.guardiaService.findAll();
 	}
 	
 	@QueryMapping
-	@PreAuthorize("hasAnyRole('USER')")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public List<Guardia> gaurdiasByProfesor(@Argument String referenciaProfesor) {
 		return this.guardiaService.findAllByReferenciaProfesor(referenciaProfesor);
 	}
 	
 	@QueryMapping
-	@PreAuthorize("hasAnyRole('USER')")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public List<Guardia> guardiasByDiaAndIndice(@Argument IdTramoHorarioDTO tramoHorario ) {
 		return this.guardiaService.findAllByDiaAndIndice(tramoHorario);
 	}

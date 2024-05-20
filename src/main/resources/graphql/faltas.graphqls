@@ -8,7 +8,7 @@ extend type Mutation{
 	createFalta(faltaCreateInput:FaltaCreateInputDTO) : Falta,
 	updateFalta(faltaUpdateInput:FaltaUpdateInputDTO) : Falta,
 	deleteFalta(faltaDeleteInput:IdFaltaDTO) : String,
-	sustituirFalta(faltaSustituirInput:IdFaltaDTO) : Falta,
+	sustituirFalta(faltaSustituirInput:FaltaSustituirInputDTO) : Falta,
 	cancelarFalta(faltaCancelarInput:IdFaltaDTO) : Falta
 }
 
@@ -35,6 +35,13 @@ input IdFaltaDTO {
 	referenciaSesion : String!,
 	fecha : LocalDate!
 	}
+input FaltaSustituirInputDTO{
+	dia : Int!,
+	indice : Int!,
+	referenciaSesion : String!,
+	fecha : LocalDate!,
+	referenciaProfesorSustituto:String!
+}
 
 type Falta {
 	horaHorario: HoraHorario,
