@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.models.horario.Falta;
+import com.faltasproject.domain.models.horario.dtos.FaltaCreateByDiaProfesorDTO;
 import com.faltasproject.domain.models.horario.dtos.FaltaCreateInputDTO;
 import com.faltasproject.domain.models.horario.dtos.FaltaSustituirInputDTO;
 import com.faltasproject.domain.models.horario.dtos.FaltaUpdateInputDTO;
@@ -49,6 +50,12 @@ public class FaltasControllerGraphql {
 	public Falta createFalta(@Argument FaltaCreateInputDTO faltaCreateInput) {
 		UserInfo userInfoDTO = userDetailsServiceImpl.getuserInfo();
 		return this.faltaService.create(faltaCreateInput,userInfoDTO);
+	}
+	@MutationMapping
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	public List<Falta> createFullDayFalta(@Argument FaltaCreateByDiaProfesorDTO faltaCreateAllInput) {
+		UserInfo userInfoDTO = userDetailsServiceImpl.getuserInfo();
+		return this.faltaService.createAll(faltaCreateAllInput,userInfoDTO);
 	}
 	
 	@MutationMapping

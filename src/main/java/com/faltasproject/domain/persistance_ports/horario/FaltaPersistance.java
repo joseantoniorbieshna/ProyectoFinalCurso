@@ -1,6 +1,7 @@
 package com.faltasproject.domain.persistance_ports.horario;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Stream;
 
 import com.faltasproject.domain.models.horario.Falta;
@@ -23,4 +24,6 @@ public interface FaltaPersistance {
 	void delete(IdFaltaDTO idFaltaDTO);
 	
 	boolean existId(IdFaltaDTO idFaltaDTO);
+
+	Stream<Falta> createAll(List<Falta> faltas);
 }

@@ -1,6 +1,8 @@
 package com.faltasproject.adapters.jpa.horario.persistence;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -18,6 +20,8 @@ import com.faltasproject.domain.models.horario.Falta;
 import com.faltasproject.domain.models.horario.dtos.IdFaltaDTO;
 import com.faltasproject.domain.models.horario.mappers.FaltaIdMapper;
 import com.faltasproject.domain.persistance_ports.horario.FaltaPersistance;
+
+import jakarta.transaction.Transactional;
 @Repository("faltaPersistance")
 public class FaltaPersistanceJPA implements FaltaPersistance{
 	private static final String MESSAGE_NOT_EXIST_HORA_HORARIO="La hora horario introducida no existe.";
@@ -140,6 +144,32 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 					.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_PROFESOR));
 			faltaUpdate.setProfesorSustituto(profesorPersistance);
 		}
+	}
+
+	@Override
+	@Transactional
+	public Stream<Falta> createAll(List<Falta> faltas) {
+		List<Falta> faltasSaveAndPersistance = new ArrayList<>();
+		for(Falta falta: faltas) {
+		
+		HoraHorarioEntity horaHorarioPersist=getHoraHorarioPersist(faltaIdMapper.toDto(falta))
+				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
+		
+		if(existId(faltaIdMapper.toDto(falta))) {
+			continue;
+		}
+		
+		FaltaEntity faltaEntity = new FaltaEntity(falta);
+		
+		faltaEntity.setHoraHorario(horaHorarioPersist);
+		faltaEntity.setProfesorSustituto(null);
+		// NO ES NECESARIO PERSISTIR PROFESOR YA QUE PROFESOR SUSTITUTO NO VA A ESTAR EN PRIMERA INSTANCIA
+		faltaEntity = faltaRepositoryJPA.save(faltaEntity);
+		
+		faltasSaveAndPersistance.add(faltaEntity.toFalta());
+		}
+		
+		return faltasSaveAndPersistance.stream();
 	}
 
 }

@@ -3,6 +3,7 @@ package com.faltasproject.domain.services.horario;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import javax.management.relation.Role;
 
@@ -15,6 +16,7 @@ import com.faltasproject.domain.models.horario.Falta;
 import com.faltasproject.domain.models.horario.HoraHorario;
 import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.horario.TramoHorario;
+import com.faltasproject.domain.models.horario.dtos.FaltaCreateByDiaProfesorDTO;
 import com.faltasproject.domain.models.horario.dtos.FaltaCreateInputDTO;
 import com.faltasproject.domain.models.horario.dtos.FaltaDeleteInputDTO;
 import com.faltasproject.domain.models.horario.dtos.FaltaSustituirInputDTO;
@@ -26,6 +28,7 @@ import com.faltasproject.domain.models.profesorado.Profesor;
 import com.faltasproject.domain.models.usuario.RoleEnum;
 import com.faltasproject.domain.persistance_ports.clases.SesionPersistance;
 import com.faltasproject.domain.persistance_ports.horario.FaltaPersistance;
+import com.faltasproject.domain.persistance_ports.horario.HoraHorarioPersistance;
 import com.faltasproject.domain.persistance_ports.horario.TramoHorarioPersistance;
 import com.faltasproject.domain.persistance_ports.profesorado.ProfesorPersistance;
 import com.faltasproject.security.usuarios.dtos.UserInfo;
@@ -34,25 +37,28 @@ import com.faltasproject.security.usuarios.dtos.UserInfo;
 public class FaltaService {
 
 	private FaltaPersistance faltaPersistance;
+	private HoraHorarioPersistance horaHorarioPersistance;
 	private TramoHorarioPersistance tramoPersistance;
 	private SesionPersistance sesionPersistance;
 	private ProfesorPersistance profesorPersistance;
 
 	public FaltaService(FaltaPersistance faltaPersistance, TramoHorarioPersistance tramoPersistance,
-			SesionPersistance sesionPersistance, ProfesorPersistance profesorPersistance) {
+			SesionPersistance sesionPersistance, ProfesorPersistance profesorPersistance,
+			HoraHorarioPersistance horaHorarioPersistance) {
 		super();
 		this.faltaPersistance = faltaPersistance;
 		this.tramoPersistance = tramoPersistance;
 		this.sesionPersistance = sesionPersistance;
 		this.profesorPersistance = profesorPersistance;
+		this.horaHorarioPersistance=horaHorarioPersistance;
 	}
 
 	public Falta create(FaltaCreateInputDTO faltaCreateInputDTO, UserInfo userInfoDTO) {
-		
+
 		if (isUser(userInfoDTO)) {
 			assertDayIsTodayOrLater(faltaCreateInputDTO.getFecha());
 		}
-		
+
 		TramoHorario tramoHorario = tramoPersistance
 				.readById(new IdTramoHorarioDTO(faltaCreateInputDTO.getDia(), faltaCreateInputDTO.getIndice()));
 		Sesion sesion = sesionPersistance.readByReferencia(faltaCreateInputDTO.getReferenciaSesion());
@@ -61,6 +67,29 @@ public class FaltaService {
 		Falta falta = new Falta(horaHorario, faltaCreateInputDTO.getComentario().orElse(""),
 				faltaCreateInputDTO.getFecha());
 		return this.faltaPersistance.create(falta);
+	}
+
+	public List<Falta> createAll(FaltaCreateByDiaProfesorDTO faltaCreateAllInput, UserInfo userInfoDTO) {
+
+		if (isUser(userInfoDTO)) {
+			assertDayIsTodayOrLater(faltaCreateAllInput.getFecha());
+			if (!faltaCreateAllInput.getReferenciaProfesor().equals(userInfoDTO.referenciaProfesor())) {
+				throw new ConflictException("No tienes permiso para realizar esta acción");
+			}
+		}
+
+		Stream<HoraHorario> allByReferenciaProfesor = horaHorarioPersistance.readAllByReferenciaProfesor(faltaCreateAllInput.getReferenciaProfesor());
+		List<Falta> faltas = allByReferenciaProfesor
+		.filter(horaHorario->horaHorario.getDiaTramoHorario()==faltaCreateAllInput.getDia())
+		.map((horaHorario)->{
+			return new Falta(horaHorario, faltaCreateAllInput.getComentario().orElse(""), faltaCreateAllInput.getFecha());
+		}).toList();
+		
+		List<Falta> faltasSave = faltaPersistance.createAll(faltas).toList();
+		if(faltasSave.size()<=0) {
+			throw new ConflictException("Ya se han creado todas las faltas posibles para este día y fecha");
+		}
+		return faltasSave;
 	}
 
 	public List<Falta> findAll() {
@@ -83,17 +112,16 @@ public class FaltaService {
 	}
 
 	public Falta update(FaltaUpdateInputDTO faltaUpdateInputDTO, UserInfo userInfoDTO) {
-		
+
 		IdFaltaDTO idFaltaActual = new IdFaltaDTO(faltaUpdateInputDTO.getReferenciaSesion(),
 				faltaUpdateInputDTO.getDia(), faltaUpdateInputDTO.getIndice(), faltaUpdateInputDTO.getFecha());
-		
+
 		if (isUser(userInfoDTO)) {
 			assertDayIsTodayOrLater(faltaUpdateInputDTO.getFecha());
 			assertDayIsTodayOrLater(faltaUpdateInputDTO.getFechaNueva());
-			
+
 			assertUserIspropietario(idFaltaActual, userInfoDTO);
 		}
-
 
 		Falta faltaActualizar = faltaPersistance.readById(idFaltaActual);
 		faltaActualizar.setComentario(faltaUpdateInputDTO.getComentario().orElse(""));
@@ -103,14 +131,14 @@ public class FaltaService {
 	}
 
 	private void assertDayIsTodayOrLater(LocalDate date) {
-		if(date.isBefore(LocalDate.now())) {
+		if (date.isBefore(LocalDate.now())) {
 			throw new ConflictException("La fecha es inferior al día de hoy");
 		}
 	}
 
 	public void delete(IdFaltaDTO faltaDeleteInputDTO, UserInfo userInfoDTO) {
-	
-		/*Validar solo si es user*/
+
+		/* Validar solo si es user */
 		if (isUser(userInfoDTO)) {
 			assertDayIsTodayOrLater(faltaDeleteInputDTO.getFecha());
 			assertUserIspropietario(faltaDeleteInputDTO, userInfoDTO);
@@ -135,7 +163,7 @@ public class FaltaService {
 		if (!falta.getProfesorSustituto().isPresent()) {
 			throw new ConflictException("No hay nadie que sustituya esta falta");
 		}
-		if(isUser(userInfo)) {
+		if (isUser(userInfo)) {
 			if (falta.getReferenciaProfesorPropietario().equals(userInfo)) {
 				throw new ConflictException("No puedes cancelar el profesorSustituto de tu propia falta");
 			}
@@ -144,7 +172,7 @@ public class FaltaService {
 				throw new ConflictException("No eres el profesor que sustituye esta falta");
 			}
 		}
-	
+
 		/* GUARDAR */
 		falta.setProfesorSustituto(null);
 
@@ -158,9 +186,10 @@ public class FaltaService {
 
 	public Falta sustituir(FaltaSustituirInputDTO faltaSustituirInput) {
 		assertDayIsTodayOrLater(faltaSustituirInput.getFecha());
-		
-		IdFaltaDTO idFaltaDTO = new IdFaltaDTO(faltaSustituirInput.getReferenciaSesion(), faltaSustituirInput.getDia(), faltaSustituirInput.getIndice(), faltaSustituirInput.getFecha());
-		
+
+		IdFaltaDTO idFaltaDTO = new IdFaltaDTO(faltaSustituirInput.getReferenciaSesion(), faltaSustituirInput.getDia(),
+				faltaSustituirInput.getIndice(), faltaSustituirInput.getFecha());
+
 		Falta falta = faltaPersistance.readById(idFaltaDTO);
 
 		/* VALIDACIONES */
@@ -173,7 +202,8 @@ public class FaltaService {
 		}
 
 		/* GUARDAR */
-		Profesor profesorSustituto = profesorPersistance.readByReferencia(faltaSustituirInput.getReferenciaProfesorSustituto());
+		Profesor profesorSustituto = profesorPersistance
+				.readByReferencia(faltaSustituirInput.getReferenciaProfesorSustituto());
 		falta.setProfesorSustituto(profesorSustituto);
 
 		return this.faltaPersistance.update(idFaltaDTO, falta);
