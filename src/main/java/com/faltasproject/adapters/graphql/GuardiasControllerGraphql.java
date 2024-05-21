@@ -10,18 +10,15 @@ import org.springframework.stereotype.Controller;
 import com.faltasproject.domain.models.horario.Guardia;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 import com.faltasproject.domain.services.horario.GuardiaService;
-import com.faltasproject.security.usuarios.service.UserDetailsServiceImpl;
 
 @Controller
 public class GuardiasControllerGraphql {
 	
 	private final GuardiaService guardiaService;
-	private final UserDetailsServiceImpl userDetailsServiceImpl;
 	
-	public GuardiasControllerGraphql(GuardiaService guardiaService, UserDetailsServiceImpl userDetailsServiceImpl) {
+	public GuardiasControllerGraphql(GuardiaService guardiaService) {
 		super();
 		this.guardiaService = guardiaService;
-		this.userDetailsServiceImpl = userDetailsServiceImpl;
 	}
 
 	@QueryMapping

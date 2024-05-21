@@ -14,6 +14,7 @@ import com.faltasproject.adapters.jpa.horario.daos.GuardiaRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.HoraHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.horario.daos.TramoHorarioRepositoryJPA;
 import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
+import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.usuario.RoleEnum;
 import com.faltasproject.security.usuarios.daos.RoleRepositoryJPA;
 import com.faltasproject.security.usuarios.daos.UserRepositoryJPA;
@@ -30,7 +31,7 @@ public class InitialDataBase {
 	private final HoraHorarioRepositoryJPA horaHorarioRepositoryJPA;
 	private final FaltaRepositoryJPA faltaRepositoryJPA;
 
-	private ProfesorRepositoryJPA profesorRepositoryJPA;
+	private final ProfesorRepositoryJPA profesorRepositoryJPA;
 
 	private final MateriaRepositoryJPA materiaRepository;
 	private final CursoRepositoryJPA cursoRepositoryJPA;
@@ -63,16 +64,14 @@ public class InitialDataBase {
 		this.cursoRepositoryJPA = cursoRepositoryJPA;
 		this.aulaRepositoryJPA = aulaRepositoryJPA;
 		this.grupoRepositoryJPA = grupoRepositoryJPA;
-		this.profesorRepositoryJPA = profesorRepositoryJPA;
 
 		this.userRepositoryJPA = userRepositoryJPA;
 		this.roleRepositoryJPA = roleRepositoryJPA;
 	}
 	
-	public void ClearToInitialDatabase() {
+	public void clearToInitialDatabase() {
 
-		Optional<RoleEntity> roleEnum = roleRepositoryJPA.findByRoleEnum(RoleEnum.USER);
-		if(!roleEnum.isPresent()) {
+		if(!roleRepositoryJPA.findByRoleEnum(RoleEnum.USER).isPresent()) {
 			populateInitialDataIfNotExist();
 		}
 
@@ -90,7 +89,8 @@ public class InitialDataBase {
 		aulaRepositoryJPA.deleteAll();
 		sesionRepositoryJPA.deleteAll();
 
-		userRepositoryJPA.deleteAllByRole(roleEnum.get());
+		userRepositoryJPA.deleteAllByRole(roleRepositoryJPA.findByRoleEnum(RoleEnum.USER)
+				.orElseThrow(()->new NotFoundException("Rol usuario no existente")));
 	}
 	
 	public void populateInitialDataIfNotExist() {

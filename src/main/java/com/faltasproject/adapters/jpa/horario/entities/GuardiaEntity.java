@@ -52,9 +52,9 @@ public class GuardiaEntity {
 	}
 	
 	public Guardia toGuardia() {
-		TramoHorario tramoHorario = this.tramoHorario.toTramoHorario();
-		Profesor profesor = this.profesor.toProfesor();
-		return new Guardia(tramoHorario,profesor);
+		TramoHorario tramoHorarioModel = this.tramoHorario.toTramoHorario();
+		Profesor profesorModel = this.profesor.toProfesor();
+		return new Guardia(tramoHorarioModel,profesorModel);
 	}
 	
 	public String getReferenciaProfesor() {

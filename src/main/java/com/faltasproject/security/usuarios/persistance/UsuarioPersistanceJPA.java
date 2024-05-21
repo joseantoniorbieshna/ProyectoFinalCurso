@@ -30,7 +30,7 @@ public class UsuarioPersistanceJPA implements UsuarioPersistance {
 	public Usuario create(Usuario usuario) {
 		Optional<RoleEntity> role = roleRepositoryJPA.findByRoleEnum(usuario.getRole());
 		if(!role.isPresent()) {
-			throw new NotFoundException("Introduce un role disponible");
+			throw new NotFoundException("Introduce un rol disponible");
 		}
 		UsuarioEntity userPersistance = new UsuarioEntity(usuario);
 		userPersistance.setRole(role.get());
@@ -44,7 +44,7 @@ public class UsuarioPersistanceJPA implements UsuarioPersistance {
 		Optional<UsuarioEntity> usuarioCambiar = userRepositoryJPA.findByUsername(username);
 		
 		if(!usuarioOriginal.isPresent()) {
-			throw new NotFoundException("El usuario original '"+username+ "' no existe");
+			throw new NotFoundException(getMessagetUserNotExist(username));
 		}
 		if(!usuario.getUsername().equals(username) && usuarioCambiar.isPresent()) {
 			throw new ConflictException("El usuario al que quiere cambiar '"+username+ "' ya existe");
@@ -62,12 +62,10 @@ public class UsuarioPersistanceJPA implements UsuarioPersistance {
 
 	@Override
 	public Stream<Usuario> readAllByRole(RoleEnum role) {
-		Optional<RoleEntity> rolePersistance = roleRepositoryJPA.findByRoleEnum(role);
+		RoleEntity rolePersistance = roleRepositoryJPA.findByRoleEnum(role)
+				.orElseThrow(()->  new NotFoundException("El rol introducido no existe"));
 		
-		if(rolePersistance.isPresent()){
-			throw new NotFoundException("El rol introducido no existe");
-		}
-		return userRepositoryJPA.findAllByRole(rolePersistance.get())
+		return userRepositoryJPA.findAllByRole(rolePersistance)
 				.stream()
 				.map(UsuarioEntity::toUsuario);
 	}
@@ -82,7 +80,7 @@ public class UsuarioPersistanceJPA implements UsuarioPersistance {
 	public void delete(String username) {
 		Optional<UsuarioEntity> userPersistance = userRepositoryJPA.findByUsername(username);
 		if(!userPersistance.isPresent()) {
-			throw new NotFoundException("El usuario '"+username+ "' no existe");
+			throw new NotFoundException(getMessagetUserNotExist(username));
 		}
 		userRepositoryJPA.deleteByUsername(username);
 	}
@@ -91,7 +89,7 @@ public class UsuarioPersistanceJPA implements UsuarioPersistance {
 	public Usuario readByUsername(String username) {
 		Optional<UsuarioEntity> userPersistance = userRepositoryJPA.findByUsername(username);
 		if(!userPersistance.isPresent()) {
-			throw new NotFoundException("El usuario '"+username+ "' no existe");
+			throw new NotFoundException(getMessagetUserNotExist(username));
 		}
 		return userRepositoryJPA.save(userPersistance.get()).toUsuario();
 	}
@@ -102,4 +100,7 @@ public class UsuarioPersistanceJPA implements UsuarioPersistance {
 		return userPersistance.isPresent();
 	}
 
+	private String getMessagetUserNotExist(String username){
+		return "El usuario '"+username+ "' no existe";
+	}
 }

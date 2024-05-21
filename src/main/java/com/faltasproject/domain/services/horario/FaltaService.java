@@ -81,12 +81,12 @@ public class FaltaService {
 		Stream<HoraHorario> allByReferenciaProfesor = horaHorarioPersistance.readAllByReferenciaProfesor(faltaCreateAllInput.getReferenciaProfesor());
 		List<Falta> faltas = allByReferenciaProfesor
 		.filter(horaHorario->horaHorario.getDiaTramoHorario()==faltaCreateAllInput.getDia())
-		.map((horaHorario)->{
-			return new Falta(horaHorario, faltaCreateAllInput.getComentario().orElse(""), faltaCreateAllInput.getFecha());
-		}).toList();
+		.map(horaHorario->
+			new Falta(horaHorario, faltaCreateAllInput.getComentario().orElse(""), faltaCreateAllInput.getFecha())
+		).toList();
 		
 		List<Falta> faltasSave = faltaPersistance.createAll(faltas).toList();
-		if(faltasSave.size()<=0) {
+		if(faltasSave.isEmpty()) {
 			throw new ConflictException("Ya se han creado todas las faltas posibles para este día y fecha");
 		}
 		return faltasSave;
@@ -164,11 +164,11 @@ public class FaltaService {
 			throw new ConflictException("No hay nadie que sustituya esta falta");
 		}
 		if (isUser(userInfo)) {
-			if (falta.getReferenciaProfesorPropietario().equals(userInfo)) {
+			if (falta.getReferenciaProfesorPropietario().equals(userInfo.referenciaProfesor())) {
 				throw new ConflictException("No puedes cancelar el profesorSustituto de tu propia falta");
 			}
 
-			if (!falta.getReferenciaProfesorSustituto().equals(userInfo)) {
+			if (!falta.getReferenciaProfesorSustituto().equals(userInfo.referenciaProfesor())) {
 				throw new ConflictException("No eres el profesor que sustituye esta falta");
 			}
 		}

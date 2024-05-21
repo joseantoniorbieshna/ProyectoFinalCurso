@@ -17,10 +17,7 @@ public class FaltasprojectApplication {
 	
 	@Bean
 	CommandLineRunner init(InitialDataBase initialDataBase) {
-		return args->{
-			initialDataBase.populateInitialDataIfNotExist();
-		};
-		
+		return args->initialDataBase.populateInitialDataIfNotExist();
 	}
 
 }

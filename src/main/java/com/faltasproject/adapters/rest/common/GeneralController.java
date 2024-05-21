@@ -2,10 +2,10 @@ package com.faltasproject.adapters.rest.common;
 
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +30,6 @@ import com.faltasproject.domain.services.horario.GuardiaService;
 import com.faltasproject.domain.services.horario.HoraHorarioService;
 import com.faltasproject.domain.services.horario.TramoHorarioService;
 import com.faltasproject.domain.services.profesorado.ProfesorService;
-import com.faltasproject.security.usuarios.service.UserDetailsServiceImpl;
 import com.faltasproject.utils.InitialDataBase;
 import com.faltasproject.utils.XmlTreatment;
 
@@ -42,65 +41,29 @@ import jakarta.transaction.Transactional;
 public class GeneralController {
 	private static final String MENSAJE_GURADADO_TOTAL_DE = "Se ha guardado un total de ";
 	
-	private final MateriaService materiaService;
-	private final CursoService cursoService;
-	private final TramoHorarioService tramoHorarioService;
-	private final AulaService aulaService;
-	private final GrupoService grupoService;
-	private final ProfesorService profesorService;
-	private final SesionService sesionService;
-	private final HoraHorarioService horaHorarioService;
-	private final GuardiaService guardiaService;
-	private final UserDetailsServiceImpl userDetailsServiceImpl;
-	private final InitialDataBase initialDataBase;
-	
-	public GeneralController(MateriaService materiaService,
-			CursoService cursoService,
-			TramoHorarioService tramoHorarioService,
-			AulaService aulaService,
-			GrupoService grupoService,
-			ProfesorService profesorService,
-			SesionService sesionService,
-			HoraHorarioService horaHorarioService,
-			GuardiaService guardiaService,
-			UserDetailsServiceImpl userDetailsServiceImpl,
-			InitialDataBase initialDataBase) {
-		
-		this.materiaService=materiaService;
-		this.cursoService=cursoService;
-		this.tramoHorarioService=tramoHorarioService;
-		this.aulaService=aulaService;
-		this.grupoService=grupoService;
-		this.profesorService=profesorService;
-		this.sesionService=sesionService;
-		this.horaHorarioService=horaHorarioService;
-		this.guardiaService = guardiaService;
-		
-		this.userDetailsServiceImpl=userDetailsServiceImpl;
-		
-		this.initialDataBase=initialDataBase;
-	}
+	@Autowired
+	private MateriaService materiaService;
+	@Autowired
+	private CursoService cursoService;
+	@Autowired
+	private TramoHorarioService tramoHorarioService;
+	@Autowired
+	private AulaService aulaService;
+	@Autowired
+	private GrupoService grupoService;
+	@Autowired
+	private ProfesorService profesorService;
+	@Autowired
+	private SesionService sesionService;
+	@Autowired
+	private HoraHorarioService horaHorarioService;
+	@Autowired
+	private GuardiaService guardiaService;
+	@Autowired
+	private InitialDataBase initialDataBase;
 
+	
 
-	@GetMapping("hola")
-	public String hola() {
-		return "respuesta";
-	}
-	
-	@GetMapping("holamy")
-	@PreAuthorize("hasAnyRole('ADMIN')")
-	public String holamy() {
-		String algo = userDetailsServiceImpl.getCurrentUsername();
-		return algo;
-	}
-	
-	@GetMapping("hola-secure-role")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	public String holaSecurerole() {
-		return "respuesta secure";
-	}
-	
-	@PostMapping("materias")
 	public String introducirMaterias(@RequestParam("xml") MultipartFile xml) {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
@@ -116,7 +79,7 @@ public class GeneralController {
 	
 	
 
-	@PostMapping("cursos")
+
 	public String introducirCursos(@RequestParam("xml") MultipartFile xml) {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
@@ -130,7 +93,7 @@ public class GeneralController {
 		return MENSAJE_GURADADO_TOTAL_DE + cursos.size() + " Cursos y en total tienen "+cursos.stream().flatMap(curso -> curso.getMaterias().stream()).count()+" materias relacionadas";
 	}
 	
-	@PostMapping("tramoshorarios")
+
 	public String introducirTramosHorarios(@RequestParam("xml") MultipartFile xml) {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
@@ -144,7 +107,7 @@ public class GeneralController {
 		return MENSAJE_GURADADO_TOTAL_DE + tramosHorarios.size() + " TramosHorario";
 	}
 	
-	@PostMapping("aulas")
+
 	public String introducirAulas(@RequestParam("xml") MultipartFile xml) {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
@@ -158,7 +121,7 @@ public class GeneralController {
 		return MENSAJE_GURADADO_TOTAL_DE + aulas.size() + " Aulas";
 	}
 	
-	@PostMapping("grupos")
+
 	public String introducirGrupos(@RequestParam("xml") MultipartFile xml) {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
@@ -172,7 +135,7 @@ public class GeneralController {
 		return MENSAJE_GURADADO_TOTAL_DE + grupos.size() + " grupos";
 	}
 	
-	@PostMapping("profesores")
+
 	public String introducirProfesores(@RequestParam("xml") MultipartFile xml) {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
@@ -186,7 +149,7 @@ public class GeneralController {
 		return MENSAJE_GURADADO_TOTAL_DE + profesores.size() + " profesores";
 	}
 	
-	@PostMapping("sesiones")
+
 	public String introducirSesiones(@RequestParam("xml") MultipartFile xml) {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
@@ -200,7 +163,7 @@ public class GeneralController {
 		return MENSAJE_GURADADO_TOTAL_DE + sesiones.size() + " sesiones";
 	}
 	
-	@PostMapping("horahorario")
+
 	public String introducirHorasHorario(@RequestParam("xml") MultipartFile xml) {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
@@ -214,7 +177,7 @@ public class GeneralController {
 		return MENSAJE_GURADADO_TOTAL_DE + horarios.size() + " hora de horarios";
 	}
 	
-	@PostMapping("guardias")
+
 	public String introducirGuardias(@RequestParam("xml") MultipartFile xml) {
 
 		XmlTreatment xmlTreatment = new XmlTreatment(xml);
@@ -232,7 +195,7 @@ public class GeneralController {
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@Transactional
 	public ResponseEntity<String> all(@RequestParam("xml") MultipartFile xml) {
-		initialDataBase.ClearToInitialDatabase();
+		initialDataBase.clearToInitialDatabase();
 		
 		String result = "";
 		result = result + introducirMaterias(xml) +"\n";
@@ -244,7 +207,7 @@ public class GeneralController {
 		result = result + introducirSesiones(xml)+"\n";
 		result = result + introducirHorasHorario(xml)+"\n";
 		result = result + introducirGuardias(xml)+"\n";
-		return new ResponseEntity<String>(result,HttpStatus.OK);
+		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 
 }

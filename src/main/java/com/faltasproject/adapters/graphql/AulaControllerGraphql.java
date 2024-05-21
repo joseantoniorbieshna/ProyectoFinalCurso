@@ -3,6 +3,7 @@ package com.faltasproject.adapters.graphql;
 import java.util.List;
 
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 import com.faltasproject.domain.models.clases.Aula;
@@ -20,6 +21,7 @@ public class AulaControllerGraphql{
 	}
 	
 	@QueryMapping
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public List<Aula> aulas(){
 		return aulaService.findAll();
 	} 

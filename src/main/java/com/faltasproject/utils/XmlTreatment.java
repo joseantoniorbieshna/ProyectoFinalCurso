@@ -39,6 +39,7 @@ public class XmlTreatment {
 	private static final String CLAVE_EXPORTACION_NAME_ELEMENT="claveDeExportacion";
 	private static final String NOMBRE_COMPLETO_NAME_ELEMENT="nombreCompleto";
 	private static final String NOMBRE_NAME_ELEMENT="nombre";
+	private static final String INDICE_NAME="indice";
 	Document doc;
 
 	public XmlTreatment(MultipartFile xml) {
@@ -108,14 +109,14 @@ public class XmlTreatment {
 
 			@Override
 			public TramoHorario treatment(Element element) {
-				Integer dia = Integer.valueOf( element.getElementsByTagName("dia").item(0).getTextContent() );
-				Integer indice = Integer.valueOf( element.getElementsByTagName("indice").item(0).getTextContent() );
+				Integer dia = Integer.parseInt( element.getElementsByTagName("dia").item(0).getTextContent() );
+				Integer indice = Integer.parseInt( element.getElementsByTagName(INDICE_NAME).item(0).getTextContent() );
 				
 				String[] horaEntradaTexto = element.getElementsByTagName("horaEntrada").item(0).getTextContent().split(":");
 				String[] horaSalidaTexto = element.getElementsByTagName("horaSalida").item(0).getTextContent().split(":");
 				
-				LocalTime horaEntrada = LocalTime.of(Integer.valueOf(horaEntradaTexto[0]), Integer.valueOf(horaEntradaTexto[1]), Integer.valueOf(horaEntradaTexto[2]));
-				LocalTime horaSalida=LocalTime.of(Integer.valueOf(horaSalidaTexto[0]), Integer.valueOf(horaSalidaTexto[1]), Integer.valueOf(horaSalidaTexto[2]));
+				LocalTime horaEntrada = LocalTime.of(Integer.parseInt(horaEntradaTexto[0]), Integer.parseInt(horaEntradaTexto[1]), Integer.parseInt(horaEntradaTexto[2]));
+				LocalTime horaSalida=LocalTime.of(Integer.parseInt(horaSalidaTexto[0]), Integer.parseInt(horaSalidaTexto[1]), Integer.parseInt(horaSalidaTexto[2]));
 				
 				return new TramoHorario(dia,indice,horaEntrada,horaSalida);
 			}
@@ -255,8 +256,8 @@ public class XmlTreatment {
 				if (child.getNodeType() == Node.ELEMENT_NODE) {
 					
 					Element element = (Element)child;
-					int dia = Integer.valueOf(element.getAttribute("dia"));
-					int indice = Integer.valueOf(element.getAttribute("indice"));
+					int dia = Integer.parseInt(element.getAttribute("dia"));
+					int indice = Integer.parseInt(element.getAttribute(INDICE_NAME));
 					//Volvemos a recorrer
 					   NodeList aulas = element.getElementsByTagName("aula");
 					   if (child.getNodeType() == Node.ELEMENT_NODE) {
@@ -296,8 +297,8 @@ public class XmlTreatment {
 	            if (guardiaNode.getNodeType() == Node.ELEMENT_NODE) {
 	                Element guardiaElement = (Element) guardiaNode;
 
-	                int dia = Integer.valueOf(guardiaElement.getParentNode().getAttributes().getNamedItem("dia").getNodeValue());
-	                int indice = Integer.valueOf(guardiaElement.getParentNode().getAttributes().getNamedItem("indice").getNodeValue());
+	                int dia = Integer.parseInt(guardiaElement.getParentNode().getAttributes().getNamedItem("dia").getNodeValue());
+	                int indice = Integer.parseInt(guardiaElement.getParentNode().getAttributes().getNamedItem(INDICE_NAME).getNodeValue());
 	                String profesorReferencia = guardiaElement.getElementsByTagName("profesor").item(0).getTextContent();
 	                
 	                result.add(new IdGuardiaDTO(profesorReferencia, dia, indice));

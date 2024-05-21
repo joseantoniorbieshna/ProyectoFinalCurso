@@ -2,7 +2,6 @@ package com.faltasproject.security.usuarios.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,13 +33,13 @@ public class AuthenticationController {
 	@PostMapping("/sign-up")
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<AuthReponse> register(@RequestBody @Valid AuthCreateUser authCreateUser) {
-		return new ResponseEntity<AuthReponse>(this.userDetailsService.createUser(authCreateUser),HttpStatus.CREATED);
+		return new ResponseEntity<>(this.userDetailsService.createUser(authCreateUser),HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/info")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<UserInfo> info() {
-		return new ResponseEntity<UserInfo>(this.userDetailsService.getuserInfo(),HttpStatus.OK);
+		return new ResponseEntity<>(this.userDetailsService.getuserInfo(),HttpStatus.OK);
 	}
 	
 

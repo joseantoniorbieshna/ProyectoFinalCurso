@@ -1,6 +1,5 @@
 package com.faltasproject.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,12 +24,10 @@ import com.faltasproject.security.utils.JwtUtils;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-	
-	@Autowired
-	private JwtUtils jwtUtils;
+
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,JwtUtils jwtUtils) throws Exception {
 		return httpSecurity
 				.csrf(csrf->csrf.disable())
 				.httpBasic(Customizer.withDefaults())

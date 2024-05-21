@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
 public class FaltaCreateInputDTO {

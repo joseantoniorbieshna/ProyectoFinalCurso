@@ -9,7 +9,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -81,8 +80,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String accessToken = jwtUtils.createToken(authentication);
 
-		AuthReponse authReponse = new AuthReponse(username, "Usuario logeado con exito", accessToken, true);
-		return authReponse;
+		return new AuthReponse(username, "Usuario logeado con exito", accessToken, true);
 	}
 
 	private Authentication authenticate(String username, String password) {
@@ -133,14 +131,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_".concat(userEntity.getStringRole())));
 
-		SecurityContext context = SecurityContextHolder.getContext();
 		Authentication authentication = new UsernamePasswordAuthenticationToken(userEntity.getUsername(),
 				userEntity.getPassword(), authorities);
 		String accessToken = jwtUtils.createToken(authentication);
 
-		AuthReponse authReponse = new AuthReponse(userEntity.getUsername(), "Usuario creado con exito", accessToken,
+		return new AuthReponse(userEntity.getUsername(), "Usuario creado con exito", accessToken,
 				true);
-		return authReponse;
 	}
 
 	public String getCurrentUsername() {
@@ -150,20 +146,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			throw new ConflictException("Algo salió mal a la hora de obtener el usuario");
 		}
 
-		String username = authentication.getName();
-		return username;
-	}
-
-	public void assertUserLoggedCanEditHoraHorario(IdHoraHorarioDTO idHoraHorarioDTO) {
-		Optional<UsuarioEntity> user = userRepositoryJPA.findByUsername(getCurrentUsername());
-
-		if (user.isPresent()) {
-			throw new NotFoundException("Problema al obtener usuario");
-		}
-		HoraHorario horaHorario = horaHorarioService.findById(idHoraHorarioDTO);
-		// TODO comprobar si es admin o si la referencia del profesor es la misma que el
-		// logeado
-		horaHorario.getReferenciaSesion();
+		return authentication.getName();
 	}
 
 	public UserInfo getuserInfo() {
