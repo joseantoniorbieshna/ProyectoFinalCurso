@@ -18,7 +18,10 @@ import com.faltasproject.domain.models.horario.dtos.IdGuardiaDTO;
 import com.faltasproject.domain.models.horario.mappers.GuardiaIdMapper;
 import com.faltasproject.domain.persistance_ports.horario.GuardiaPersistance;
 
+import jakarta.transaction.Transactional;
+
 @Repository("guardiaPersistance")
+@Transactional
 public class GuardiaPersistanceJPA implements GuardiaPersistance {
 
 	private final GuardiaRepositoryJPA guardiaRepositoryJPA;

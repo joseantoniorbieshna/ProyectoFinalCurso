@@ -13,7 +13,11 @@ import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.persistance_ports.clases.GrupoPersistance;
 
+import jakarta.transaction.Transactional;
+
+
 @Repository("grupoPersistance")
+@Transactional
 public class GrupoPersistanceJPA implements GrupoPersistance {
 	
 	private static final String ERROR_CURSO_NOT_EXIST="Necesitas que haya una referencia exisente de curso en el grupo";
@@ -34,8 +38,10 @@ public class GrupoPersistanceJPA implements GrupoPersistance {
 		if(existNombre(grupo.getNombre())) {
 			throw new ConflictException(getMessageErrorExist(grupo.getNombre()));
 		}
+		CursoEntity cursoPersist = getCursoPersistByReferenciaCurso(grupo.getReferenciaCurso());
+		
 		GrupoEntity grupoEntity = new GrupoEntity(grupo);
-		grupoEntity.setCurso(getCursoPersistByReferenciaCurso(grupo.getReferenciaCurso()));
+		grupoEntity.setCurso(cursoPersist);
 		
 		return grupoRepositoryJPA.save(grupoEntity).toGrupo();
 	}
@@ -49,9 +55,10 @@ public class GrupoPersistanceJPA implements GrupoPersistance {
 			throw new ConflictException(String.format("El curso con el nombre '%s' al que quieres actualizar ya existe.", grupo.getNombre()));
 		}
 		
+		CursoEntity cursoPersistByReferenciaCurso = getCursoPersistByReferenciaCurso(grupo.getReferenciaCurso());
 		//CAMBIAMOS LOS DATOS
 		grupoEntity.fromGrupo(grupo);
-		grupoEntity.setCurso(getCursoPersistByReferenciaCurso(grupo.getReferenciaCurso()));
+		grupoEntity.setCurso(cursoPersistByReferenciaCurso);
 		
 		return grupoRepositoryJPA.save(grupoEntity)
 				.toGrupo();
@@ -74,7 +81,7 @@ public class GrupoPersistanceJPA implements GrupoPersistance {
 		if(!existNombre(nombre)) {
 			throw new NotFoundException(getMessageErrorNotExist(nombre));
 		}
-		grupoRepositoryJPA.deleteByNombreEquals(nombre);
+		grupoRepositoryJPA.deleteByNombre(nombre);
 		return !existNombre(nombre);
 	}
 

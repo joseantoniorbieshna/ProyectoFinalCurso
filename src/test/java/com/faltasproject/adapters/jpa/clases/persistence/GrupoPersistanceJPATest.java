@@ -11,7 +11,10 @@ import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Grupo;
 
+import jakarta.transaction.Transactional;
+
 @SpringBootTest
+@Transactional
 class GrupoPersistanceJPATest {
 	
 	@Autowired

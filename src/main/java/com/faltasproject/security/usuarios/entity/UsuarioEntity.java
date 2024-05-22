@@ -45,11 +45,11 @@ public class UsuarioEntity {
 	@Column(name="credential_No_Expired")
 	private boolean credentialNoExpired;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "role_id",referencedColumnName = "id")
 	private RoleEntity role;
 	
-    @OneToOne(mappedBy = "usuario",fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "usuario",fetch = FetchType.LAZY)
     private ProfesorEntity profesor;
 	
 	

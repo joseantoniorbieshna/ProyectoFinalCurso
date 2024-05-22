@@ -1,6 +1,10 @@
 package com.faltasproject.adapters.jpa.clases.entities;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+
+import org.hibernate.Hibernate;
 import org.springframework.beans.BeanUtils;
 import com.faltasproject.domain.models.clases.Grupo;
 import jakarta.persistence.Column;
@@ -14,6 +18,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,12 +26,13 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "GRUPOS")
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class GrupoEntity {
+	@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+	public class GrupoEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
@@ -34,29 +40,28 @@ public class GrupoEntity {
 	@Column(unique = true)
 	@EqualsAndHashCode.Include
 	private String nombre;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private CursoEntity curso;
 	
-	@ManyToMany(mappedBy = "grupos",fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "grupos",fetch = FetchType.LAZY)
 	private Set<SesionEntity> sesiones;
 
 	public GrupoEntity(Grupo grupo) {
 		super();
 		fromGrupo(grupo);
+		this.sesiones = new HashSet<>();
 	}
 	
 	public GrupoEntity(String nombre, CursoEntity curso) {
 		super();
 		this.nombre = nombre;
 		this.curso = curso;
+		this.sesiones = new HashSet<>();
 	}
 	
 	public void fromGrupo(Grupo grupo) {
-		BeanUtils.copyProperties(grupo, this);
-		
-		if(grupo.getCurso()!=null) {
-			//No persistido
-			this.curso = new CursoEntity(grupo.getReferenciaCurso());
+		if(grupo.getNombre()!=null) {
+			setNombre(grupo.getNombre());			
 		}
 	}
 	
@@ -66,10 +71,15 @@ public class GrupoEntity {
 	
 	@PreRemove
 	private void beforeRemove() {
-		for(SesionEntity sesion: getSesiones()) {
-			sesion.removeGrupoEntity(this);
-		}
-		sesiones.clear();
+		Hibernate.initialize(sesiones);
+	    if (sesiones != null) {
+	        Iterator<SesionEntity> iterator = sesiones.iterator();
+	        while (iterator.hasNext()) {
+	            SesionEntity sesion = iterator.next();
+	            iterator.remove();
+	            sesion.getGrupos().remove(this);
+	        }
+	    }
 		
 		this.setCurso(null);
 	}

@@ -21,6 +21,7 @@ import com.faltasproject.domain.persistance_ports.horario.HoraHorarioPersistance
 import jakarta.transaction.Transactional;
 
 @Repository("horaHorarioPersistance")
+@Transactional
 public class HoraHorarioPersistanceJPA implements HoraHorarioPersistance{
 	
 	private static final String MESSAGE_EXIST = "La hora del horario no existe.";

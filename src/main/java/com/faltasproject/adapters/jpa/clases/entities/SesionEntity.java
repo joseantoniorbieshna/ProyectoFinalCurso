@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.hibernate.Hibernate;
+
 import com.faltasproject.adapters.jpa.horario.entities.HoraHorarioEntity;
 import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
 import com.faltasproject.domain.models.clases.Aula;
@@ -23,6 +25,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -42,27 +45,27 @@ public class SesionEntity {
 	@Column(name = "referencia",unique = true)
 	private String referencia;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "materia_id")
 	private MateriasEntity materia;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "profesor_id")
 	private ProfesorEntity profesor;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 		name = "SESION_GRUPO",
 		joinColumns = @JoinColumn(name="sesion_id"),
 		inverseJoinColumns = @JoinColumn(name="grupo_id")
 	)
 	private Set<GrupoEntity> grupos;
-	@OneToMany(fetch = FetchType.EAGER,
+	@OneToMany(fetch = FetchType.LAZY,
 			cascade = CascadeType.REMOVE,
 			mappedBy = "sesion")
 	private Set<HoraHorarioEntity> horasHorario;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "aula_id",nullable = true)
 	private AulaEntity aula;
 
@@ -114,9 +117,10 @@ public class SesionEntity {
 	public String getReferenciaProfesor() {
 		return this.profesor.getReferencia();
 	}
-	
+
 	public void addGrupoEntity(GrupoEntity grupo) {
 		this.grupos.add(grupo);
+		grupo.getSesiones().add(this);
 	}
 	public boolean removeGrupoEntity(GrupoEntity grupo) {
 		for (Iterator<GrupoEntity> iterator = getGrupos().iterator(); iterator.hasNext();) {

@@ -17,7 +17,7 @@ public interface MateriaPersistance {
 	
 	Stream<Materia> readContainInCompleteName(String name);
 	
-	boolean delete(String referencia);
+	void delete(String referencia);
 	
 	Materia readByReferencia(String referencia);
 

@@ -17,7 +17,10 @@ import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 import com.faltasproject.domain.persistance_ports.horario.TramoHorarioPersistance;
 
+import jakarta.transaction.Transactional;
+
 @Repository("tramoHorarioPersistance")
+@Transactional
 public class TramoHorarioPersistanceJPA implements TramoHorarioPersistance {
 	
 	public final TramoHorarioRepositoryJPA tramoHorarioRepositoryJPA;

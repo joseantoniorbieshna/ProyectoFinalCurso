@@ -42,13 +42,13 @@ public class ProfesorEntity {
 	private String referencia;
 	private String nombre;
 	
-	@OneToMany(fetch = FetchType.EAGER,mappedBy = "profesor",cascade = CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY,mappedBy = "profesor",cascade = CascadeType.REMOVE)
 	private Set<SesionEntity> materia;
 	
 	@OneToMany(mappedBy = "profesor",cascade = CascadeType.REMOVE)
 	private Set<GuardiaEntity> guardias;
 	
-    @OneToOne(cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", unique = true)
     private UsuarioEntity usuario;
 	

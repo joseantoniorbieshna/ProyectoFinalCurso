@@ -1,6 +1,7 @@
 package com.faltasproject.adapters.jpa.clases.entities;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
@@ -39,35 +40,38 @@ public class MateriasEntity {
 	private String referencia;
 	private String nombreAbreviado;
 	private String nombreCompleto;
-	
-	@ManyToMany(mappedBy = "materias",fetch = FetchType.EAGER)
-	private Set<CursoEntity> cursos;
-	
-	@OneToMany(fetch = FetchType.EAGER,mappedBy = "materia",cascade = CascadeType.REMOVE)
-	private Set<SesionEntity> sesiones;
-	
-	public MateriasEntity(String referencia){
+
+	@ManyToMany(mappedBy = "materias", fetch = FetchType.LAZY)
+	private Set<CursoEntity> cursos= new HashSet<>();
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "materia", cascade = CascadeType.REMOVE)
+	private Set<SesionEntity> sesiones= new HashSet<>();
+
+	public MateriasEntity(String referencia) {
 		super();
-		this.referencia=referencia;
-	}	
+		this.referencia = referencia;
+	}
+
 	public MateriasEntity(String referencia, String nombreAbreviado, String nombreCompleto) {
 		this(referencia);
 		this.nombreAbreviado = nombreAbreviado;
 		this.nombreCompleto = nombreCompleto;
-		this.cursos=new HashSet<>();
 	}
-	
+
 	public MateriasEntity(Materia materia) {
 		fromMateria(materia);
 	}
-	
+
 	public void fromMateria(Materia materia) {
 		BeanUtils.copyProperties(materia, this);
 	}
-	
+
 	public Materia toMateria() {
-		return new Materia(String.valueOf(referencia), String.valueOf(nombreAbreviado),String.valueOf(nombreCompleto));
+		return new Materia(String.valueOf(getReferencia()), String.valueOf(getNombreAbreviado()),
+				String.valueOf(getNombreCompleto()));
 	}
+
+	
 	
 	@PreRemove
 	private void beforeRemove() {
@@ -75,4 +79,5 @@ public class MateriasEntity {
 			curso.getMaterias().remove(this);
 		}
 	}
+	
 }

@@ -10,8 +10,11 @@ import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
 import com.faltasproject.adapters.jpa.clases.entities.GrupoEntity;
 import com.faltasproject.adapters.jpa.clases.entities.SesionEntity;
 
+import jakarta.transaction.Transactional;
+
 
 @SpringBootTest
+@Transactional
 class GrupoRepositoryJPATest {
 
 	@Autowired
@@ -62,10 +65,11 @@ class GrupoRepositoryJPATest {
 		assertEquals(referenciaCurso, grupoRepositoryJPA.findByNombreEquals(nombreGrupoNuevo).get()
 				.getCurso()
 				.getReferencia());
-		
+		// aquí sesiones si tiene el grupo pero el grupo tiene sesiones null
+		assertTrue(grupoRepositoryJPA.findByNombreEquals(nombreGrupoNuevo).get().getSesiones().size()>0);
 		
 		//BORRAMOS Y COMPROBAMOS QUE LOS OTROS DATOS EXISTAN
-		grupoRepositoryJPA.deleteByNombreEquals(nombreGrupoNuevo);
+		grupoRepositoryJPA.deleteByNombre(nombreGrupoNuevo);
 		assertFalse(grupoRepositoryJPA.findByNombreEquals(nombreGrupoNuevo).isPresent());
 		
 		assertTrue(sesionRepositoryJPA.findByReferencia(sesionReferencia).isPresent());

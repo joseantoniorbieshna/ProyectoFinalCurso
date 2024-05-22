@@ -22,6 +22,8 @@ import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.profesorado.Profesor;
 import com.faltasproject.domain.persistance_ports.clases.SesionPersistance;
 
+import jakarta.transaction.Transactional;
+
 @SpringBootTest
 class SesionPersistanceJPATest {
 	
@@ -108,6 +110,7 @@ class SesionPersistanceJPATest {
 	}
 	
 	@Test
+	@Transactional
 	void update() {
 		//TODO
 		String referencia="01";

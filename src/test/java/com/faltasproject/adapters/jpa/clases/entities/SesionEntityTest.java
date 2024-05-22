@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.faltasproject.adapters.jpa.clases.daos.GrupoRepositoryJPA;
 import com.faltasproject.adapters.jpa.clases.daos.SesionRepositoryJPA;
+import com.faltasproject.adapters.jpa.clases.persistence.SesionPersistanceJPA;
 import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
@@ -19,11 +20,14 @@ import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.profesorado.Profesor;
 import com.faltasproject.domain.persistance_ports.clases.SesionPersistance;
 
+import jakarta.transaction.Transactional;
+
 @SpringBootTest
+@Transactional
 class SesionEntityTest {
 
 	@Autowired
-	private SesionPersistance sesionPersistance;
+	private SesionPersistanceJPA sesionPersistance;
 	@Autowired 
 	private SesionRepositoryJPA sesionRepositoryJPA;
 	@Autowired

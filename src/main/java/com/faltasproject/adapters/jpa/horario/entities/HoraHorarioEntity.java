@@ -33,10 +33,10 @@ public class HoraHorarioEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private Long id;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sesion_id")
 	private SesionEntity sesion;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tramo_horario_id_dia",referencedColumnName = "dia")
 	@JoinColumn(name = "tramo_horario_id_indice",referencedColumnName = "indice")
 	private TramoHorarioEntity tramoHorario;

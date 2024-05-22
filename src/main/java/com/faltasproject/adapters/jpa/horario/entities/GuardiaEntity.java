@@ -33,11 +33,11 @@ public class GuardiaEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "profesor_id")
 	private ProfesorEntity profesor;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tramo_horario_id_dia",referencedColumnName = "dia")
 	@JoinColumn(name = "tramo_horario_id_indice",referencedColumnName = "indice")
 	private TramoHorarioEntity tramoHorario;

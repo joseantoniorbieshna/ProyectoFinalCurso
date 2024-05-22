@@ -31,7 +31,7 @@ public class FaltaEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "hora_horario")
 	@EqualsAndHashCode.Include
 	HoraHorarioEntity horaHorario;
@@ -39,7 +39,7 @@ public class FaltaEntity {
 	@Column(name = "fecha")
 	@EqualsAndHashCode.Include
 	private LocalDate fecha;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "profesor_sustituto")
 	private ProfesorEntity profesorSustituto;
 	@Column(name = "comentario")

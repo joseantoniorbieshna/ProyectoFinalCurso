@@ -12,8 +12,11 @@ import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Materia;
 import com.faltasproject.domain.persistance_ports.clases.MateriaPersistance;
 
+import jakarta.transaction.Transactional;
+
 
 @Repository("materiaPersistance")
+@Transactional
 public class MateriaPersistenceJPA implements MateriaPersistance {
 	
 	private final MateriaRepositoryJPA materiaRepository;
@@ -64,13 +67,12 @@ public class MateriaPersistenceJPA implements MateriaPersistance {
 	}
 
 	@Override
-	public boolean delete(String referencia) {
+	public void delete(String referencia) {
 		if (!existReferencia(referencia)) {
 			throw new NotFoundException(getMessageErrorNotExist(referencia));
 		}
 		
 		materiaRepository.deleteByReferencia(referencia);
-		return !existReferencia(referencia);
 	}
 
 	@Override

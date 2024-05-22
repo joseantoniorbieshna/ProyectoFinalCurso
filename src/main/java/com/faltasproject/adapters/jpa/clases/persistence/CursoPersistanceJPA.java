@@ -16,8 +16,11 @@ import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.persistance_ports.clases.CursoPersistance;
 
+import jakarta.transaction.Transactional;
+
 
 @Repository("cursoPersistance")
+@Transactional
 public class CursoPersistanceJPA implements CursoPersistance {
 	
 	private final CursoRepositoryJPA cursoRepositoryJPA;
@@ -35,8 +38,10 @@ public class CursoPersistanceJPA implements CursoPersistance {
 			throw new ConflictException(getMessageErrorExist(curso.getReferencia()));
 		}
 		
+		Set<MateriasEntity> materiaPersistData = getMateriaPersistData(curso);
 		CursoEntity cursoEntity = new CursoEntity(curso);
-		convertDataToPersistData(cursoEntity);
+		cursoEntity.setMaterias(materiaPersistData);
+		
 		return cursoRepositoryJPA.save(cursoEntity).toCurso();
 	}
 
@@ -51,17 +56,18 @@ public class CursoPersistanceJPA implements CursoPersistance {
 		
 
 		//CAMBIAMOS LOS DATOS Y PERSISTIMOS MATERIAS
+		Set<MateriasEntity> materiaPersistData = getMateriaPersistData(curso);
 		cursoEntity.fromCurso(curso);
-		convertDataToPersistData(cursoEntity);
+		cursoEntity.setMaterias(materiaPersistData);
 		
 		return cursoRepositoryJPA.save(cursoEntity).toCurso();
 	}
 
-	private void convertDataToPersistData(CursoEntity cursoEntity) {
-		Set<MateriasEntity> materias=cursoEntity.getMaterias().stream().map(materia -> materiaRepositoryJPA.findByReferencia(materia.getReferencia())
+	private Set<MateriasEntity> getMateriaPersistData(Curso curso) {
+		return curso.getMaterias().stream().map(materia -> materiaRepositoryJPA.findByReferencia(materia.getReferencia())
 				.orElseThrow(()->new NotFoundException( getMateriaErrorNotFound(materia.getReferencia()) )))
 				.collect(Collectors.toSet());
-		cursoEntity.setMaterias(materias);
+		
 	}
 
 	@Override

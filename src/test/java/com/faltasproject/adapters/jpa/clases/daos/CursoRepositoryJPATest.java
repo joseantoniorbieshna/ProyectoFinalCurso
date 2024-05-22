@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.faltasproject.adapters.jpa.clases.entities.CursoEntity;
 
+import jakarta.transaction.Transactional;
+
 @SpringBootTest
 class CursoRepositoryJPATest {
 

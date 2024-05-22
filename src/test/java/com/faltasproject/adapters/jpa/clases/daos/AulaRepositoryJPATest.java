@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.faltasproject.adapters.jpa.clases.entities.AulaEntity;
 
+
 @SpringBootTest
 class AulaRepositoryJPATest {
 

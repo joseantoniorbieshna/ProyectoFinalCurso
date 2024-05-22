@@ -13,7 +13,10 @@ import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.clases.Materia;
 
+import jakarta.transaction.Transactional;
+
 @SpringBootTest
+@Transactional
 class MateriaPersistanceJPATest {
 
 	

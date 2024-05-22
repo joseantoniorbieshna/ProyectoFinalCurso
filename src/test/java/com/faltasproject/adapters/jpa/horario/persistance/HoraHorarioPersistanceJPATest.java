@@ -16,6 +16,8 @@ import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 
+import jakarta.transaction.Transactional;
+
 @SpringBootTest
 class HoraHorarioPersistanceJPATest {
 

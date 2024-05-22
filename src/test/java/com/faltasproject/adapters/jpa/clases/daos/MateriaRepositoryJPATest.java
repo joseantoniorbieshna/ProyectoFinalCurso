@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.faltasproject.adapters.jpa.clases.entities.MateriasEntity;
 
+import jakarta.transaction.Transactional;
+
 @SpringBootTest
 class MateriaRepositoryJPATest {
 	@Autowired

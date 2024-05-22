@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,8 +35,8 @@ public class AulaEntity {
 	private String referencia;
 	private String nombre;
 	
-	@OneToMany(fetch = FetchType.EAGER,mappedBy = "aula",cascade = CascadeType.REMOVE)
-	private Set<SesionEntity> materia;
+	@OneToMany(fetch = FetchType.LAZY,mappedBy = "aula",cascade = CascadeType.REMOVE)
+	private Set<SesionEntity> sesiones;
 		
 	public AulaEntity(String referencia) {
 		super();
@@ -60,6 +61,15 @@ public class AulaEntity {
 		return new Aula(
 				this.getReferencia(),
 				this.getNombre());
+	}
+	
+	@PreRemove
+	private void beforeRemove() {
+		if(getSesiones()!=null) {
+			for(SesionEntity sesiones: getSesiones()) {
+				sesiones.setAula(null);
+			}			
+		}
 	}
 
 }

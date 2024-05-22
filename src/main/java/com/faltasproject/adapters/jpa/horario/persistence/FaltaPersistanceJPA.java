@@ -23,6 +23,7 @@ import com.faltasproject.domain.persistance_ports.horario.FaltaPersistance;
 
 import jakarta.transaction.Transactional;
 @Repository("faltaPersistance")
+@Transactional
 public class FaltaPersistanceJPA implements FaltaPersistance{
 	private static final String MESSAGE_NOT_EXIST_HORA_HORARIO="La hora horario introducida no existe.";
 	private static final String MESSAGE_NOT_EXIST_FALTA="La falta introducida no existe.";
@@ -48,12 +49,13 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 	@Override
 	
 	public Falta create(Falta falta) {
-		HoraHorarioEntity horaHorarioPersist=getHoraHorarioPersist(faltaIdMapper.toDto(falta))
-				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
 		
 		if(existId(faltaIdMapper.toDto(falta))) {
 			throw new ConflictException("La Falta ya existe");
 		}
+		
+		HoraHorarioEntity horaHorarioPersist=getHoraHorarioPersist(faltaIdMapper.toDto(falta))
+				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
 		
 		FaltaEntity faltaEntity = new FaltaEntity(falta);
 		
@@ -69,18 +71,24 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 		HoraHorarioEntity horaHorarioPersist=getHoraHorarioPersist(idFaltaDTO)
 				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
 		
-		FaltaEntity faltaUpdate = faltaRepositoryJPA.findByHoraHorarioAndFecha(horaHorarioPersist, idFaltaDTO.getFecha())
+		HoraHorarioEntity horaHorarioUpdate = getHoraHorarioPersist(falta);
+		ProfesorEntity profesorUpdate = getProfesorSustitutoPersist(falta);
+		
+		
+		FaltaEntity faltaPersist = faltaRepositoryJPA.findByHoraHorarioAndFecha(horaHorarioPersist, idFaltaDTO.getFecha())
 				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
 		
-		faltaUpdate.fromFalta(falta);
-		changeToPersistData(faltaUpdate,falta);
+		faltaPersist.fromFalta(falta);
+		
+		faltaPersist.setHoraHorario(horaHorarioUpdate);
+		faltaPersist.setProfesorSustituto(profesorUpdate);
 		
 		/*SI HAY CONFLICTO AL CAMBIAR LA FALTA*/
 		if(!falta.getFecha().equals(idFaltaDTO.getFecha()) && existId(faltaIdMapper.toDto(falta))) {
 			throw new ConflictException("La falta a la que quiere cambiar ya existe");
 		}
 		
-		return faltaRepositoryJPA.save(faltaUpdate).toFalta();
+		return faltaRepositoryJPA.save(faltaPersist).toFalta();
 	}
 
 	@Override
@@ -134,20 +142,20 @@ public class FaltaPersistanceJPA implements FaltaPersistance{
 		return horaHorarioRepositoryJPA.findByReferenciaAndTramoHorario(idFaltaDTO.getReferenciaSesion(), idFaltaDTO.getDia(), idFaltaDTO.getIndice());
 	}
 	
-	private void changeToPersistData(FaltaEntity faltaUpdate,Falta falta) {
-		HoraHorarioEntity horaHorarioPersist=getHoraHorarioPersist(faltaIdMapper.toDto(falta))
+	private HoraHorarioEntity getHoraHorarioPersist(Falta falta) {
+		return getHoraHorarioPersist(faltaIdMapper.toDto(falta))
 				.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_HORA_HORARIO));
-		faltaUpdate.setHoraHorario(horaHorarioPersist);
-		
+	}
+	
+	private ProfesorEntity getProfesorSustitutoPersist(Falta falta) {
 		if(falta.getProfesorSustituto().isPresent()) {
-			ProfesorEntity profesorPersistance = profesorRepositoryJPA.findByReferencia(falta.getReferenciaProfesorSustituto())
+			return profesorRepositoryJPA.findByReferencia(falta.getReferenciaProfesorSustituto())
 					.orElseThrow(()-> new NotFoundException(MESSAGE_NOT_EXIST_PROFESOR));
-			faltaUpdate.setProfesorSustituto(profesorPersistance);
 		}
+		return null;
 	}
 
 	@Override
-	@Transactional
 	public Stream<Falta> createAll(List<Falta> faltas) {
 		List<Falta> faltasSaveAndPersistance = new ArrayList<>();
 		for(Falta falta: faltas) {

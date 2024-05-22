@@ -1,9 +1,11 @@
 package com.faltasproject.adapters.jpa.clases.persistence;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Repository;
 
 import com.faltasproject.adapters.jpa.clases.daos.AulaRepositoryJPA;
@@ -21,7 +23,10 @@ import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.persistance_ports.clases.SesionPersistance;
 
+import jakarta.transaction.Transactional;
+
 @Repository("sesionPersistance")
+@Transactional
 public class SesionPersistanceJPA implements SesionPersistance {
 	
 	private final SesionRepositoryJPA sesionRepositoryJPA;
@@ -29,6 +34,7 @@ public class SesionPersistanceJPA implements SesionPersistance {
 	private final GrupoRepositoryJPA grupoRepositoryJPA;
 	private final ProfesorRepositoryJPA profesorRepositoryJPA;
 	private final AulaRepositoryJPA aulaRepositoryJPA;
+	private final String LAST_PART_MESSAGE=" introducida al crear la sesion";
 	
 
 	public SesionPersistanceJPA(SesionRepositoryJPA sesionRepositoryJPA, MateriaRepositoryJPA materiaRepositoryJPA,
@@ -47,9 +53,18 @@ public class SesionPersistanceJPA implements SesionPersistance {
 		if(existReferencia(sesion.getReferencia())) {
 			throw new ConflictException(getMessageErrorExist(sesion.getReferencia()));
 		}
+		//Persist Data
+		AulaEntity aula = getAulaPersist(sesion);
+		MateriasEntity materia = materiaPersist(sesion.getReferenciaMateria());
+		ProfesorEntity profesor= profesorPersist(sesion.getReferenciaProfesor());
+		Set<GrupoEntity> grupos = grupoPersist(sesion);
 		
 		SesionEntity sesionEntity = new SesionEntity(sesion);
-		changeDataToPersistData(sesionEntity);
+		
+		sesionEntity.setAula(aula);
+		sesionEntity.setMateria(materia);
+		sesionEntity.setGrupos(grupos);
+		sesionEntity.setProfesor(profesor);
 		
 		return sesionRepositoryJPA.save(sesionEntity).toSesion();
 	}
@@ -64,8 +79,17 @@ public class SesionPersistanceJPA implements SesionPersistance {
 		}
 		
 		// CAMBIAMOS DATOS
+		AulaEntity aula = getAulaPersist(sesion);
+		MateriasEntity materia = materiaPersist(sesion.getReferenciaMateria());
+		ProfesorEntity profesor= profesorPersist(sesion.getReferenciaProfesor());
+		Set<GrupoEntity> grupos = grupoPersist(sesion);
+		
 		sesionEntity.fromSesion(sesion);
-		changeDataToPersistData(sesionEntity);
+		
+		sesionEntity.setAula(aula);
+		sesionEntity.setMateria(materia);
+		sesionEntity.setGrupos(grupos);
+		sesionEntity.setProfesor(profesor);
 		
 		return sesionRepositoryJPA.save(sesionEntity)
 				.toSesion();
@@ -105,29 +129,29 @@ public class SesionPersistanceJPA implements SesionPersistance {
 		return  "La sesion con la referencia "+referencia+ " ya existe";
 	}
 	
-	private void changeDataToPersistData(SesionEntity sesionEntity) {
-		String lastPartPersistMessage=" introducida al crear la sesion";
-		// Persist
-		// AULA OPCIONAL
-		AulaEntity aulaPersist = sesionEntity.getAula()==null || sesionEntity.getReferenciaAula()==null? null : aulaRepositoryJPA.findByReferencia(sesionEntity.getReferenciaAula())
-				.orElseThrow(()-> new NotFoundException("No existe la referencia de aula "+sesionEntity.getReferenciaAula()+lastPartPersistMessage) );
+	
+	private AulaEntity getAulaPersist(Sesion sesion) {
+		if(sesion.getAula()!=null && sesion.getReferenciaAula()!=null) {
+			return aulaRepositoryJPA.findByReferencia(sesion.getReferenciaAula())
+					.orElseThrow(()-> new NotFoundException("No existe la referencia de aula "+sesion.getReferenciaAula()+LAST_PART_MESSAGE) );
+		} 
+		return null;
+	}
+	private MateriasEntity materiaPersist(String referenciaMateria) {
+		return materiaRepositoryJPA.findByReferencia(referenciaMateria)
+				.orElseThrow(()-> new NotFoundException("No existe la referencia de materia "+referenciaMateria+LAST_PART_MESSAGE));
+	}
+	
+	private ProfesorEntity profesorPersist(String referenciaProfesor) {
+		return profesorRepositoryJPA.findByReferencia(referenciaProfesor)
+				.orElseThrow(()-> new NotFoundException("No existe la referencia de profesor "+referenciaProfesor+LAST_PART_MESSAGE));
 		
-		MateriasEntity materiaPersist = materiaRepositoryJPA.findByReferencia(sesionEntity.getReferenciaMateria())
-				.orElseThrow(()-> new NotFoundException("No existe la referencia de materia "+sesionEntity.getReferenciaMateria()+lastPartPersistMessage));
-		
-		ProfesorEntity profesorPersist = profesorRepositoryJPA.findByReferencia(sesionEntity.getReferenciaProfesor())
-				.orElseThrow(()-> new NotFoundException("No existe la referencia de profesor "+sesionEntity.getReferenciaProfesor()+lastPartPersistMessage));
-		
-		Set<GrupoEntity> gruposPersist = sesionEntity.getGrupos().stream()
+	}
+	private Set<GrupoEntity>  grupoPersist(Sesion sesion) {
+		return sesion.getGrupos().stream()
 				.map(grupo-> grupoRepositoryJPA.findByNombreEquals(grupo.getNombre())
 						.orElseThrow(()-> new NotFoundException("No existe el nombre del grupo introducido al crear la sesion")))
 				.collect(Collectors.toSet());
-		
-		// Change data persist
-		sesionEntity.setAula(aulaPersist);
-		sesionEntity.setMateria(materiaPersist);
-		sesionEntity.setProfesor(profesorPersist);
-		sesionEntity.setGrupos(gruposPersist);
 	}
 	
 
