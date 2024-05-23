@@ -6,3 +6,10 @@
 5. En goals pondremos el siguiente código con sus respectivo host y login  
 
 clean verify sonar:sonar -Dsonar.projectKey=faltasProject -Dsonar.host.url=conexionLocal/conexionExterna  -Dsonar.login=hashLogin
+
+# BUILD DOCKER IMAGE AND UPLOAD IN DOCKERHUB
+docker build -t mrjoshrb/proyecto-fin-curso-app-faltas:alfa-0.1 .   
+
+docker push mrjoshrb/proyecto-fin-curso-app-faltas:alfa-0.1   
+
+Cambiar version cada vez que se suba uno nuevo

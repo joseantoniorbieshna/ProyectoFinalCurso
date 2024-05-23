@@ -11,9 +11,9 @@
 	</parent>
 	<groupId>com.faltasproject</groupId>
 	<artifactId>faltasproject</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>faltasproject</name>
-	<description>Demo project for Spring Boot</description>
+	<description>proyecto sobre faltas del instituto ieshna</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
