@@ -69,7 +69,7 @@ public class FaltasControllerGraphql {
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public Falta sustituirFalta(@Argument FaltaSustituirInputDTO faltaSustituirInput) {
 		
-		userDetailsServiceImpl.assertForUserAndIsTheSameReferenciaProfesor(faltaSustituirInput.getReferenciaProfesorSustituto());
+		userDetailsServiceImpl.assertForUserRoleAndIsTheSameReferenciaProfesor(faltaSustituirInput.getReferenciaProfesorSustituto());
 		
 		return this.faltaService.sustituir(faltaSustituirInput);
 	}

@@ -21,15 +21,14 @@ import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
 import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
 import com.faltasproject.domain.exceptions.ConflictException;
 import com.faltasproject.domain.exceptions.NotFoundException;
-import com.faltasproject.domain.models.horario.HoraHorario;
-import com.faltasproject.domain.models.horario.dtos.IdHoraHorarioDTO;
 import com.faltasproject.domain.models.usuario.RoleEnum;
-import com.faltasproject.domain.services.horario.HoraHorarioService;
 import com.faltasproject.security.usuarios.daos.RoleRepositoryJPA;
 import com.faltasproject.security.usuarios.daos.UserRepositoryJPA;
 import com.faltasproject.security.usuarios.dtos.AuthCreateUser;
 import com.faltasproject.security.usuarios.dtos.AuthLoginRequest;
 import com.faltasproject.security.usuarios.dtos.AuthReponse;
+import com.faltasproject.security.usuarios.dtos.ChangePasswordByUserNameDTO;
+import com.faltasproject.security.usuarios.dtos.ChangePasswordProfesorDTO;
 import com.faltasproject.security.usuarios.dtos.UserInfo;
 import com.faltasproject.security.usuarios.entity.RoleEntity;
 import com.faltasproject.security.usuarios.entity.UsuarioEntity;
@@ -52,9 +51,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private HoraHorarioService horaHorarioService;
 
 	@Autowired
 	private ProfesorRepositoryJPA profesorRepositoryJPA;
@@ -166,11 +162,45 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		return new UserInfo(userPersistance.getUsername(), referenciaProfesor, userPersistance.getStringRole());
 	}
+	
+	public void changePasswordByreferenciaProfesor(ChangePasswordProfesorDTO changePasswordProfesorDTO) {
+		assertForUserRoleAndIsTheSameReferenciaProfesor(changePasswordProfesorDTO.referenciaProfesor());
+		
+		UsuarioEntity userEntity = userRepositoryJPA.findByProfesorReferencia(changePasswordProfesorDTO.referenciaProfesor())
+				.orElseThrow(()->new ConflictException("No se ha encontrado al usuario"));
+		
+		String passwordEncode = passwordEncoder.encode(changePasswordProfesorDTO.password());
+		
+		userEntity.setPassword(passwordEncode);
+		userRepositoryJPA.save(userEntity);
+				
+	}
+	
+	public void changePasswordByUsername(ChangePasswordByUserNameDTO changePasswordByUserNameDTO) {
+		assertForUserRoleAndIsTheSameUsuario(changePasswordByUserNameDTO.username());
+		
+		UsuarioEntity userEntity = userRepositoryJPA.findByUsername(changePasswordByUserNameDTO.username())
+				.orElseThrow(()->new ConflictException("No se ha encontrado al usuario"));
+		
+		String passwordEncode = passwordEncoder.encode(changePasswordByUserNameDTO.password());
+		
+		userEntity.setPassword(passwordEncode);
+		userRepositoryJPA.save(userEntity);
+				
+	}
 
-	public void assertForUserAndIsTheSameReferenciaProfesor(String referenciaProfesor) {
+	public void assertForUserRoleAndIsTheSameReferenciaProfesor(String referenciaProfesor) {
 		UserInfo userInfo = getuserInfo();
 		if (userInfo.role().equals(RoleEnum.USER.toString())
 				&& !referenciaProfesor.equals(userInfo.referenciaProfesor())) {
+			throw new ConflictException("Error no eres el usuario introducido");
+		}
+	}
+	
+	public void assertForUserRoleAndIsTheSameUsuario(String username) {
+		UserInfo userInfo = getuserInfo();
+		if (userInfo.role().equals(RoleEnum.USER.toString())
+				&& !username.equals(userInfo.username())) {
 			throw new ConflictException("Error no eres el usuario introducido");
 		}
 	}
