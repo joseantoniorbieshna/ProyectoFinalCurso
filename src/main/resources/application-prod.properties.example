@@ -1,6 +1,6 @@
-spring.datasource.url=jdbc:mysql://localhost:3306/faltas?useUnicode=yes&characterEncoding=UTF-8
-spring.datasource.username=root
-spring.datasource.password=
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USER_NAME}
+spring.datasource.password=${DB_PASSWORD}
 
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.format_sql=true
@@ -8,9 +8,12 @@ spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
 logging.file.name=myLog.log
 
-spring.graphql.graphiql.enabled=true
-
 # SECURITY
 	#clave secreta en sha256 (esta clave solo la conoce el back-end)
 security.jwt.key.private=fd984bad363e9a30021460091726467b65bb1e88c31752d93c68ade87e4946e4
 security.jwt.key.generator=AUTH0JWT-BACKEND
+
+# SSL
+server.port: 8080
+server.ssl.certificate-private-key=file:/ssl/server.key
+server.ssl.certificate=file:/ssl/server.crt
