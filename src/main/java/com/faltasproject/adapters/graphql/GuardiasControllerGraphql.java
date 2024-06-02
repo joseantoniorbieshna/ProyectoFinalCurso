@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 import com.faltasproject.domain.models.horario.Guardia;
+import com.faltasproject.domain.models.horario.dtos.GuardiaCountedFaltaProfesorDTO;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
 import com.faltasproject.domain.services.horario.GuardiaService;
 
@@ -35,7 +36,7 @@ public class GuardiasControllerGraphql {
 	
 	@QueryMapping
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	public List<Guardia> guardiasByDiaAndIndice(@Argument IdTramoHorarioDTO tramoHorario ) {
+	public List<GuardiaCountedFaltaProfesorDTO> guardiasByDiaAndIndice(@Argument IdTramoHorarioDTO tramoHorario ) {
 		return this.guardiaService.findAllByDiaAndIndice(tramoHorario);
 	}
 

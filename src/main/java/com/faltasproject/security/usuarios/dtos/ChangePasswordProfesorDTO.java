@@ -1,5 +1,7 @@
 package com.faltasproject.security.usuarios.dtos;
 
-public record ChangePasswordProfesorDTO(String referenciaProfesor,String password) {
+import jakarta.validation.constraints.NotBlank;
+
+public record ChangePasswordProfesorDTO(@NotBlank String referenciaProfesor,@NotBlank String password) {
 
 }

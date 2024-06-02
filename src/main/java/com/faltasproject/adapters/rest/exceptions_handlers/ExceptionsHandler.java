@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.faltasproject.domain.exceptions.BadRequestException;
 import com.faltasproject.domain.exceptions.ConflictException;
+import com.faltasproject.domain.exceptions.IlegalArgumentException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class ExceptionsHandler {
 	
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({BadRequestException.class})
+	@ExceptionHandler({BadRequestException.class,IlegalArgumentException.class})
 	@ResponseBody
 	public ErrorMessage badRequest(Exception excepction) {
 		log.error(excepction.toString());

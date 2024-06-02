@@ -32,5 +32,11 @@ public class ProfesorControllerGraphql{
 		return profesorService.findAllWithoutRegistrationUser();
 	}
 	
+	@QueryMapping
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	public List<Profesor> profesoresWithRegistrationUser(){
+		return profesorService.findAllWithRegistrationUser();
+	}
+	
 	
 }

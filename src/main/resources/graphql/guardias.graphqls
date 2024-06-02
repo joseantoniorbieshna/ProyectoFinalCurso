@@ -1,11 +1,17 @@
 extend type Query {
 	guardias : [Guardia],
 	gaurdiasByProfesor(referenciaProfesor:String!): [Guardia],
-	guardiasByDiaAndIndice(tramoHorario:IdTramoHorario!) : [Guardia]
+	guardiasByDiaAndIndice(tramoHorario:IdTramoHorario!) : [GuardiaCountedFaltaProfesorDTO]
 }
 	
 type Guardia {
 	tramoHorario: TramoHorario,
 	profesor: Profesor,
+	
+}
+
+type GuardiaCountedFaltaProfesorDTO {
+	tramoHorario: TramoHorario,
+	profesor: ProfesorWithCountedFaltasDTO
 	
 }

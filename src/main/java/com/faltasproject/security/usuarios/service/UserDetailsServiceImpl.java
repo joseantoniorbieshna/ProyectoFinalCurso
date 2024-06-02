@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import com.faltasproject.adapters.jpa.profesorado.daos.ProfesorRepositoryJPA;
 import com.faltasproject.adapters.jpa.profesorado.entities.ProfesorEntity;
+import com.faltasproject.domain.exceptions.BadRequestException;
 import com.faltasproject.domain.exceptions.ConflictException;
+import com.faltasproject.domain.exceptions.IlegalArgumentException;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.usuario.RoleEnum;
 import com.faltasproject.security.usuarios.daos.RoleRepositoryJPA;
@@ -51,6 +53,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
 
 	@Autowired
 	private ProfesorRepositoryJPA profesorRepositoryJPA;
@@ -116,6 +119,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			throw new ConflictException("El profesor ya tiene asignado un usuario");
 		}
 
+		assertIsValidPassword(authCreateUser.password());
+		
 		UsuarioEntity userEntity = new UsuarioEntity(authCreateUser.username(),
 				passwordEncoder.encode(authCreateUser.password()), true, true, true, true, roleEntity.get());
 
@@ -156,18 +161,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		ProfesorEntity profesor = userPersistance.getProfesor();
 
 		String referenciaProfesor = null;
+		String nombreCompleto = null;
 		if (profesor != null) {
 			referenciaProfesor = profesor.getReferencia();
+			nombreCompleto = profesor.getNombre();
 		}
-
-		return new UserInfo(userPersistance.getUsername(), referenciaProfesor, userPersistance.getStringRole());
+		
+		return new UserInfo(userPersistance.getUsername(), nombreCompleto,referenciaProfesor, userPersistance.getStringRole());
 	}
 	
 	public void changePasswordByreferenciaProfesor(ChangePasswordProfesorDTO changePasswordProfesorDTO) {
+		assertIsValidPassword(changePasswordProfesorDTO.password());
 		assertForUserRoleAndIsTheSameReferenciaProfesor(changePasswordProfesorDTO.referenciaProfesor());
 		
 		UsuarioEntity userEntity = userRepositoryJPA.findByProfesorReferencia(changePasswordProfesorDTO.referenciaProfesor())
 				.orElseThrow(()->new ConflictException("No se ha encontrado al usuario"));
+		
+		if (passwordEncoder.matches(changePasswordProfesorDTO.password(), userEntity.getPassword()) ) {
+			throw new ConflictException("No puedes cambiar a la misma contraseña.");
+		}
 		
 		String passwordEncode = passwordEncoder.encode(changePasswordProfesorDTO.password());
 		
@@ -176,18 +188,36 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				
 	}
 	
+	public String findUserNameByRefProfesor(String referenciProfesor) {
+		
+		UsuarioEntity userEntity = userRepositoryJPA.findByProfesorReferencia(referenciProfesor)
+				.orElseThrow(()->new ConflictException("No se ha encontrado al usuario"));
+		return userEntity.getUsername();
+				
+	}
+	
 	public void changePasswordByUsername(ChangePasswordByUserNameDTO changePasswordByUserNameDTO) {
+		assertIsValidPassword(changePasswordByUserNameDTO.passwordToChange());
 		assertForUserRoleAndIsTheSameUsuario(changePasswordByUserNameDTO.username());
+		
 		
 		UsuarioEntity userEntity = userRepositoryJPA.findByUsername(changePasswordByUserNameDTO.username())
 				.orElseThrow(()->new ConflictException("No se ha encontrado al usuario"));
+		if (!passwordEncoder.matches(changePasswordByUserNameDTO.actualPassword(), userEntity.getPassword()) ) {
+			throw new BadRequestException("La contraseña que has introducido no es la contraseña actual.");
+		}
 		
-		String passwordEncode = passwordEncoder.encode(changePasswordByUserNameDTO.password());
+		if (passwordEncoder.matches(changePasswordByUserNameDTO.passwordToChange(), userEntity.getPassword()) ) {
+			throw new ConflictException("No puedes cambiar a la misma contraseña.");
+		}
+		
+		String passwordEncode = passwordEncoder.encode(changePasswordByUserNameDTO.passwordToChange());
 		
 		userEntity.setPassword(passwordEncode);
 		userRepositoryJPA.save(userEntity);
 				
 	}
+	
 
 	public void assertForUserRoleAndIsTheSameReferenciaProfesor(String referenciaProfesor) {
 		UserInfo userInfo = getuserInfo();
@@ -207,5 +237,50 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private boolean existUserByUsername(String username) {
 		return userRepositoryJPA.findByUsername(username).isPresent();
+	}
+	
+	private void assertIsValidPassword(String password) {
+	    if (password == null) {
+	        throw new IlegalArgumentException("La contraseña no puede ser nula.");
+	    }
+
+	    // Criterios de validación
+	    int minLength = 8;
+	    boolean hasUpperCase = false;
+	    boolean hasLowerCase = false;
+	    boolean hasDigit = false;
+	    boolean hasSpecialChar = false;
+
+	    if (password.length() < minLength) {
+	        throw new IlegalArgumentException("La contraseña debe tener al menos " + minLength + " caracteres.");
+	    }
+
+	    for (char c : password.toCharArray()) {
+	        if (Character.isUpperCase(c)) {
+	            hasUpperCase = true;
+	        } else if (Character.isLowerCase(c)) {
+	            hasLowerCase = true;
+	        } else if (Character.isDigit(c)) {
+	            hasDigit = true;
+	        } else if (!Character.isLetterOrDigit(c)) {
+	            hasSpecialChar = true;
+	        }
+	    }
+
+	    if (!hasUpperCase) {
+	        throw new IlegalArgumentException("La contraseña debe tener al menos una letra mayúscula.");
+	    }
+
+	    if (!hasLowerCase) {
+	        throw new IlegalArgumentException("La contraseña debe tener al menos una letra minúscula.");
+	    }
+
+	    if (!hasDigit) {
+	        throw new IlegalArgumentException("La contraseña debe tener al menos un dígito.");
+	    }
+
+	    if (!hasSpecialChar) {
+	        throw new IlegalArgumentException("La contraseña debe tener al menos un carácter especial.");
+	    }
 	}
 }

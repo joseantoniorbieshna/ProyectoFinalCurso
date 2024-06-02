@@ -111,6 +111,11 @@ public class FaltaService {
 		return this.faltaPersistance.readFaltasBetweenFechas(fechaInicio, fechaFin).toList();
 	}
 
+	public int countTotalFaltasSustituidasByReferenciaProfesorDiaAndIndice(String referenciaProfesor,int dia,int indice) {
+		return (int) this.faltaPersistance.readAll()
+				.filter(t -> t.getProfesorSustituto().isPresent() && t.getReferenciaProfesorSustituto().equals(referenciaProfesor) && t.getDiaTramoHorario()==dia && t.getIndiceTramoHorario()==indice)
+				.count();
+	}
 	public Falta update(FaltaUpdateInputDTO faltaUpdateInputDTO, UserInfo userInfoDTO) {
 
 		IdFaltaDTO idFaltaActual = new IdFaltaDTO(faltaUpdateInputDTO.getReferenciaSesion(),

@@ -1,9 +1,16 @@
 extend type Query {
 	profesores : [Profesor],
-	profesoresWithoutRegistrationUser : [Profesor]
+	profesoresWithoutRegistrationUser : [Profesor],
+	profesoresWithRegistrationUser: [Profesor]
 }
 
 type Profesor {
 	referencia: String,
 	nombre: String,
+}
+
+type ProfesorWithCountedFaltasDTO{
+	referencia: String,
+	nombre: String,
+	totalFaltasSustituidas: Int,
 }

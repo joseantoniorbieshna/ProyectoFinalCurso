@@ -1,4 +1,6 @@
 package com.faltasproject.security.usuarios.dtos;
 
-public record ChangePasswordByUserNameDTO(String username,String password) {
+import jakarta.validation.constraints.NotBlank;
+
+public record ChangePasswordByUserNameDTO(@NotBlank String username,@NotBlank String actualPassword,@NotBlank String passwordToChange) {
 }

@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import com.faltasproject.domain.exceptions.NotFoundException;
 import com.faltasproject.domain.models.horario.Guardia;
 import com.faltasproject.domain.models.horario.TramoHorario;
+import com.faltasproject.domain.models.horario.dtos.GuardiaCountedFaltaProfesorDTO;
 import com.faltasproject.domain.models.horario.dtos.IdGuardiaDTO;
 import com.faltasproject.domain.models.horario.dtos.IdTramoHorarioDTO;
+import com.faltasproject.domain.models.horario.mappers.ProfesorWithCountMapper;
 import com.faltasproject.domain.models.profesorado.Profesor;
 import com.faltasproject.domain.persistance_ports.horario.GuardiaPersistance;
 import com.faltasproject.domain.persistance_ports.horario.TramoHorarioPersistance;
@@ -19,13 +21,17 @@ public class GuardiaService {
 	private final GuardiaPersistance guardiaPersistance;
 	private final ProfesorPersistance profesorPersistance;
 	private final TramoHorarioPersistance tramoHorarioPersistance;
+	private final FaltaService faltaService;
+	private final ProfesorWithCountMapper profesorWithCountMapper;
 
 	public GuardiaService(GuardiaPersistance guardiaPersistance, ProfesorPersistance profesorPersistance,
-			TramoHorarioPersistance tramoHorarioPersistance) {
+			TramoHorarioPersistance tramoHorarioPersistance,FaltaService faltaService, ProfesorWithCountMapper profesorWithCountMapper) {
 		super();
 		this.guardiaPersistance = guardiaPersistance;
 		this.profesorPersistance = profesorPersistance;
 		this.tramoHorarioPersistance = tramoHorarioPersistance;
+		this.faltaService=faltaService;
+		this.profesorWithCountMapper=profesorWithCountMapper;
 	}
 
 
@@ -49,9 +55,13 @@ public class GuardiaService {
 				.toList();
 	}
 	
-	public List<Guardia> findAllByDiaAndIndice(IdTramoHorarioDTO idTramoHorarioDTO) {
+	public List<GuardiaCountedFaltaProfesorDTO> findAllByDiaAndIndice(IdTramoHorarioDTO idTramoHorarioDTO) {
 		return guardiaPersistance.readAll()
 				.filter(p->p.getDia()==idTramoHorarioDTO.getDia() && p.getIndice()==idTramoHorarioDTO.getIndice())
+				.map(t -> {
+					int totalGuardiaSustituidas=faltaService.countTotalFaltasSustituidasByReferenciaProfesorDiaAndIndice(t.getReferenciaProfesor(), t.getDia(), t.getIndice());
+					return new GuardiaCountedFaltaProfesorDTO(t.getTramoHorario(),profesorWithCountMapper.mapToDTO(t.getProfesor(), totalGuardiaSustituidas));
+				})
 				.toList();
 	}
 
