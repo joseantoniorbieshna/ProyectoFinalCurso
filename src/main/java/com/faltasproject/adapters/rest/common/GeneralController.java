@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.faltasproject.adapters.XmlTreatmentService;
 import com.faltasproject.domain.dto.InputHoraHorarioDTO;
 import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
+import com.faltasproject.domain.models.clases.dtos.CursoCreateDTO;
 import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.models.horario.dtos.IdGuardiaDTO;
@@ -31,7 +33,6 @@ import com.faltasproject.domain.services.horario.HoraHorarioService;
 import com.faltasproject.domain.services.horario.TramoHorarioService;
 import com.faltasproject.domain.services.profesorado.ProfesorService;
 import com.faltasproject.utils.InitialDataBase;
-import com.faltasproject.utils.XmlTreatment;
 
 import jakarta.transaction.Transactional;
 
@@ -61,12 +62,16 @@ public class GeneralController {
 	private GuardiaService guardiaService;
 	@Autowired
 	private InitialDataBase initialDataBase;
+	@Autowired
+	XmlTreatmentService xmlTreatmentService;
+	
+	
 
 	
 
 	public String introducirMaterias(@RequestParam("xml") MultipartFile xml) {
 
-		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+		XmlTreatmentService xmlTreatment = new XmlTreatmentService(xml);
 
 		Set<Materia> materias = xmlTreatment.getAllMaterias();
 		
@@ -82,21 +87,21 @@ public class GeneralController {
 
 	public String introducirCursos(@RequestParam("xml") MultipartFile xml) {
 
-		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+		XmlTreatmentService xmlTreatment = new XmlTreatmentService(xml);
 
-		Set<Curso> cursos = xmlTreatment.getAllCursos();
+		Set<CursoCreateDTO> cursos = xmlTreatment.getAllCursos();
 		
-		for(Curso curso:cursos) {
+		for(CursoCreateDTO curso:cursos) {
 			cursoService.create(curso);
 		}
 
-		return MENSAJE_GURADADO_TOTAL_DE + cursos.size() + " Cursos y en total tienen "+cursos.stream().flatMap(curso -> curso.getMaterias().stream()).count()+" materias relacionadas";
+		return MENSAJE_GURADADO_TOTAL_DE + cursos.size() + " Cursos y en total tienen "+cursos.stream().flatMap(curso -> curso.getReferenciaMaterias().stream()).count()+" materias relacionadas";
 	}
 	
 
 	public String introducirTramosHorarios(@RequestParam("xml") MultipartFile xml) {
 
-		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+		XmlTreatmentService xmlTreatment = new XmlTreatmentService(xml);
 
 		Set<TramoHorario> tramosHorarios = xmlTreatment.getAllTramosHorarios();
 		
@@ -110,7 +115,7 @@ public class GeneralController {
 
 	public String introducirAulas(@RequestParam("xml") MultipartFile xml) {
 
-		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+		XmlTreatmentService xmlTreatment = new XmlTreatmentService(xml);
 
 		Set<Aula> aulas = xmlTreatment.getAllAulas();
 		
@@ -124,7 +129,7 @@ public class GeneralController {
 
 	public String introducirGrupos(@RequestParam("xml") MultipartFile xml) {
 
-		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+		XmlTreatmentService xmlTreatment = new XmlTreatmentService(xml);
 
 		Set<Grupo> grupos = xmlTreatment.getAllGrupos();
 		
@@ -138,7 +143,7 @@ public class GeneralController {
 
 	public String introducirProfesores(@RequestParam("xml") MultipartFile xml) {
 
-		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+		XmlTreatmentService xmlTreatment = new XmlTreatmentService(xml);
 
 		Set<Profesor> profesores = xmlTreatment.getAllProfesores();
 		
@@ -152,7 +157,7 @@ public class GeneralController {
 
 	public String introducirSesiones(@RequestParam("xml") MultipartFile xml) {
 
-		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+		XmlTreatmentService xmlTreatment = new XmlTreatmentService(xml);
 
 		Set<Sesion> sesiones = xmlTreatment.getAllSesiones();
 		
@@ -166,7 +171,7 @@ public class GeneralController {
 
 	public String introducirHorasHorario(@RequestParam("xml") MultipartFile xml) {
 
-		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+		XmlTreatmentService xmlTreatment = new XmlTreatmentService(xml);
 
 		Set<InputHoraHorarioDTO> horarios = xmlTreatment.getAllHoraHorario();
 		
@@ -180,7 +185,7 @@ public class GeneralController {
 
 	public String introducirGuardias(@RequestParam("xml") MultipartFile xml) {
 
-		XmlTreatment xmlTreatment = new XmlTreatment(xml);
+		XmlTreatmentService xmlTreatment = new XmlTreatmentService(xml);
 
 		Set<IdGuardiaDTO> guardias = xmlTreatment.getAllGuardias();
 		
@@ -202,7 +207,7 @@ public class GeneralController {
 		result = result + introducirCursos(xml)+"\n";
 		result = result + introducirTramosHorarios(xml)+"\n";
 		result = result + introducirAulas(xml)+"\n";
-		result = result + introducirGrupos(xml)+"\n";
+		result = result + introducirGrupos( xml)+"\n";
 		result = result + introducirProfesores(xml)+"\n";
 		result = result + introducirSesiones(xml)+"\n";
 		result = result + introducirHorasHorario(xml)+"\n";

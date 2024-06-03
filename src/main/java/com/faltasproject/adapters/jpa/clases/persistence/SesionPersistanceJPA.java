@@ -1,11 +1,9 @@
 package com.faltasproject.adapters.jpa.clases.persistence;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Repository;
 
 import com.faltasproject.adapters.jpa.clases.daos.AulaRepositoryJPA;
@@ -34,7 +32,7 @@ public class SesionPersistanceJPA implements SesionPersistance {
 	private final GrupoRepositoryJPA grupoRepositoryJPA;
 	private final ProfesorRepositoryJPA profesorRepositoryJPA;
 	private final AulaRepositoryJPA aulaRepositoryJPA;
-	private final String LAST_PART_MESSAGE=" introducida al crear la sesion";
+	private static final String LAST_PART_MESSAGE=" introducida al crear la sesion";
 	
 
 	public SesionPersistanceJPA(SesionRepositoryJPA sesionRepositoryJPA, MateriaRepositoryJPA materiaRepositoryJPA,

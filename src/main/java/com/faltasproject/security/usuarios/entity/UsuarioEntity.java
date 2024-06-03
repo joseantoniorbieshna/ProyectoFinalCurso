@@ -79,7 +79,6 @@ public class UsuarioEntity {
 	public void fromUsuario(Usuario usuario) {
 		setUsername(usuario.getUsername());
 		setPassword(usuario.getPassword());
-		RoleEnum roleEnum = null;
 		if(usuario.getRole()!=null) {
 			setRole(new RoleEntity(usuario.getRole()));
 		}

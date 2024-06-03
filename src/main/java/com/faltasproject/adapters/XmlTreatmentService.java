@@ -1,4 +1,4 @@
-package com.faltasproject.utils;
+package com.faltasproject.adapters;
 
 import java.io.IOException;
 import java.time.LocalTime;
@@ -14,6 +14,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,22 +28,28 @@ import com.faltasproject.domain.models.clases.Aula;
 import com.faltasproject.domain.models.clases.Curso;
 import com.faltasproject.domain.models.clases.Grupo;
 import com.faltasproject.domain.models.clases.Materia;
+import com.faltasproject.domain.models.clases.dtos.CursoCreateDTO;
 import com.faltasproject.domain.models.horario.Sesion;
 import com.faltasproject.domain.models.horario.TramoHorario;
 import com.faltasproject.domain.models.horario.dtos.IdGuardiaDTO;
 import com.faltasproject.domain.models.profesorado.Profesor;
+import com.faltasproject.domain.services.general.IFileTreatmentService;
+import com.faltasproject.utils.XpathUtile;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class XmlTreatment {
+@Service("iFileTreatmentService")
+@NoArgsConstructor
+public class XmlTreatmentService implements IFileTreatmentService {
 	private static final String CLAVE_EXPORTACION_NAME_ELEMENT="claveDeExportacion";
 	private static final String NOMBRE_COMPLETO_NAME_ELEMENT="nombreCompleto";
 	private static final String NOMBRE_NAME_ELEMENT="nombre";
 	private static final String INDICE_NAME="indice";
-	Document doc;
+	private Document doc;
 
-	public XmlTreatment(MultipartFile xml) {
+	public XmlTreatmentService(MultipartFile xml) {
 		// Configurar el analizador DOM
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newDefaultInstance();
 		DocumentBuilder builder;
@@ -73,28 +80,28 @@ public class XmlTreatment {
 
 	}
 	
-	public Set<Curso> getAllCursos() {
+	public Set<CursoCreateDTO> getAllCursos() {
 		// OBTENEMOS LA LISTA DE CURSOSS
 		String expr = "//cursos/curso";
-		XpathUtile<Curso> treatmentCurso = new XpathUtile<Curso>(doc,expr) {
+		XpathUtile<CursoCreateDTO> treatmentCurso = new XpathUtile<CursoCreateDTO>(doc,expr) {
 
 			@Override
-			public Curso treatment(Element element) {
+			public CursoCreateDTO treatment(Element element) {
 				String id = element.getElementsByTagName(CLAVE_EXPORTACION_NAME_ELEMENT).item(0).getTextContent();
 				String nombreCompleto = element.getElementsByTagName(NOMBRE_COMPLETO_NAME_ELEMENT).item(0).getTextContent();
 				NodeList materiasNode = ((Element)element.getElementsByTagName("materiasDelCurso").item(0)).getElementsByTagName("materia");
 				
-				Set<Materia> materias = new HashSet<>();
+				Set<String> materiasReferencias = new HashSet<>();
 				//MATERIA ID
 				for (int j = 0; j < materiasNode.getLength(); j++) {
 					Node materiasChild = materiasNode.item(j);
 					if (materiasChild.getNodeType() == Node.ELEMENT_NODE) {
 						// OBTENGO EL ID 
 						String idMateria = materiasChild.getTextContent();
-						materias.add(new Materia(idMateria));
+						materiasReferencias.add(idMateria);
 					}
 				}
-				return new Curso(id,nombreCompleto,materias);
+				return new CursoCreateDTO(id,nombreCompleto,materiasReferencias);
 			}
 			
 		};
@@ -308,6 +315,10 @@ public class XmlTreatment {
 	        log.warn(e.getMessage());
 	    }
 	    return result;
+	}
+	
+	public void changeDocument() {
+		
 	}
 
 }

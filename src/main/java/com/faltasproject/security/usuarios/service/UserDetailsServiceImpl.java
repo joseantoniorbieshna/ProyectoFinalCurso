@@ -57,6 +57,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private ProfesorRepositoryJPA profesorRepositoryJPA;
+	
+	private static final String NOT_FOUND_USER_MESSEAGE="No se ha encontrado al usuario";
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -175,7 +177,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		assertForUserRoleAndIsTheSameReferenciaProfesor(changePasswordProfesorDTO.referenciaProfesor());
 		
 		UsuarioEntity userEntity = userRepositoryJPA.findByProfesorReferencia(changePasswordProfesorDTO.referenciaProfesor())
-				.orElseThrow(()->new ConflictException("No se ha encontrado al usuario"));
+				.orElseThrow(()->new ConflictException(NOT_FOUND_USER_MESSEAGE));
 		
 		if (passwordEncoder.matches(changePasswordProfesorDTO.password(), userEntity.getPassword()) ) {
 			throw new ConflictException("No puedes cambiar a la misma contraseña.");
@@ -191,7 +193,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public String findUserNameByRefProfesor(String referenciProfesor) {
 		
 		UsuarioEntity userEntity = userRepositoryJPA.findByProfesorReferencia(referenciProfesor)
-				.orElseThrow(()->new ConflictException("No se ha encontrado al usuario"));
+				.orElseThrow(()->new ConflictException(NOT_FOUND_USER_MESSEAGE));
 		return userEntity.getUsername();
 				
 	}
@@ -202,7 +204,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 		
 		UsuarioEntity userEntity = userRepositoryJPA.findByUsername(changePasswordByUserNameDTO.username())
-				.orElseThrow(()->new ConflictException("No se ha encontrado al usuario"));
+				.orElseThrow(()->new ConflictException(NOT_FOUND_USER_MESSEAGE));
 		if (!passwordEncoder.matches(changePasswordByUserNameDTO.actualPassword(), userEntity.getPassword()) ) {
 			throw new BadRequestException("La contraseña que has introducido no es la contraseña actual.");
 		}
@@ -244,7 +246,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	        throw new IlegalArgumentException("La contraseña no puede ser nula.");
 	    }
 
-	    // Criterios de validación
 	    int minLength = 8;
 	    boolean hasUpperCase = false;
 	    boolean hasLowerCase = false;

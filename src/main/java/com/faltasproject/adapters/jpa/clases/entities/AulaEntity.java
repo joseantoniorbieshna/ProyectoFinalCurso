@@ -66,8 +66,8 @@ public class AulaEntity {
 	@PreRemove
 	private void beforeRemove() {
 		if(getSesiones()!=null) {
-			for(SesionEntity sesiones: getSesiones()) {
-				sesiones.setAula(null);
+			for(SesionEntity sesion: getSesiones()) {
+				sesion.setAula(null);
 			}			
 		}
 	}
