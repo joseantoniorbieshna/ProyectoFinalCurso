@@ -8,9 +8,12 @@ spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
 logging.file.name=myLog.log
 
+# VISUAL INTERFAZE GRAPHQL http://localhost:8080/graphiql 
 spring.graphql.graphiql.enabled=true
 
 # SECURITY
 	#clave secreta en sha256 (esta clave solo la conoce el back-end)
 security.jwt.key.private=fd984bad363e9a30021460091726467b65bb1e88c31752d93c68ade87e4946e4
 security.jwt.key.generator=AUTH0JWT-BACKEND
+
+server.port: 8080

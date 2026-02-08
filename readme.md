@@ -1,3 +1,11 @@
+# PRIMEROS PASOS
+1. Descargar Spring Tools Suite for eclipse 4.32.0
+2. Instalar Lombok en eclipse de spring, ubicado en la carpeta "ComplementosPrevios"
+3. Crear base de datos llamada "faltas"
+
+# IMPORTANTE
+Hay un XML de ejemplo para hacer pruebas en la carpeta "ComplementosPrevios"
+
 # SONARQUBE
 1. Nos iremos al proyecto
 2. Click derecho Run As
